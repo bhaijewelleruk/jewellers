@@ -26,38 +26,52 @@ export default function WishlistPage() {
   };
 
   return (
-    <main className="w-full bg-[#faf7f2] min-h-screen text-[#1c1510] pt-20 sm:pt-24 pb-20 md:pb-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
+    <main className="w-full bg-[#faf7f2] min-h-screen text-[#1c1510] pb-20 md:pb-24">
+      {/* ── Top Hero Banner (Provides luxury dark backdrop for transparent header on mobile & desktop) ── */}
+      <section className="relative w-full h-[180px] sm:h-[210px] md:h-[240px] bg-[#120e0b] overflow-hidden flex flex-col justify-end pb-7 sm:pb-9 text-center">
+        <Image
+          src="/images/shop-banner.jpg"
+          alt="My Wishlist"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center opacity-40 pointer-events-none"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#120e0b] via-[#120e0b]/75 to-[#120e0b]/90" />
 
-        {/* ── Breadcrumb & Header (matches mockup) ── */}
+        <div className="relative z-10 px-4 max-w-xl mx-auto">
+          <span className="text-[10px] sm:text-xs tracking-[0.28em] uppercase text-[#dec29b] font-medium block mb-1">
+            SAVED PIECES
+          </span>
+          <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl text-[#f5efe8] font-normal leading-tight">
+            My Wishlist {wishlist.length > 0 && <span className="text-lg sm:text-2xl text-[#dec29b]">({wishlist.length})</span>}
+          </h1>
+          <p className="text-xs sm:text-sm text-[#c8bdb5] font-light mt-1.5">
+            Your curated selection of fine gold & diamond jewellery
+          </p>
+        </div>
+      </section>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 pt-6">
+
+        {/* ── Breadcrumb & Actions ── */}
         <ScrollReveal direction="up">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6 sm:mb-8">
-            <div>
-              <h1 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-[#1c1510] font-normal leading-tight">
-                My Wishlist {wishlist.length > 0 && <span className="text-lg sm:text-2xl text-[#8a796c]">({wishlist.length})</span>}
-              </h1>
-              <p className="text-xs sm:text-sm text-[#8a796c] font-light mt-1">
-                Save your favorite pieces for later.
-              </p>
-            </div>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+            <nav className="text-xs text-[#8c7e73] font-light flex items-center gap-1.5">
+              <Link href="/" className="hover:text-[#1c1510] transition-colors">Home</Link>
+              <span>/</span>
+              <span className="text-[#1c1510] font-normal">Wishlist</span>
+            </nav>
 
-            <div className="flex items-center gap-4 self-start sm:self-auto">
-              {wishlist.length > 0 && (
-                <button
-                  type="button"
-                  onClick={clearWishlist}
-                  className="text-xs text-[#8a796c] hover:text-[#a83232] font-light transition-colors underline underline-offset-4"
-                >
-                  Clear Wishlist
-                </button>
-              )}
-
-              <nav className="text-xs text-[#8c7e73] font-light flex items-center gap-1.5">
-                <Link href="/" className="hover:text-[#1c1510] transition-colors">Home</Link>
-                <span>/</span>
-                <span className="text-[#1c1510] font-normal">Wishlist</span>
-              </nav>
-            </div>
+            {wishlist.length > 0 && (
+              <button
+                type="button"
+                onClick={clearWishlist}
+                className="text-xs text-[#8a796c] hover:text-[#a83232] font-light transition-colors underline underline-offset-4 self-start sm:self-auto cursor-pointer"
+              >
+                Clear Wishlist
+              </button>
+            )}
           </div>
         </ScrollReveal>
 

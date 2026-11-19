@@ -17,27 +17,41 @@ export default function CartPage() {
   const total = subtotal - discount + tax;
 
   return (
-    <main className="w-full bg-[#faf7f2] min-h-screen text-[#1c1510] pt-20 sm:pt-24 pb-20 md:pb-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
+    <main className="w-full bg-[#faf7f2] min-h-screen text-[#1c1510] pb-20 md:pb-24">
+      {/* ── Top Hero Banner (Provides luxury dark backdrop for transparent header on mobile & desktop) ── */}
+      <section className="relative w-full h-[180px] sm:h-[210px] md:h-[240px] bg-[#120e0b] overflow-hidden flex flex-col justify-end pb-7 sm:pb-9 text-center">
+        <Image
+          src="/images/shop-banner.jpg"
+          alt="Your Cart"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center opacity-40 pointer-events-none"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#120e0b] via-[#120e0b]/75 to-[#120e0b]/90" />
 
-        {/* ── Breadcrumb & Header ── */}
+        <div className="relative z-10 px-4 max-w-xl mx-auto">
+          <span className="text-[10px] sm:text-xs tracking-[0.28em] uppercase text-[#dec29b] font-medium block mb-1">
+            SHOPPING BAG
+          </span>
+          <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl text-[#f5efe8] font-normal leading-tight">
+            Your Cart {cart.length > 0 && <span className="text-lg sm:text-2xl text-[#dec29b]">({cart.length})</span>}
+          </h1>
+          <p className="text-xs sm:text-sm text-[#c8bdb5] font-light mt-1.5">
+            Review your fine jewellery pieces before secure checkout
+          </p>
+        </div>
+      </section>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 pt-6">
+
+        {/* ── Breadcrumb ── */}
         <ScrollReveal>
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6 sm:mb-8">
-            <div>
-              <h1 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-[#1c1510] font-normal leading-tight">
-                Your Cart {cart.length > 0 && <span className="text-lg sm:text-2xl text-[#8a796c]">({cart.length})</span>}
-              </h1>
-              <p className="text-xs sm:text-sm text-[#8a796c] font-light mt-1">
-                Review your items before checkout
-              </p>
-            </div>
-
-            <nav className="text-xs text-[#8c7e73] font-light flex items-center gap-1.5 self-start sm:self-auto">
-              <Link href="/" className="hover:text-[#1c1510] transition-colors">Home</Link>
-              <span>/</span>
-              <span className="text-[#1c1510] font-normal">Cart</span>
-            </nav>
-          </div>
+          <nav className="text-xs text-[#8c7e73] font-light flex items-center gap-1.5 mb-6">
+            <Link href="/" className="hover:text-[#1c1510] transition-colors">Home</Link>
+            <span>/</span>
+            <span className="text-[#1c1510] font-normal">Cart</span>
+          </nav>
         </ScrollReveal>
 
         {cart.length === 0 ? (

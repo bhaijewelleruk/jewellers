@@ -144,7 +144,7 @@ export function Header({
       >
         {/* ── SEARCH OPEN MODE (Full Header Glass Search Bar + Live Dropdown) ── */}
         {isSearchOpen ? (
-          <div className="w-full bg-[#140e0b]/95 backdrop-blur-2xl border-b border-white/10 shadow-2xl py-3 px-4 sm:px-8 pointer-events-auto">
+          <div className="w-full bg-[#120e0b]/98 backdrop-blur-2xl border-b border-[#dec29b]/25 shadow-[0_12px_45px_rgba(0,0,0,0.85)] py-3 px-4 sm:px-8 pointer-events-auto">
             <div className="max-w-6xl mx-auto flex items-center justify-between gap-3 animate-fadeIn">
               {/* Logo (Desktop only when search is open) */}
               <Link href="/" onClick={() => setIsSearchOpen(false)} className="hidden md:flex items-center flex-shrink-0 group">
@@ -153,10 +153,10 @@ export function Header({
                 </span>
               </Link>
 
-              {/* Expanded Search Bar Form */}
+              {/* Expanded Professional Search Bar Form */}
               <form onSubmit={handleSearchSubmit} className="flex-1 max-w-3xl relative flex items-center mx-1 sm:mx-4">
-                <div className="relative w-full flex items-center">
-                  <svg className="w-4 h-4 sm:w-5 sm:h-5 text-[#d8bb93] absolute left-3.5 stroke-[1.8] pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="relative w-full flex items-center group">
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5 text-[#dec29b] absolute left-3.5 stroke-[2] pointer-events-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                   </svg>
                   <input
@@ -164,18 +164,25 @@ export function Header({
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search rings, necklaces, bracelets, 21ct gold, SKU..."
-                    className="w-full bg-[#1c1511] text-[#f5efe8] text-xs sm:text-sm placeholder-[#8a796b] border border-[#3d2e24] focus:border-[#d8bb93] rounded-full pl-10 sm:pl-11 pr-10 py-2 sm:py-2.5 outline-none transition-all shadow-inner"
+                    placeholder="Search fine rings, necklaces, bracelets, 21ct British gold..."
+                    className="w-full bg-[#1c1511] text-[#f5efe8] text-xs sm:text-sm placeholder-[#9a897b] border border-[#dec29b]/30 focus:border-[#dec29b] focus:ring-2 focus:ring-[#dec29b]/25 rounded-full pl-10 sm:pl-11 pr-16 py-2.5 outline-none transition-all shadow-inner"
                   />
-                  {searchQuery && (
-                    <button
-                      type="button"
-                      onClick={() => setSearchQuery('')}
-                      className="absolute right-3.5 text-[#9a897b] hover:text-[#f5efe8] text-xs font-semibold p-1"
-                    >
-                      ✕
-                    </button>
-                  )}
+                  <div className="absolute right-3.5 flex items-center gap-1.5">
+                    {searchQuery ? (
+                      <button
+                        type="button"
+                        onClick={() => setSearchQuery('')}
+                        className="text-[#9a897b] hover:text-[#f5efe8] text-xs font-semibold p-1 transition-colors cursor-pointer"
+                        title="Clear search"
+                      >
+                        ✕
+                      </button>
+                    ) : (
+                      <kbd className="hidden sm:inline-block px-1.5 py-0.5 text-[10px] text-[#dec29b] bg-[#241a14] border border-[#dec29b]/30 rounded font-mono select-none">
+                        ESC
+                      </kbd>
+                    )}
+                  </div>
                 </div>
               </form>
 
@@ -187,7 +194,7 @@ export function Header({
                   setSearchQuery('');
                 }}
                 aria-label="Close search"
-                className="flex-shrink-0 px-3.5 py-1.5 rounded-full border border-white/15 text-[#d8bb93] hover:text-white hover:bg-white/10 transition-all flex items-center gap-1.5 text-xs font-light cursor-pointer"
+                className="flex-shrink-0 px-3.5 py-1.5 rounded-full border border-[#dec29b]/30 bg-white/[0.04] text-[#dec29b] hover:text-white hover:bg-white/10 hover:border-[#dec29b] transition-all flex items-center gap-1.5 text-xs font-medium cursor-pointer"
               >
                 <span>Close</span>
                 <svg className="w-3.5 h-3.5 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -208,17 +215,19 @@ export function Header({
                   : 'bg-transparent md:bg-[#160f0b]/70 md:rounded-full md:backdrop-blur-xl md:border md:border-white/10 md:shadow-[0_10px_35px_rgba(0,0,0,0.6)] md:px-6'
               }`}
             >
-              {/* Left: Mobile Menu Toggle Button */}
+              {/* Left: Mobile Menu Toggle Button (Unique Asymmetrical Luxury Lines) */}
               <div className="flex items-center md:hidden">
                 <button
                   type="button"
                   onClick={() => setDrawerOpen(true)}
                   aria-label="Open navigation menu"
-                  className="text-[#f5efe8] hover:text-[#dec29b] p-1.5 -ml-1 transition-colors"
+                  className="text-[#f5efe8] hover:text-[#dec29b] p-2 -ml-1.5 transition-all active:scale-90 group cursor-pointer"
                 >
-                  <svg className="w-5 h-5 stroke-[1.8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5M3.75 17.25h16.5" />
-                  </svg>
+                  <div className="w-6 flex flex-col items-start gap-1.5 py-0.5">
+                    <span className="w-5.5 h-[2px] bg-[#f5efe8] rounded-full group-hover:bg-[#dec29b] transition-all duration-300" />
+                    <span className="w-3.5 h-[2px] bg-[#dec29b] rounded-full group-hover:w-5.5 transition-all duration-300 shadow-[0_0_6px_rgba(222,194,155,0.6)]" />
+                    <span className="w-4.5 h-[2px] bg-[#f5efe8] rounded-full group-hover:bg-[#dec29b] transition-all duration-300" />
+                  </div>
                 </button>
               </div>
 
@@ -337,11 +346,11 @@ export function Header({
 
         {/* ── LIVE SEARCH RESULTS OVERLAY ── */}
         {isSearchOpen && (
-          <div className="w-full bg-[#16100d] border-b border-[#2e231b] shadow-2xl animate-fadeIn text-[#f5efe8]">
+          <div className="w-full bg-[#120e0b]/98 backdrop-blur-2xl border-b border-[#dec29b]/25 shadow-[0_20px_60px_rgba(0,0,0,0.85)] animate-fadeIn text-[#f5efe8]">
             <div className="max-w-6xl mx-auto px-4 sm:px-8 py-5">
               {/* Trending Quick Search Tags */}
               <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide text-xs">
-                <span className="text-[11px] text-[#9e8d7d] uppercase tracking-wider font-medium mr-1 whitespace-nowrap">
+                <span className="text-[11px] text-[#dec29b] uppercase tracking-wider font-semibold mr-1 whitespace-nowrap">
                   Trending:
                 </span>
                 {QUICK_TAGS.map((tag) => (
@@ -349,7 +358,7 @@ export function Header({
                     key={tag}
                     type="button"
                     onClick={() => handleTagClick(tag)}
-                    className="px-3 py-1 rounded-full bg-[#241a14] hover:bg-[#dec29b] text-[#d4c5b5] hover:text-[#140e0b] border border-[#3b2c21] hover:border-[#dec29b] transition-all text-xs font-light whitespace-nowrap active:scale-95 cursor-pointer"
+                    className="px-3.5 py-1 rounded-full bg-[#1c140f] hover:bg-[#dec29b] text-[#d4c5b5] hover:text-[#140e0b] border border-[#dec29b]/30 hover:border-[#dec29b] transition-all text-xs font-medium whitespace-nowrap active:scale-95 cursor-pointer shadow-xs"
                   >
                     {tag}
                   </button>
@@ -358,7 +367,7 @@ export function Header({
 
               {/* Live Search Results View */}
               {searchQuery.trim().length > 0 && (
-                <div className="mt-4 pt-4 border-t border-[#261d16]">
+                <div className="mt-4 pt-4 border-t border-white/10">
                   <div className="flex items-center justify-between mb-3.5">
                     <p className="text-xs text-[#a09080] font-light">
                       Found <strong className="text-[#f5efe8] font-semibold">{liveResults.length}</strong> {liveResults.length === 1 ? 'item' : 'items'} matching &ldquo;<span className="text-[#dec29b]">{searchQuery}</span>&rdquo;
@@ -367,7 +376,7 @@ export function Header({
                       <button
                         type="button"
                         onClick={() => handleSearchSubmit()}
-                        className="text-xs text-[#dec29b] hover:underline font-light cursor-pointer"
+                        className="text-xs text-[#dec29b] hover:underline font-medium cursor-pointer"
                       >
                         View all in Shop →
                       </button>
@@ -375,7 +384,7 @@ export function Header({
                   </div>
 
                   {liveResults.length === 0 ? (
-                    <div className="py-6 text-center">
+                    <div className="py-8 text-center">
                       <p className="font-serif text-lg text-[#dec29b]">No products found</p>
                       <p className="text-xs text-[#9a897b] font-light mt-1">
                         Try searching for &quot;Gold&quot;, &quot;Ring&quot;, &quot;21ct&quot;, or &quot;Necklace&quot;.
@@ -394,9 +403,9 @@ export function Header({
                               setIsSearchOpen(false);
                               setSearchQuery('');
                             }}
-                            className="group flex flex-col bg-[#1f1712] border border-[#31231a] hover:border-[#dec29b] rounded-[6px] overflow-hidden p-2 transition-all"
+                            className="group flex flex-col bg-[#1a130f] border border-[#dec29b]/20 hover:border-[#dec29b] rounded-xl overflow-hidden p-2.5 transition-all shadow-md hover:shadow-[0_8px_25px_rgba(222,194,155,0.15)] hover:-translate-y-0.5 cursor-pointer"
                           >
-                            <div className="relative aspect-square w-full rounded-[4px] overflow-hidden bg-[#2a2018]">
+                            <div className="relative aspect-square w-full rounded-lg overflow-hidden bg-[#241a14]">
                               <Image
                                 src={imgSrc}
                                 alt={p.name}
@@ -438,20 +447,21 @@ export function Header({
         />
       )}
 
-      {/* ── Mobile Side Navigation Drawer ── */}
+      {/* ── Mobile Side Navigation Drawer (Animated Luxury Slider) ── */}
       {drawerOpen && (
         <div className="fixed inset-0 z-[100] md:hidden">
           <div
-            className="fixed inset-0 bg-black/75 backdrop-blur-sm transition-opacity duration-300 z-[100]"
+            className="fixed inset-0 bg-black/80 backdrop-blur-md transition-opacity duration-300 z-[100] animate-fadeIn"
             onClick={() => setDrawerOpen(false)}
             aria-hidden="true"
           />
 
-          <div className="fixed top-0 left-0 bottom-0 w-[86%] max-w-[340px] bg-white text-[#1c1510] border-r border-[#e8ded4] shadow-2xl flex flex-col z-[101] animate-slideRight">
+          <div className="fixed top-0 left-0 bottom-0 w-[86%] max-w-[340px] bg-[#140e0b] text-[#f5efe8] border-r border-[#dec29b]/30 shadow-[0_0_60px_rgba(0,0,0,0.85)] flex flex-col z-[101] animate-slideRight">
             {/* Drawer Header */}
-            <div className="p-5 border-b border-[#f0e6dc] flex items-center justify-between bg-white">
-              <Link href="/" onClick={() => setDrawerOpen(false)} className="flex items-center">
-                <span className="text-sm tracking-[0.22em] text-[#1c1510] font-semibold uppercase leading-tight">
+            <div className="p-5 border-b border-white/10 flex items-center justify-between bg-[#140e0b]">
+              <Link href="/" onClick={() => setDrawerOpen(false)} className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-[#dec29b] shadow-[0_0_8px_rgba(222,194,155,0.8)]" />
+                <span className="text-sm tracking-[0.24em] text-[#f5efe8] font-semibold uppercase leading-tight">
                   {brandName}
                 </span>
               </Link>
@@ -460,7 +470,7 @@ export function Header({
                 type="button"
                 onClick={() => setDrawerOpen(false)}
                 aria-label="Close menu"
-                className="w-8.5 h-8.5 rounded-full bg-[#faf7f2] border border-[#e8ded4] flex items-center justify-center text-[#1c1510] hover:bg-[#1c1510] hover:text-white transition-all cursor-pointer shadow-2xs"
+                className="w-8.5 h-8.5 rounded-full bg-white/[0.06] border border-white/15 flex items-center justify-center text-[#dec29b] hover:bg-[#dec29b] hover:text-[#140e0b] transition-all cursor-pointer shadow-xs active:scale-90"
               >
                 <svg className="w-4 h-4 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -469,45 +479,56 @@ export function Header({
             </div>
 
             {/* Search Input inside Drawer */}
-            <div className="px-5 pt-4 pb-2 bg-white">
+            <div className="px-5 pt-4 pb-2 bg-[#140e0b]">
               <button
                 type="button"
                 onClick={() => {
                   setDrawerOpen(false);
                   setIsSearchOpen(true);
                 }}
-                className="w-full text-left flex items-center gap-2 px-3.5 py-2.5 rounded-full bg-[#faf7f2] border border-[#e8ded4] hover:border-[#9e7d56] active:scale-[0.98] transition-all shadow-2xs group cursor-pointer"
+                className="w-full text-left flex items-center gap-2 px-3.5 py-2.5 rounded-full bg-[#1c1511] border border-[#dec29b]/30 hover:border-[#dec29b] active:scale-[0.98] transition-all shadow-inner group cursor-pointer"
               >
-                <svg className="w-4 h-4 text-[#9e7d56] stroke-[1.8] flex-shrink-0 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-[#dec29b] stroke-[2] flex-shrink-0 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                 </svg>
-                <span className="text-xs text-[#8c7a6b] font-light truncate">
+                <span className="text-xs text-[#a8988a] font-light truncate">
                   Search rings, necklaces, 21ct gold...
                 </span>
               </button>
             </div>
 
-            {/* Navigation Links */}
-            <div className="flex-1 overflow-y-auto px-5 py-4 divide-y divide-[#f5eee6] bg-white">
-              <nav className="flex flex-col pb-4 space-y-0.5">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.name}
-                    href={link.href}
-                    onClick={() => setDrawerOpen(false)}
-                    className="flex items-center justify-between py-2.5 px-2 rounded-lg text-[#2c221a] hover:text-[#9e7d56] hover:bg-[#faf7f2] text-sm font-medium tracking-wide transition-all"
-                  >
-                    <span>{link.name}</span>
-                    <svg className="w-3.5 h-3.5 stroke-[1.8] text-[#a8988a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-                    </svg>
-                  </Link>
-                ))}
+            {/* Navigation Links with Staggered Entrance */}
+            <div className="flex-1 overflow-y-auto px-5 py-4 divide-y divide-white/10 bg-[#140e0b]">
+              <nav className="flex flex-col pb-4 space-y-1">
+                {navLinks.map((link, idx) => {
+                  const isCurrent = link.name === 'Home' ? isHomeActive : pathname === link.href;
+                  return (
+                    <Link
+                      key={link.name}
+                      href={link.href}
+                      onClick={() => setDrawerOpen(false)}
+                      style={{ animationDelay: `${idx * 40}ms` }}
+                      className={`flex items-center justify-between py-3 px-3 rounded-xl text-sm font-medium tracking-wide transition-all animate-fadeIn ${
+                        isCurrent
+                          ? 'bg-[#dec29b]/15 text-[#dec29b] border border-[#dec29b]/30 font-semibold'
+                          : 'text-[#e5dad0] hover:text-[#dec29b] hover:bg-white/[0.04]'
+                      }`}
+                    >
+                      <span className="flex items-center gap-2.5">
+                        <span className={`w-1.5 h-1.5 rounded-full ${isCurrent ? 'bg-[#dec29b]' : 'bg-transparent'}`} />
+                        <span>{link.name}</span>
+                      </span>
+                      <svg className="w-3.5 h-3.5 stroke-[1.8] text-[#a8988a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                      </svg>
+                    </Link>
+                  );
+                })}
               </nav>
 
               {/* Collections Quick Cards */}
               <div className="pt-4 pb-2">
-                <p className="text-[10px] tracking-[0.25em] uppercase text-[#9e7d56] font-semibold mb-3">
+                <p className="text-[10px] tracking-[0.28em] uppercase text-[#dec29b] font-semibold mb-3">
                   FEATURED CATEGORIES
                 </p>
                 <div className="grid grid-cols-2 gap-2">
@@ -521,7 +542,7 @@ export function Header({
                       key={cat.name}
                       href={cat.href}
                       onClick={() => setDrawerOpen(false)}
-                      className="p-2.5 rounded-[5px] bg-[#faf7f2] border border-[#ede5db] text-center text-xs font-medium text-[#1c1510] hover:border-[#9e7d56] hover:bg-[#9e7d56]/10 transition-all shadow-2xs"
+                      className="p-3 rounded-lg bg-[#1c1511] border border-[#dec29b]/20 text-center text-xs font-medium text-[#f5efe8] hover:border-[#dec29b] hover:bg-[#dec29b]/10 transition-all shadow-xs active:scale-95 cursor-pointer"
                     >
                       {cat.name}
                     </Link>
@@ -530,9 +551,9 @@ export function Header({
               </div>
 
               {/* Customer Service info */}
-              <div className="pt-4 space-y-2.5 text-xs text-[#5c4d40] font-light">
+              <div className="pt-4 space-y-2.5 text-xs text-[#a8988a] font-light">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-6 h-6 rounded-full bg-[#f0e6d8] flex items-center justify-center text-[#9e7d56] flex-shrink-0">
+                  <div className="w-6 h-6 rounded-full bg-[#1c1511] border border-[#dec29b]/30 flex items-center justify-center text-[#dec29b] flex-shrink-0">
                     <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
                       <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
@@ -541,7 +562,7 @@ export function Header({
                   <span>Bradford, West Yorkshire, UK</span>
                 </div>
                 <div className="flex items-center gap-2.5">
-                  <div className="w-6 h-6 rounded-full bg-[#f0e6d8] flex items-center justify-center text-[#9e7d56] flex-shrink-0">
+                  <div className="w-6 h-6 rounded-full bg-[#1c1511] border border-[#dec29b]/30 flex items-center justify-center text-[#dec29b] flex-shrink-0">
                     <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
                     </svg>
@@ -552,11 +573,11 @@ export function Header({
             </div>
 
             {/* Drawer Footer */}
-            <div className="p-4 border-t border-[#f0e6dc] bg-[#faf7f2] flex items-center justify-between text-xs text-[#706052]">
+            <div className="p-4 border-t border-white/10 bg-[#120e0b] flex items-center justify-between text-xs text-[#a8988a]">
               <span>© {new Date().getFullYear()} Bhai Jeweller</span>
               <div className="flex items-center gap-3 font-medium">
-                <Link href="/about" onClick={() => setDrawerOpen(false)} className="hover:text-[#9e7d56]">About</Link>
-                <Link href="/contact" onClick={() => setDrawerOpen(false)} className="hover:text-[#9e7d56]">Support</Link>
+                <Link href="/about" onClick={() => setDrawerOpen(false)} className="hover:text-[#dec29b] transition-colors">About</Link>
+                <Link href="/contact" onClick={() => setDrawerOpen(false)} className="hover:text-[#dec29b] transition-colors">Support</Link>
               </div>
             </div>
           </div>

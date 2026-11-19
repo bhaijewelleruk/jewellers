@@ -386,52 +386,40 @@ export default function AccountPage() {
   if (!isAuthenticated) {
     return (
       <div className="min-h-[85vh] bg-[#faf7f2] text-[#1c1510] flex items-center justify-center px-4 py-16">
-        <div className="max-w-md w-full bg-[#fdfbf7] border border-[#ded3c5] rounded-3xl p-8 shadow-xl text-center space-y-6">
-          <div className="w-16 h-16 rounded-full bg-[#1c140f] border border-[#dec29b] text-[#dec29b] font-serif font-bold italic text-2xl flex items-center justify-center mx-auto shadow-md">
-            B
+        <div className="max-w-md w-full bg-[#140e0b] border border-[#dec29b]/35 rounded-3xl p-8 sm:p-10 shadow-[0_24px_60px_rgba(0,0,0,0.45)] text-center space-y-6 relative overflow-hidden backdrop-blur-xl">
+          {/* Subtle Golden Ambient Glow */}
+          <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-48 h-48 bg-[#dec29b]/15 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="w-14 h-14 rounded-full bg-[#1c140f] border border-[#dec29b]/50 text-[#dec29b] flex items-center justify-center mx-auto shadow-lg relative z-10">
+            <span className="text-xl">✦</span>
           </div>
-          <div className="space-y-2">
-            <span className="text-[10px] tracking-[0.3em] uppercase text-[#9e7d56] font-medium block">
-              BHAI JEWELLER — BRADFORD
+
+          <div className="space-y-2 relative z-10">
+            <span className="text-[10px] tracking-[0.32em] uppercase text-[#dec29b] font-medium block">
+              BHAI JEWELLER
             </span>
-            <h1 className="font-serif text-2xl sm:text-3xl font-normal text-[#1c1510]">
+            <h1 className="font-serif text-2xl sm:text-3xl font-normal text-white tracking-wide">
               Sign In to Your Account
             </h1>
-            <p className="text-xs text-[#7a6a5c] leading-relaxed max-w-xs mx-auto">
-              Please log in or create an account to view your past orders, active deliveries, and personal details.
+            <p className="text-xs text-[#c8bdb5] font-light leading-relaxed max-w-xs mx-auto">
+              Access your personal portal, order history, active deliveries, and saved jewellery.
             </p>
           </div>
 
-          <div className="space-y-3 pt-2">
+          <div className="space-y-3 pt-2 relative z-10">
             <Link
               href="/login"
-              className="w-full py-3.5 rounded-full bg-[#1c1510] text-[#f5efe8] hover:bg-[#33261d] font-medium text-xs tracking-wider uppercase transition-all shadow-sm flex items-center justify-center gap-2"
+              className="w-full py-3.5 rounded-full bg-[#f3dfc8] hover:bg-white text-[#1c140e] font-semibold text-xs tracking-wider uppercase transition-all shadow-[0_4px_20px_rgba(243,223,200,0.25)] hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer"
             >
               <span>Sign In</span>
-              <span>→</span>
+              <span className="text-sm">→</span>
             </Link>
             <Link
               href="/signup"
-              className="w-full py-3.5 rounded-full bg-[#ede4d8] text-[#1c1510] hover:bg-[#ded3c5] font-medium text-xs tracking-wider uppercase transition-all border border-[#ded3c5] shadow-xs flex items-center justify-center gap-2"
+              className="w-full py-3.5 rounded-full bg-white/[0.06] hover:bg-white/10 text-white font-medium text-xs tracking-wider uppercase transition-all border border-white/20 hover:border-[#dec29b]/50 flex items-center justify-center gap-2 cursor-pointer"
             >
               <span>Create New Account</span>
             </Link>
-          </div>
-
-          <div className="pt-4 border-t border-[#ede4d8] flex items-center justify-center gap-4 text-[11px] text-[#8a796c]">
-            <span className="flex items-center gap-1">
-              <svg className="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-              Live Order Tracking
-            </span>
-            <span>•</span>
-            <span className="flex items-center gap-1">
-              <svg className="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-              Secure 256-bit DB
-            </span>
           </div>
         </div>
       </div>

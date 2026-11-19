@@ -83,11 +83,11 @@ export function MobileBottomNav() {
             >
               {/* Top active indicator line */}
               {isActive && (
-                <span className="absolute -top-2 left-1/2 -translate-x-1/2 w-6 h-0.5 rounded-full bg-[#9e7d56] shadow-xs animate-fadeInScale" />
+                <span className="absolute -top-2 left-1/2 -translate-x-1/2 w-7 h-1 rounded-full bg-gradient-to-r from-[#dec29b] to-[#9e7d56] shadow-[0_2px_8px_rgba(222,194,155,0.6)] animate-fadeInScale" />
               )}
 
               {/* Icon with smooth bounce & scale animation */}
-              <div className={`transition-all duration-300 transform ${isActive ? 'text-[#9e7d56] scale-115 -translate-y-0.5 animate-tabBounce' : 'text-[#8a7a6c] group-hover:scale-105'}`}>
+              <div className={`transition-all duration-300 transform ${isActive ? 'text-[#9e7d56] scale-115 -translate-y-0.5 animate-tabBounce' : 'text-[#7d6c5d] group-hover:scale-110'}`}>
                 {item.icon}
               </div>
 
@@ -98,10 +98,10 @@ export function MobileBottomNav() {
                 </span>
               )}
 
-              {/* Label */}
+              {/* Label - Bold and clear */}
               <span
-                className={`text-[10px] font-light tracking-wide transition-all duration-300 ${
-                  isActive ? 'text-[#9e7d56] font-medium scale-105' : 'text-[#9e8875]'
+                className={`text-[10.5px] tracking-wider transition-all duration-300 ${
+                  isActive ? 'text-[#9e7d56] font-bold scale-105' : 'text-[#6b5849] font-bold'
                 }`}
               >
                 {item.name}
