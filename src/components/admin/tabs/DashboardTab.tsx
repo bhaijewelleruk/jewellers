@@ -59,81 +59,81 @@ export default function DashboardTab({
 
   return (
     <ScrollReveal direction="up" delay={100} className="space-y-4">
-      {/* KPI METRICS CARDS */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        <div className={`${cardBg} p-3.5 rounded-[5px]`}>
+      {/* KPI METRICS CARDS (Shopify Polaris Clean Style) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+        <div className={`${cardBg} p-4 rounded-lg border border-gray-200 dark:border-neutral-800 shadow-xs`}>
           <div className="flex justify-between items-start">
             <div>
-              <p className={`text-xs ${subtitleColor} uppercase tracking-wider font-semibold`}>
+              <p className={`text-[11px] ${subtitleColor} uppercase tracking-wider font-semibold`}>
                 Total Revenue
               </p>
-              <p className={`text-xl sm:text-2xl font-serif ${accentGold} font-bold mt-1.5`}>
+              <p className="text-2xl font-bold font-sans text-gray-900 dark:text-white mt-1.5">
                 &pound;{totalRevenue.toLocaleString()}
               </p>
             </div>
-            <div className="p-2 rounded-[4px] bg-gray-100 border border-gray-200 text-gray-900">
-              <ArrowTrendingUpIcon className="w-5 h-5" />
+            <div className="w-8 h-8 rounded-md bg-emerald-50 dark:bg-emerald-950/50 flex items-center justify-center text-emerald-600">
+              <ArrowTrendingUpIcon className="w-4 h-4" />
             </div>
           </div>
-          <div className="mt-4 flex items-center text-xs text-emerald-600 dark:text-emerald-400 font-medium">
-            <span>&uarr; +18.4% from last month</span>
+          <div className="mt-3 flex items-center text-[11px] text-gray-500 font-medium">
+            <span>Verified store orders</span>
           </div>
         </div>
 
-        <div className={`${cardBg} p-3.5 rounded-[5px]`}>
+        <div className={`${cardBg} p-4 rounded-lg border border-gray-200 dark:border-neutral-800 shadow-xs`}>
           <div className="flex justify-between items-start">
             <div>
-              <p className={`text-xs ${subtitleColor} uppercase tracking-wider font-semibold`}>
-                Live Catalog Items
+              <p className={`text-[11px] ${subtitleColor} uppercase tracking-wider font-semibold`}>
+                Catalog Products
               </p>
-              <p className={`text-xl sm:text-2xl font-serif ${titleColor} font-bold mt-1.5`}>
+              <p className="text-2xl font-bold font-sans text-gray-900 dark:text-white mt-1.5">
                 {totalProductsCount}
               </p>
             </div>
-            <div className="p-2 rounded-[4px] bg-sky-50 dark:bg-sky-950/40 border border-sky-200 dark:border-sky-900 text-sky-600">
-              <DiamondIcon className="w-5 h-5" />
+            <div className="w-8 h-8 rounded-md bg-sky-50 dark:bg-sky-950/40 flex items-center justify-center text-sky-600">
+              <DiamondIcon className="w-4 h-4" />
             </div>
           </div>
-          <div className={`mt-4 flex items-center text-xs ${subtitleColor}`}>
-            <span>Synced in real-time with Storefront</span>
+          <div className="mt-3 flex items-center text-[11px] text-gray-500">
+            <span>Live on Supabase database</span>
           </div>
         </div>
 
-        <div className={`${cardBg} p-3.5 rounded-[5px]`}>
+        <div className={`${cardBg} p-4 rounded-lg border border-gray-200 dark:border-neutral-800 shadow-xs`}>
           <div className="flex justify-between items-start">
             <div>
-              <p className={`text-xs ${subtitleColor} uppercase tracking-wider font-semibold`}>
-                Bespoke Requests
+              <p className={`text-[11px] ${subtitleColor} uppercase tracking-wider font-semibold`}>
+                Bespoke Inquiries
               </p>
-              <p className={`text-xl sm:text-2xl font-serif ${accentGold} font-bold mt-1.5`}>
+              <p className="text-2xl font-bold font-sans text-gray-900 dark:text-white mt-1.5">
                 {pendingEnquiriesCount}
               </p>
             </div>
-            <div className="p-2 rounded-[4px] bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900 text-amber-600">
-              <SparklesIcon className="w-5 h-5" />
+            <div className="w-8 h-8 rounded-md bg-amber-50 dark:bg-amber-950/40 flex items-center justify-center text-amber-600">
+              <SparklesIcon className="w-4 h-4" />
             </div>
           </div>
-          <div className="mt-4 flex items-center text-xs text-amber-600 dark:text-amber-400 font-medium">
-            <span>Requires artisan consultation</span>
+          <div className="mt-3 flex items-center text-[11px] text-amber-600 dark:text-amber-400 font-medium">
+            <span>Customer consultation requests</span>
           </div>
         </div>
 
-        <div className={`${cardBg} p-3.5 rounded-[5px]`}>
+        <div className={`${cardBg} p-4 rounded-lg border border-gray-200 dark:border-neutral-800 shadow-xs`}>
           <div className="flex justify-between items-start">
             <div>
-              <p className={`text-xs ${subtitleColor} uppercase tracking-wider font-semibold`}>
+              <p className={`text-[11px] ${subtitleColor} uppercase tracking-wider font-semibold`}>
                 Live 24K Gold Rate
               </p>
-              <p className={`text-xl sm:text-2xl font-serif ${titleColor} font-bold mt-1.5`}>
+              <p className="text-2xl font-bold font-sans text-gray-900 dark:text-white mt-1.5">
                 Rs. {gold24kRate}
               </p>
             </div>
-            <div className="p-2 rounded-[4px] bg-gray-100 border border-gray-200 text-gray-900">
-              <GoldRatesIcon className="w-5 h-5" />
+            <div className="w-8 h-8 rounded-md bg-gray-100 dark:bg-neutral-800 flex items-center justify-center text-gray-800 dark:text-gray-200">
+              <GoldRatesIcon className="w-4 h-4" />
             </div>
           </div>
-          <div className={`mt-4 flex items-center text-xs ${accentGold}`}>
-            <span>PKR / Gram &bull; Auto-sync on</span>
+          <div className="mt-3 flex items-center text-[11px] text-gray-500">
+            <span>PKR / Gram live pricing</span>
           </div>
         </div>
       </div>

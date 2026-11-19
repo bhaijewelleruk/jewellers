@@ -77,6 +77,7 @@ interface ShopContextType {
   clearWishlist: () => void;
   addProduct: (product: ProductItem) => Promise<boolean>;
   updateProduct: (product: ProductItem) => Promise<boolean>;
+  updateProductPrice: (id: string, newPrice: number, newOriginalPrice?: number) => Promise<boolean>;
   deleteProduct: (id: string) => Promise<boolean>;
   updateProductStock: (id: string, newStock: number) => void;
   refreshProducts: () => Promise<void>;
@@ -640,14 +641,14 @@ export function ShopProvider({ children }: { children: React.ReactNode }) {
       }
     }
 
-    // 3. Server API Route sync with master admin key
+    // 3. Server API Route sync with cookie session
     try {
       const res = await fetch('/api/products', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-admin-key': 'admin123',
         },
+        credentials: 'include',
         body: JSON.stringify({ ...resolvedProd, focusKeywords: keywordsPayload }),
       });
       const data = await res.json();
@@ -744,8 +745,8 @@ export function ShopProvider({ children }: { children: React.ReactNode }) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-admin-key': 'admin123',
         },
+        credentials: 'include',
         body: JSON.stringify({ ...cleanProd, focusKeywords: keywordsPayload }),
       });
       const data = await res.json();
@@ -754,6 +755,53 @@ export function ShopProvider({ children }: { children: React.ReactNode }) {
 
     refreshProducts().catch(() => {});
     return ok;
+  };
+
+  // Instant Real-time Price Update (Zero Refresh Needed)
+  const updateProductPrice = async (
+    id: string,
+    newPrice: number,
+    newOriginalPrice?: number
+  ): Promise<boolean> => {
+    const price = Math.max(0, Number(newPrice) || 0);
+    const origPrice = newOriginalPrice !== undefined ? Math.max(0, Number(newOriginalPrice) || 0) : undefined;
+
+    // 1. Instant optimistic state update (0ms, no refresh needed)
+    setProducts((prev) => {
+      const target = prev.find((p) => p.id === id);
+      if (!target) return prev;
+      const updatedItem = {
+        ...target,
+        price,
+        originalPrice: origPrice !== undefined ? origPrice : target.originalPrice,
+      };
+      const updated = prev.map((p) => (p.id === id ? updatedItem : p));
+      try {
+        localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(updated));
+      } catch (e) {}
+      return updated;
+    });
+
+    // 2. Direct Supabase write (if client available)
+    if (supabase) {
+      const updateData: Record<string, any> = { price };
+      if (origPrice !== undefined) updateData.original_price = origPrice;
+      supabase.from('products').update(updateData).eq('id', id).then(() => {});
+    }
+
+    // 3. Server API route sync with cookie session
+    try {
+      const res = await fetch('/api/products', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ id, price, originalPrice: origPrice }),
+      });
+      const data = await res.json();
+      return !!data.success;
+    } catch {
+      return false;
+    }
   };
 
   const deleteProduct = async (id: string): Promise<boolean> => {
@@ -777,13 +825,11 @@ export function ShopProvider({ children }: { children: React.ReactNode }) {
       }
     }
 
-    // 3. API Route DELETE with master admin key and cache-busting
+    // 3. API Route DELETE with cookie session
     try {
       const res = await fetch(`/api/products?id=${encodeURIComponent(id)}&_t=${Date.now()}`, {
         method: 'DELETE',
-        headers: {
-          'x-admin-key': 'admin123',
-        },
+        credentials: 'include',
       });
       const data = await res.json();
       if (data.success) ok = true;
@@ -814,12 +860,12 @@ export function ShopProvider({ children }: { children: React.ReactNode }) {
       }
 
       fetch('/api/products', {
-        method: 'POST',
+        method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          'x-admin-key': 'admin123',
         },
-        body: JSON.stringify(updatedItem),
+        credentials: 'include',
+        body: JSON.stringify({ id, stock, status }),
       }).catch(() => {});
 
       return updated;
@@ -833,8 +879,8 @@ export function ShopProvider({ children }: { children: React.ReactNode }) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-admin-key': 'admin123',
         },
+        credentials: 'include',
         body: JSON.stringify(catData),
       });
       const data = await res.json();
@@ -861,8 +907,8 @@ export function ShopProvider({ children }: { children: React.ReactNode }) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-admin-key': 'admin123',
         },
+        credentials: 'include',
         body: JSON.stringify(catData),
       });
       const data = await res.json();
@@ -887,9 +933,7 @@ export function ShopProvider({ children }: { children: React.ReactNode }) {
     try {
       const res = await fetch(`/api/categories?id=${encodeURIComponent(id)}&_t=${Date.now()}`, {
         method: 'DELETE',
-        headers: {
-          'x-admin-key': 'admin123',
-        },
+        credentials: 'include',
       });
       const data = await res.json();
       if (data.success) {
@@ -932,6 +976,7 @@ export function ShopProvider({ children }: { children: React.ReactNode }) {
         clearWishlist,
         addProduct,
         updateProduct,
+        updateProductPrice,
         deleteProduct,
         updateProductStock,
         refreshProducts,

@@ -56,6 +56,7 @@ export default function AdminDashboardPage() {
     products,
     addProduct,
     updateProduct,
+    updateProductPrice,
     deleteProduct: removeStoreProduct,
     updateProductStock,
     categories,
@@ -106,49 +107,8 @@ export default function AdminDashboardPage() {
   // Invoice State
   const [selectedInvoiceOrder, setSelectedInvoiceOrder] = useState<OrderItem | null>(null);
 
-  // Audit Logs State
-  const [auditLogs, setAuditLogs] = useState<AuditLogItem[]>([
-    {
-      id: 'AUD-8801',
-      timestamp: '2026-09-30 22:30:15',
-      category: 'AUTH',
-      action: 'ADMIN_SESSION_VERIFIED',
-      details: 'Admin authorized with HMAC-SHA256 signed session cookie',
-      severity: 'INFO',
-      ip: '82.132.241.18 (Bradford, UK)',
-      actor: 'admin@bhaijeweller.co.uk',
-    },
-    {
-      id: 'AUD-8802',
-      timestamp: '2026-09-30 22:18:40',
-      category: 'SECURITY',
-      action: 'RATE_LIMIT_PASSED',
-      details: 'Sliding window rate limit checks active on auth endpoints',
-      severity: 'INFO',
-      ip: '194.207.81.4 (Leeds, UK)',
-      actor: 'System Guard',
-    },
-    {
-      id: 'AUD-8803',
-      timestamp: '2026-09-30 21:55:10',
-      category: 'ORDER',
-      action: 'ORDER_DISPATCHED',
-      details: 'Order #ORD-1002 status advanced to Shipped via Royal Mail Special Delivery',
-      severity: 'INFO',
-      ip: '82.132.241.18',
-      actor: 'admin',
-    },
-    {
-      id: 'AUD-8804',
-      timestamp: '2026-09-30 21:40:22',
-      category: 'INVENTORY',
-      action: 'LOW_STOCK_ALERT',
-      details: 'Stock threshold warning: 22K Royal Bridal Necklace fell below 5 units',
-      severity: 'WARNING',
-      ip: '82.132.241.18',
-      actor: 'Inventory Engine',
-    },
-  ]);
+  // Audit Logs State (Live real-time operational logs)
+  const [auditLogs, setAuditLogs] = useState<AuditLogItem[]>([]);
 
   // Auth Verification
   useEffect(() => {
@@ -1184,6 +1144,7 @@ export default function AdminDashboardPage() {
             }}
             onQuickRestock={handleQuickRestock}
             onExportInventoryCSV={handleExportInventoryCSV}
+            onUpdatePrice={updateProductPrice}
           />
         )}
 

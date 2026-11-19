@@ -8,6 +8,10 @@ const supabase = supabaseAdmin || publicSupabase;
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
+// In-memory high-speed cache for instant real-time response
+let PRODUCTS_CACHE: { data: any[]; timestamp: number } | null = null;
+const CACHE_TTL_MS = 60 * 1000; // 60s cache TTL
+
 // In-memory fallback array for non-blocking local operation
 let SERVER_PRODUCTS_DB: any[] = [];
 
@@ -17,8 +21,25 @@ const NO_CACHE_HEADERS = {
   Expires: '0',
 };
 
-export async function GET() {
+export async function GET(request?: Request) {
   try {
+    const url = request ? new URL(request.url) : null;
+    const forceRefresh = url?.searchParams.get('nocache') === '1' || url?.searchParams.get('_t');
+
+    // 1. Return from in-memory cache if fresh
+    const now = Date.now();
+    if (!forceRefresh && PRODUCTS_CACHE && (now - PRODUCTS_CACHE.timestamp) < CACHE_TTL_MS) {
+      return NextResponse.json(
+        {
+          success: true,
+          source: 'cache_hit',
+          count: PRODUCTS_CACHE.data.length,
+          data: PRODUCTS_CACHE.data,
+        },
+        { headers: NO_CACHE_HEADERS }
+      );
+    }
+
     if (supabase) {
       const { data, error } = await supabase
         .from('products')
@@ -70,7 +91,8 @@ export async function GET() {
             };
           });
 
-        // Keep fallback synchronized with database
+        // Update real-time cache and fallback
+        PRODUCTS_CACHE = { data: mappedProducts, timestamp: Date.now() };
         SERVER_PRODUCTS_DB = [...mappedProducts];
 
         return NextResponse.json(
@@ -240,6 +262,9 @@ export async function POST(request: Request) {
       }
     }
 
+    // Invalidate cache immediately on change
+    PRODUCTS_CACHE = null;
+
     // Keep local fallback in sync (replace if same ID or same name)
     const existingIndex = SERVER_PRODUCTS_DB.findIndex(
       (p) => p.id === newProduct.id || p.name.trim().toLowerCase() === productName.toLowerCase()
@@ -263,6 +288,87 @@ export async function POST(request: Request) {
     console.error('Products POST error:', error);
     return NextResponse.json(
       { success: false, error: error.message || 'Failed to save product.' },
+      { status: 500, headers: NO_CACHE_HEADERS }
+    );
+  }
+}
+
+// FAST REAL-TIME INLINE UPDATE (Price & Stock)
+export async function PATCH(request: Request) {
+  try {
+    const securityCheck = validateRequestSecurity(request);
+    if (!securityCheck.valid) {
+      return securityCheck.errorResponse!;
+    }
+
+    const auth = await requireAdmin(request);
+    if (!auth.authorized) {
+      return auth.errorResponse!;
+    }
+
+    const body = await request.json();
+    const { id, price, originalPrice, stock } = body;
+
+    if (!id) {
+      return NextResponse.json(
+        { success: false, error: 'Product ID is required.' },
+        { status: 400, headers: NO_CACHE_HEADERS }
+      );
+    }
+
+    const updatePayload: Record<string, any> = {
+      updated_at: new Date().toISOString(),
+    };
+
+    if (price !== undefined && price !== null && !isNaN(Number(price))) {
+      updatePayload.price = Number(price);
+    }
+    if (originalPrice !== undefined && originalPrice !== null && !isNaN(Number(originalPrice))) {
+      updatePayload.original_price = Number(originalPrice);
+    }
+    if (stock !== undefined && stock !== null && !isNaN(Number(stock))) {
+      const numStock = Math.max(0, Number(stock));
+      updatePayload.stock = numStock;
+      updatePayload.status = numStock > 0 ? (numStock <= 5 ? 'Low Stock' : 'In Stock') : 'Out of Stock';
+    }
+
+    if (supabase) {
+      const { error } = await supabase.from('products').update(updatePayload).eq('id', id);
+      if (error) {
+        console.error('Supabase PATCH error:', error);
+        return NextResponse.json(
+          { success: false, error: `Database error: ${error.message}` },
+          { status: 500, headers: NO_CACHE_HEADERS }
+        );
+      }
+    }
+
+    // Invalidate cache
+    PRODUCTS_CACHE = null;
+
+    // Update in-memory fallback
+    const target = SERVER_PRODUCTS_DB.find((p) => p.id === id);
+    if (target) {
+      if (updatePayload.price !== undefined) target.price = updatePayload.price;
+      if (updatePayload.original_price !== undefined) target.originalPrice = updatePayload.original_price;
+      if (updatePayload.stock !== undefined) {
+        target.stock = updatePayload.stock;
+        target.status = updatePayload.status;
+      }
+    }
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: 'Product updated in real-time.',
+        updated: updatePayload,
+      },
+      { headers: NO_CACHE_HEADERS }
+    );
+  } catch (err: any) {
+    console.error('Products PATCH error:', err);
+    return NextResponse.json(
+      { success: false, error: err.message || 'Failed to update product.' },
       { status: 500, headers: NO_CACHE_HEADERS }
     );
   }
@@ -301,6 +407,7 @@ export async function DELETE(request: Request) {
       }
     }
 
+    PRODUCTS_CACHE = null;
     SERVER_PRODUCTS_DB = SERVER_PRODUCTS_DB.filter((p) => p.id !== id);
 
     return NextResponse.json(

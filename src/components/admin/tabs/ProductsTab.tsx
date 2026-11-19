@@ -25,6 +25,7 @@ interface ProductsTabProps {
   onDeleteProduct: (id: string, name: string) => Promise<void>;
   onQuickRestock: (id: string, name: string, currentStock: number, delta: number) => void;
   onExportInventoryCSV: () => void;
+  onUpdatePrice?: (id: string, newPrice: number) => Promise<boolean>;
 }
 
 export default function ProductsTab({
@@ -36,11 +37,11 @@ export default function ProductsTab({
   onDeleteProduct,
   onQuickRestock,
   onExportInventoryCSV,
+  onUpdatePrice,
 }: ProductsTabProps) {
   const {
     cardBg,
     subtitleColor,
-    accentGold,
     titleColor,
     inputBg,
     primaryBtn,
@@ -52,6 +53,12 @@ export default function ProductsTab({
   const [searchQuery, setSearchQuery] = useState('');
   const [productCategory, setProductCategory] = useState('All');
   const [stockFilter, setStockFilter] = useState<'all' | 'low' | 'out'>('all');
+
+  // Inline Price Editing State
+  const [editingPriceId, setEditingPriceId] = useState<string | null>(null);
+  const [tempPrice, setTempPrice] = useState<string>('');
+  const [isSavingPrice, setIsSavingPrice] = useState<boolean>(false);
+  const [priceSuccessId, setPriceSuccessId] = useState<string | null>(null);
 
   const healthyStockCount = products.filter((p) => p.stock > 5).length;
   const lowStockCount = products.filter((p) => p.stock > 0 && p.stock <= 5).length;
@@ -72,157 +79,147 @@ export default function ProductsTab({
     return true;
   });
 
+  const handleStartPriceEdit = (p: ProductItem) => {
+    setEditingPriceId(p.id);
+    setTempPrice(String(p.price));
+  };
+
+  const handleCancelPriceEdit = () => {
+    setEditingPriceId(null);
+    setTempPrice('');
+  };
+
+  const handleSavePriceEdit = async (p: ProductItem) => {
+    const val = parseFloat(tempPrice);
+    if (isNaN(val) || val < 0) {
+      alert('Please enter a valid price.');
+      return;
+    }
+    if (!onUpdatePrice) return;
+
+    setIsSavingPrice(true);
+    const success = await onUpdatePrice(p.id, val);
+    setIsSavingPrice(false);
+
+    if (success) {
+      setEditingPriceId(null);
+      setPriceSuccessId(p.id);
+      setTimeout(() => setPriceSuccessId(null), 2500);
+    } else {
+      alert('Failed to update price. Please try again.');
+    }
+  };
+
   return (
-    <ScrollReveal direction="up" delay={100} className="space-y-6">
-      {/* INVENTORY HEALTH KPI CARDS */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className={`${cardBg} p-4 rounded-[5px] border-l-4 border-gray-900`}>
-          <p className={`text-[10px] ${subtitleColor} uppercase font-semibold tracking-wider`}>
-            Total Catalog Items
-          </p>
-          <div className="flex items-center justify-between mt-1">
-            <span className={`text-2xl font-serif font-bold ${titleColor}`}>{products.length}</span>
-            <div className="p-1.5 rounded-[5px] bg-gray-100 border border-gray-200 text-gray-900">
-              <DiamondIcon className="w-4 h-4" />
+    <ScrollReveal direction="up" delay={100} className="space-y-5">
+      {/* INVENTORY HEALTH METRICS (Shopify Polaris Clean KPI Cards) */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div className={`${cardBg} p-4 rounded-lg border border-gray-200 dark:border-neutral-800 shadow-xs`}>
+          <div className="flex items-center justify-between">
+            <span className={`text-[11px] font-medium uppercase tracking-wider ${subtitleColor}`}>All Products</span>
+            <div className="w-7 h-7 rounded-md bg-gray-100 dark:bg-neutral-800 flex items-center justify-center text-gray-700 dark:text-gray-300">
+              <DiamondIcon className="w-3.5 h-3.5" />
             </div>
           </div>
-          <p className={`text-[10px] ${subtitleColor} mt-1`}>Active product listings</p>
+          <p className={`text-2xl font-bold font-sans ${titleColor} mt-2`}>{products.length}</p>
+          <p className="text-[11px] text-gray-500 mt-0.5">Live store listings</p>
         </div>
 
-        <div className={`${cardBg} p-4 rounded-[5px] border-l-4 border-emerald-500`}>
-          <p className={`text-[10px] ${subtitleColor} uppercase font-semibold tracking-wider`}>
-            Healthy Stock (&gt; 5)
-          </p>
-          <div className="flex items-center justify-between mt-1">
-            <span className="text-2xl font-serif font-bold text-emerald-600 dark:text-emerald-400">
-              {healthyStockCount}
-            </span>
-            <div className="p-1.5 rounded-[5px] bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-600">
-              <CheckCircleIcon className="w-4 h-4" />
+        <div className={`${cardBg} p-4 rounded-lg border border-gray-200 dark:border-neutral-800 shadow-xs`}>
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-medium uppercase tracking-wider text-emerald-700 dark:text-emerald-400">In Stock</span>
+            <div className="w-7 h-7 rounded-md bg-emerald-50 dark:bg-emerald-950/50 flex items-center justify-center text-emerald-600">
+              <CheckCircleIcon className="w-3.5 h-3.5" />
             </div>
           </div>
-          <p className="text-[10px] text-emerald-600 dark:text-emerald-400 mt-1">Optimal retail inventory</p>
+          <p className="text-2xl font-bold font-sans text-emerald-600 dark:text-emerald-400 mt-2">{healthyStockCount}</p>
+          <p className="text-[11px] text-gray-500 mt-0.5">&gt; 5 units ready</p>
         </div>
 
-        <div className={`${cardBg} p-4 rounded-[5px] border-l-4 border-amber-500`}>
-          <p className={`text-[10px] ${subtitleColor} uppercase font-semibold tracking-wider`}>
-            Low Stock Warning (1-5)
-          </p>
-          <div className="flex items-center justify-between mt-1">
-            <span className="text-2xl font-serif font-bold text-amber-600 dark:text-amber-400">
-              {lowStockCount}
-            </span>
-            <div className="p-1.5 rounded-[5px] bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 text-amber-600">
-              <AlertTriangleIcon className="w-4 h-4" />
+        <div className={`${cardBg} p-4 rounded-lg border border-gray-200 dark:border-neutral-800 shadow-xs`}>
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-medium uppercase tracking-wider text-amber-700 dark:text-amber-400">Low Stock</span>
+            <div className="w-7 h-7 rounded-md bg-amber-50 dark:bg-amber-950/50 flex items-center justify-center text-amber-600">
+              <AlertTriangleIcon className="w-3.5 h-3.5" />
             </div>
           </div>
-          <p className="text-[10px] text-amber-600 dark:text-amber-400 mt-1">Replenishment recommended</p>
+          <p className="text-2xl font-bold font-sans text-amber-600 dark:text-amber-400 mt-2">{lowStockCount}</p>
+          <p className="text-[11px] text-gray-500 mt-0.5">1 to 5 units remaining</p>
         </div>
 
-        <div className={`${cardBg} p-4 rounded-[5px] border-l-4 border-red-500`}>
-          <p className={`text-[10px] ${subtitleColor} uppercase font-semibold tracking-wider`}>
-            Out of Stock (0 units)
-          </p>
-          <div className="flex items-center justify-between mt-1">
-            <span className="text-2xl font-serif font-bold text-red-600 dark:text-red-400">
-              {outOfStockCount}
-            </span>
-            <div className="p-1.5 rounded-[5px] bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 text-red-600">
-              <AlertCircleIcon className="w-4 h-4" />
+        <div className={`${cardBg} p-4 rounded-lg border border-gray-200 dark:border-neutral-800 shadow-xs`}>
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-medium uppercase tracking-wider text-rose-700 dark:text-rose-400">Out of Stock</span>
+            <div className="w-7 h-7 rounded-md bg-rose-50 dark:bg-rose-950/50 flex items-center justify-center text-rose-600">
+              <AlertCircleIcon className="w-3.5 h-3.5" />
             </div>
           </div>
-          <p className="text-[10px] text-red-600 dark:text-red-400 mt-1">Unavailable on storefront</p>
+          <p className="text-2xl font-bold font-sans text-rose-600 dark:text-rose-400 mt-2">{outOfStockCount}</p>
+          <p className="text-[11px] text-gray-500 mt-0.5">Hidden / Sold out</p>
         </div>
       </div>
 
-      {/* LOW STOCK CRITICAL WARNING BANNER */}
-      {(lowStockCount > 0 || outOfStockCount > 0) && (
-        <div className="p-3.5 rounded-[5px] bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
-          <div className="flex items-center gap-2.5">
-            <AlertTriangleIcon className="w-4 h-4 text-amber-600 shrink-0" />
-            <p className="text-amber-900 dark:text-amber-200 font-medium">
-              <strong>Inventory Alert:</strong> {lowStockCount} items running low on stock and {outOfStockCount} items are out of stock. Immediate artisan restock required.
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setStockFilter('low')}
-              className="px-2.5 py-1 rounded-[4px] bg-amber-600 text-white text-[10px] font-semibold hover:bg-amber-700 transition-colors shadow-2xs flex items-center gap-1 cursor-pointer"
-            >
-              <AlertTriangleIcon className="w-3 h-3" />
-              <span>View Low Stock ({lowStockCount})</span>
-            </button>
-            {outOfStockCount > 0 && (
-              <button
-                onClick={() => setStockFilter('out')}
-                className="px-2.5 py-1 rounded-[4px] bg-red-600 text-white text-[10px] font-semibold hover:bg-red-700 transition-colors shadow-2xs flex items-center gap-1 cursor-pointer"
-              >
-                <AlertCircleIcon className="w-3 h-3" />
-                <span>View Out of Stock ({outOfStockCount})</span>
-              </button>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* ACTION & FILTER CONTROLS */}
-      <div className={`flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 ${cardBg} p-4 rounded-[5px]`}>
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="relative w-full sm:w-64">
+      {/* FILTER & CONTROL BAR (Shopify Style) */}
+      <div className={`${cardBg} p-3.5 rounded-lg border border-gray-200 dark:border-neutral-800 shadow-xs flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3`}>
+        <div className="flex flex-wrap items-center gap-2 flex-1">
+          {/* Search Input */}
+          <div className="relative w-full sm:w-72">
             <SearchIcon className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
               type="text"
-              placeholder="Search by title, SKU..."
+              placeholder="Filter products, SKU, title..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className={`text-xs pl-8.5 pr-3 py-2 rounded-[5px] focus:outline-none w-full ${inputBg}`}
+              className={`text-xs pl-8.5 pr-3 py-2 rounded-md focus:outline-none focus:ring-1 focus:ring-black w-full border border-gray-200 dark:border-neutral-700 ${inputBg}`}
             />
           </div>
 
-          <div className="flex items-center gap-1.5 bg-gray-50 dark:bg-[#1a120e] p-1 rounded-[5px] border border-gray-200 dark:border-[#3a2c23]">
+          {/* Stock Filter Pills */}
+          <div className="flex items-center gap-1 bg-gray-100 dark:bg-neutral-800/80 p-0.5 rounded-md border border-gray-200 dark:border-neutral-700">
             <button
               type="button"
               onClick={() => setStockFilter('all')}
-              className={`px-2.5 py-1 rounded-[4px] text-[10.5px] font-medium transition-all cursor-pointer ${
+              className={`px-3 py-1.5 rounded text-xs font-medium transition-all cursor-pointer ${
                 stockFilter === 'all'
-                  ? 'bg-[#17120e] text-[#fbfaf8] font-bold shadow-2xs'
-                  : `${subtitleColor} hover:${titleColor}`
+                  ? 'bg-white dark:bg-neutral-900 text-gray-900 dark:text-white shadow-2xs font-semibold'
+                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900'
               }`}
             >
-              All Stock ({products.length})
+              All ({products.length})
             </button>
             <button
               type="button"
               onClick={() => setStockFilter('low')}
-              className={`px-2.5 py-1 rounded-[4px] text-[10.5px] font-medium transition-all flex items-center gap-1 cursor-pointer ${
+              className={`px-3 py-1.5 rounded text-xs font-medium transition-all flex items-center gap-1 cursor-pointer ${
                 stockFilter === 'low'
-                  ? 'bg-amber-600 text-white font-bold shadow-2xs'
-                  : 'text-amber-700 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-950'
+                  ? 'bg-amber-500 text-white shadow-2xs font-semibold'
+                  : 'text-amber-700 dark:text-amber-400 hover:bg-amber-50'
               }`}
             >
-              <AlertTriangleIcon className="w-3 h-3" />
-              <span>Low ({lowStockCount})</span>
+              <span>Low</span>
+              <span className="text-[10px] px-1 rounded-full bg-amber-100 text-amber-800 font-bold">{lowStockCount}</span>
             </button>
             <button
               type="button"
               onClick={() => setStockFilter('out')}
-              className={`px-2.5 py-1 rounded-[4px] text-[10.5px] font-medium transition-all flex items-center gap-1 cursor-pointer ${
+              className={`px-3 py-1.5 rounded text-xs font-medium transition-all flex items-center gap-1 cursor-pointer ${
                 stockFilter === 'out'
-                  ? 'bg-red-600 text-white font-bold shadow-2xs'
-                  : 'text-red-700 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-950'
+                  ? 'bg-rose-600 text-white shadow-2xs font-semibold'
+                  : 'text-rose-700 dark:text-rose-400 hover:bg-rose-50'
               }`}
             >
-              <AlertCircleIcon className="w-3 h-3" />
-              <span>Out ({outOfStockCount})</span>
+              <span>Out</span>
+              <span className="text-[10px] px-1 rounded-full bg-rose-100 text-rose-800 font-bold">{outOfStockCount}</span>
             </button>
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 justify-end">
+        {/* Right Actions */}
+        <div className="flex items-center gap-2 justify-end">
           <select
             value={productCategory}
             onChange={(e) => setProductCategory(e.target.value)}
-            className={`text-xs px-3 py-2 rounded-[5px] focus:outline-none ${inputBg}`}
+            className={`text-xs px-3 py-2 rounded-md border border-gray-200 dark:border-neutral-700 focus:outline-none ${inputBg}`}
           >
             <option value="All">All Categories</option>
             {categories.map((c) => (
@@ -235,17 +232,17 @@ export default function ProductsTab({
           <button
             type="button"
             onClick={onExportInventoryCSV}
-            className="px-3.5 py-2 rounded-[5px] border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-900 dark:text-slate-200 text-xs font-semibold flex items-center gap-1.5 transition-all shadow-2xs cursor-pointer"
-            title="Download inventory report as CSV spreadsheet"
+            className="px-3 py-2 rounded-md border border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 hover:bg-gray-50 text-gray-700 dark:text-gray-200 text-xs font-medium flex items-center gap-1.5 transition-all shadow-2xs cursor-pointer"
+            title="Download CSV"
           >
             <ExportIcon className="w-3.5 h-3.5" />
-            <span>Export CSV</span>
+            <span className="hidden sm:inline">Export</span>
           </button>
 
           <button
             type="button"
             onClick={onOpenAddProduct}
-            className={`px-4 py-2 ${primaryBtn} font-semibold text-xs rounded-[5px] transition-all shadow-xs flex items-center gap-1.5 cursor-pointer`}
+            className={`px-3.5 py-2 ${primaryBtn} font-semibold text-xs rounded-md transition-all shadow-xs flex items-center gap-1.5 cursor-pointer`}
           >
             <PlusIcon className="w-3.5 h-3.5" />
             <span>Add Product</span>
@@ -253,124 +250,209 @@ export default function ProductsTab({
         </div>
       </div>
 
-      {/* Products Table with Quick Restock Controls */}
-      <div className={`${cardBg} rounded-[5px] overflow-hidden`}>
+      {/* PRODUCTS TABLE (Shopify Polaris Clean Style with Inline Price Edit & Restock) */}
+      <div className={`${cardBg} rounded-lg border border-gray-200 dark:border-neutral-800 shadow-xs overflow-hidden`}>
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className={`${tableHeaderBg} uppercase tracking-wider font-semibold`}>
+            <thead className={`${tableHeaderBg} border-b border-gray-200 dark:border-neutral-800 font-medium text-gray-500 uppercase tracking-wider text-[11px]`}>
               <tr>
-                <th className="py-2.5 px-3">Product Info</th>
-                <th className="py-2.5 px-3">SKU</th>
-                <th className="py-2.5 px-3">Category</th>
-                <th className="py-2.5 px-3">Metal Spec</th>
-                <th className="py-2.5 px-3">Price</th>
-                <th className="py-2.5 px-3">Stock Health</th>
-                <th className="py-2.5 px-3">Quick Restock</th>
-                <th className="py-2.5 px-3">Images</th>
-                <th className="py-2.5 px-3 text-right">Actions</th>
+                <th className="py-3 px-4">Product</th>
+                <th className="py-3 px-4">Status</th>
+                <th className="py-3 px-4">Inventory</th>
+                <th className="py-3 px-4">Category</th>
+                <th className="py-3 px-4">Price (Real-Time Edit)</th>
+                <th className="py-3 px-4">SKU / Metal</th>
+                <th className="py-3 px-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className={`divide-y ${tableRowHover}`}>
+            <tbody className={`divide-y divide-gray-100 dark:divide-neutral-800 ${tableRowHover}`}>
               {filteredProducts.length === 0 ? (
                 <tr>
-                  <td colSpan={9} className="p-8 text-center text-xs text-gray-500 italic">
-                    No products found matching the current search or stock filter.
+                  <td colSpan={7} className="py-12 text-center text-xs text-gray-400 italic">
+                    No products found matching the criteria.
                   </td>
                 </tr>
               ) : (
-                filteredProducts.map((p) => (
-                  <tr key={p.id} className="transition-colors">
-                    <td className="py-2 px-3 flex items-center space-x-2.5">
-                      <div className="relative w-8 h-8 rounded-[4px] overflow-hidden bg-[#e8ded4] dark:bg-[#211611] shrink-0 border border-gray-200 dark:border-[#3a2c23]">
-                        <Image
-                          src={p.image || (p.images && p.images[0]) || '/images/detail-ring-hero.jpg'}
-                          alt={p.name}
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-                      <div>
-                        <p className={`font-semibold ${titleColor}`}>{p.name}</p>
-                        <p className={`text-[10px] ${subtitleColor}`}>{p.id}</p>
-                      </div>
-                    </td>
-                    <td className={`py-2 px-3 font-mono ${subtitleColor}`}>{p.sku}</td>
-                    <td className="py-2 px-3">
-                      <span className={`px-1.5 py-0.5 border rounded-[4px] text-[10px] ${badgeBg}`}>
-                        {p.category}
-                      </span>
-                    </td>
-                    <td className={`py-2 px-3 ${subtitleColor}`}>{p.metal}</td>
-                    <td className={`py-2 px-3 font-semibold ${accentGold}`}>&pound;{p.price.toLocaleString()}</td>
-                    <td className="py-2 px-3">
-                      <span
-                        className={`px-2 py-0.5 rounded-[4px] text-[10px] font-bold inline-flex items-center gap-1 ${
-                          p.stock > 5
-                            ? 'bg-emerald-50 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800'
-                            : p.stock > 0
-                            ? 'bg-amber-50 text-amber-900 dark:bg-amber-950 dark:text-amber-300 border border-amber-300 dark:border-amber-800'
-                            : 'bg-red-50 text-red-900 dark:bg-red-950 dark:text-red-300 border border-red-300 dark:border-red-800'
-                        }`}
-                      >
+                filteredProducts.map((p) => {
+                  const isEditingThisPrice = editingPriceId === p.id;
+                  const isJustSaved = priceSuccessId === p.id;
+
+                  return (
+                    <tr key={p.id} className="transition-colors hover:bg-gray-50/80 dark:hover:bg-neutral-800/40">
+                      {/* Product Thumbnail & Title */}
+                      <td className="py-2.5 px-4">
+                        <div className="flex items-center gap-3">
+                          <div className="relative w-10 h-10 rounded-md overflow-hidden bg-gray-100 dark:bg-neutral-800 shrink-0 border border-gray-200 dark:border-neutral-700">
+                            <Image
+                              src={p.image || (p.images && p.images[0]) || '/images/detail-ring-hero.jpg'}
+                              alt={p.name}
+                              fill
+                              sizes="40px"
+                              className="object-cover"
+                            />
+                          </div>
+                          <div className="min-w-0 max-w-xs">
+                            <p className={`font-semibold ${titleColor} truncate text-xs hover:text-amber-700 cursor-pointer`} onClick={() => onStartEditProduct(p)}>
+                              {p.name}
+                            </p>
+                            <p className="text-[10.5px] text-gray-400 font-mono truncate">{p.id}</p>
+                          </div>
+                        </div>
+                      </td>
+
+                      {/* Status Badge (Shopify Pill) */}
+                      <td className="py-2.5 px-4">
                         {p.stock > 5 ? (
-                          <CheckCircleIcon className="w-3 h-3 text-emerald-600" />
+                          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-medium bg-[#e3f1df] text-[#108043] border border-[#bbe5b3]">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#108043]" />
+                            <span>Active</span>
+                          </span>
                         ) : p.stock > 0 ? (
-                          <AlertTriangleIcon className="w-3 h-3 text-amber-600 animate-pulse" />
+                          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-medium bg-[#fff3d6] text-[#8a6100] border border-[#ffe082]">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#8a6100] animate-pulse" />
+                            <span>Low stock</span>
+                          </span>
                         ) : (
-                          <AlertCircleIcon className="w-3 h-3 text-red-600" />
+                          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-medium bg-[#fed3d1] text-[#bf0711] border border-[#fba4a1]">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#bf0711]" />
+                            <span>Out of stock</span>
+                          </span>
                         )}
-                        <span>
-                          {p.stock} units ({p.stock > 5 ? 'In Stock' : p.stock > 0 ? 'Low Stock' : 'Out of Stock'})
+                      </td>
+
+                      {/* Inventory Count & Real-Time Restock Buttons */}
+                      <td className="py-2.5 px-4">
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium text-gray-900 dark:text-gray-100 min-w-[55px]">
+                            {p.stock} in stock
+                          </span>
+                          <div className="flex items-center border border-gray-200 dark:border-neutral-700 rounded-md overflow-hidden bg-white dark:bg-neutral-800 shadow-2xs">
+                            <button
+                              type="button"
+                              onClick={() => onQuickRestock(p.id, p.name, p.stock, -1)}
+                              disabled={p.stock <= 0}
+                              className="px-1.5 py-1 text-gray-500 hover:text-black hover:bg-gray-100 dark:hover:bg-neutral-700 text-[10px] font-bold border-r border-gray-200 dark:border-neutral-700 disabled:opacity-30 cursor-pointer"
+                              title="Decrease stock by 1"
+                            >
+                              -1
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => onQuickRestock(p.id, p.name, p.stock, 1)}
+                              className="px-1.5 py-1 text-gray-700 hover:text-black hover:bg-gray-100 dark:hover:bg-neutral-700 text-[10px] font-bold border-r border-gray-200 dark:border-neutral-700 cursor-pointer"
+                              title="Increase stock by 1"
+                            >
+                              +1
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => onQuickRestock(p.id, p.name, p.stock, 5)}
+                              className="px-2 py-1 text-gray-700 hover:text-black hover:bg-gray-100 dark:hover:bg-neutral-700 text-[10px] font-bold cursor-pointer"
+                              title="Add standard batch of 5"
+                            >
+                              +5
+                            </button>
+                          </div>
+                        </div>
+                      </td>
+
+                      {/* Category */}
+                      <td className="py-2.5 px-4">
+                        <span className={`px-2 py-0.5 rounded text-[11px] font-medium border ${badgeBg}`}>
+                          {p.category}
                         </span>
-                      </span>
-                    </td>
-                    <td className="py-2 px-3">
-                      <div className="flex items-center gap-1">
-                        <button
-                          type="button"
-                          onClick={() => onQuickRestock(p.id, p.name, p.stock, 1)}
-                          className="px-2 py-1 rounded-[4px] bg-gray-50 dark:bg-[#211611] hover:bg-gray-100 dark:hover:bg-[#2d1e17] text-[#17120e] dark:text-slate-200 border border-gray-200 dark:border-[#3a2c23] text-[10px] font-bold transition-all cursor-pointer"
-                          title="Add 1 piece to stock"
-                        >
-                          +1
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => onQuickRestock(p.id, p.name, p.stock, 5)}
-                          className="px-2 py-1 rounded-[4px] bg-gray-900/15 hover:bg-gray-900/30 text-gray-900 dark:text-slate-200 border border-gray-300 text-[10px] font-bold transition-all cursor-pointer"
-                          title="Add 5 pieces (Standard batch restock)"
-                        >
-                          +5
-                        </button>
-                      </div>
-                    </td>
-                    <td className="p-4 text-gray-900">
-                      <span className="font-semibold">{p.images?.length || 1} imgs</span>
-                    </td>
-                    <td className="p-4 text-right">
-                      <div className="flex items-center justify-end gap-1.5">
-                        <button
-                          type="button"
-                          onClick={() => onStartEditProduct(p)}
-                          className="px-2.5 py-1 bg-gray-50 hover:bg-gray-100 text-gray-900 dark:text-slate-200 rounded-[5px] text-[10px] font-bold transition-colors border border-gray-200 flex items-center gap-1 shadow-2xs cursor-pointer"
-                          title="Edit product in studio"
-                        >
-                          <EditIcon className="w-3 h-3" />
-                          <span>Edit</span>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => onDeleteProduct(p.id, p.name)}
-                          className="px-2.5 py-1 bg-red-50 hover:bg-red-100 text-red-800 dark:bg-red-950/80 dark:hover:bg-red-900 dark:text-red-200 rounded-[5px] text-[10px] font-semibold transition-colors border border-red-200 dark:border-red-900 flex items-center gap-1 shadow-2xs cursor-pointer"
-                          title="Delete product"
-                        >
-                          <TrashIcon className="w-3 h-3" />
-                          <span>Delete</span>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
+                      </td>
+
+                      {/* REAL-TIME INLINE PRICE EDITING */}
+                      <td className="py-2.5 px-4">
+                        {isEditingThisPrice ? (
+                          <div className="flex items-center gap-1 animate-fadeIn">
+                            <div className="relative flex items-center">
+                              <span className="absolute left-2 text-gray-500 text-xs font-semibold">&pound;</span>
+                              <input
+                                type="number"
+                                autoFocus
+                                value={tempPrice}
+                                onChange={(e) => setTempPrice(e.target.value)}
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter') handleSavePriceEdit(p);
+                                  if (e.key === 'Escape') handleCancelPriceEdit();
+                                }}
+                                className="w-24 pl-5 pr-2 py-1 text-xs font-semibold border-2 border-emerald-500 rounded bg-white text-gray-900 focus:outline-none shadow-xs"
+                                placeholder="Price"
+                              />
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => handleSavePriceEdit(p)}
+                              disabled={isSavingPrice}
+                              className="px-2 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-[11px] font-bold shadow-xs transition-colors cursor-pointer"
+                              title="Save new price (Enter)"
+                            >
+                              {isSavingPrice ? '...' : '✓'}
+                            </button>
+                            <button
+                              type="button"
+                              onClick={handleCancelPriceEdit}
+                              className="px-2 py-1 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded text-[11px] font-bold transition-colors cursor-pointer"
+                              title="Cancel (Esc)"
+                            >
+                              ✕
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-2 group">
+                            <button
+                              type="button"
+                              onClick={() => handleStartPriceEdit(p)}
+                              className="text-left font-bold font-sans text-gray-900 dark:text-gray-100 hover:text-emerald-700 cursor-pointer flex items-center gap-1.5"
+                              title="Click to quickly edit price in real time"
+                            >
+                              <span>&pound;{p.price.toLocaleString()}</span>
+                              <span className="opacity-0 group-hover:opacity-100 text-[10px] text-gray-400 bg-gray-100 dark:bg-neutral-800 px-1 rounded transition-opacity">
+                                ✎ Edit
+                              </span>
+                            </button>
+                            {isJustSaved && (
+                              <span className="text-[10px] font-medium text-emerald-600 animate-fadeIn">
+                                Saved!
+                              </span>
+                            )}
+                          </div>
+                        )}
+                      </td>
+
+                      {/* SKU & Metal */}
+                      <td className="py-2.5 px-4 font-mono text-[11px] text-gray-500">
+                        <div>{p.sku || 'N/A'}</div>
+                        <div className="text-[10px] text-gray-400 font-sans">{p.metal}</div>
+                      </td>
+
+                      {/* Actions */}
+                      <td className="py-2.5 px-4 text-right">
+                        <div className="flex items-center justify-end gap-1.5">
+                          <button
+                            type="button"
+                            onClick={() => onStartEditProduct(p)}
+                            className="px-2.5 py-1 bg-gray-100 hover:bg-gray-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-gray-700 dark:text-gray-200 rounded text-[11px] font-medium transition-colors border border-gray-200 dark:border-neutral-700 flex items-center gap-1 cursor-pointer"
+                            title="Full Product Studio Edit"
+                          >
+                            <EditIcon className="w-3 h-3" />
+                            <span>Edit</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => onDeleteProduct(p.id, p.name)}
+                            className="px-2 py-1 hover:bg-rose-50 text-gray-400 hover:text-rose-600 rounded text-[11px] transition-colors cursor-pointer"
+                            title="Delete product"
+                          >
+                            <TrashIcon className="w-3 h-3" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>
