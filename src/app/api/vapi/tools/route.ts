@@ -25,9 +25,9 @@ interface ParsedToolCall {
 function isVapiAuthorized(request: Request): boolean {
   const configuredSecret = process.env.VAPI_SECRET_KEY || process.env.VAPI_WEBHOOK_SECRET;
 
-  // If no secret is configured in local development, allow requests but warn
+  // Fail-closed security: reject requests if secret is not configured
   if (!configuredSecret) {
-    return true;
+    return false;
   }
 
   // 1. Check Authorization: Bearer <secret>

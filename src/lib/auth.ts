@@ -153,17 +153,13 @@ export async function getSessionUser(request?: Request | NextRequest): Promise<S
 export async function requireAdmin(
   request?: Request | NextRequest
 ): Promise<{ authorized: boolean; user: SessionUser | null; errorResponse?: NextResponse }> {
-  // Support direct admin key authentication via header
+  // Support direct admin key authentication via header (must match configured ADMIN_PASSWORD)
   if (request) {
     const adminKey = request.headers.get('x-admin-key');
     const authHeader = request.headers.get('authorization');
-    const expectedKey = process.env.ADMIN_PASSWORD || 'admin123';
-    const isKeyValid =
-      (expectedKey && (adminKey === expectedKey || authHeader === `Bearer ${expectedKey}`)) ||
-      adminKey === 'admin123' ||
-      adminKey === 'BhaiAdmin@Bradford2026!';
+    const expectedKey = process.env.ADMIN_PASSWORD;
 
-    if (isKeyValid) {
+    if (expectedKey && (adminKey === expectedKey || authHeader === `Bearer ${expectedKey}`)) {
       return {
         authorized: true,
         user: {

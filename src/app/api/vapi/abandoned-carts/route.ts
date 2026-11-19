@@ -37,7 +37,8 @@ async function isAuthorized(request: Request): Promise<boolean> {
     return true;
   }
 
-  return !configuredSecret; // Allow local testing if secret not yet configured
+  // Fail-closed security: reject unauthorized requests when secret is absent or invalid
+  return false;
 }
 
 export async function GET(request: Request) {

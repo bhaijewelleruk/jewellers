@@ -113,19 +113,11 @@ export async function POST(request: Request) {
     let userCreatedAt = new Date().toISOString();
 
     // Secure Admin verification via env vars or database
-    const configuredAdminEmail = (process.env.ADMIN_EMAIL || 'admin@bhai.com').toLowerCase();
-    const configuredAdminPassword = process.env.ADMIN_PASSWORD || 'admin123';
+    const configuredAdminEmail = process.env.ADMIN_EMAIL ? process.env.ADMIN_EMAIL.toLowerCase() : null;
+    const configuredAdminPassword = process.env.ADMIN_PASSWORD;
 
-    const isAdminEmailMatch =
-      identifier === configuredAdminEmail ||
-      identifier === 'admin@bhai.com' ||
-      identifier === 'admin' ||
-      identifier === 'admin@bhaijeweller.com';
-
-    const isAdminPasswordMatch =
-      password === configuredAdminPassword ||
-      password === 'admin123' ||
-      password === 'BhaiAdmin@Bradford2026!';
+    const isAdminEmailMatch = configuredAdminEmail && identifier === configuredAdminEmail;
+    const isAdminPasswordMatch = configuredAdminPassword && password === configuredAdminPassword;
 
     if (isAdminEmailMatch && isAdminPasswordMatch) {
       isAuthenticated = true;
