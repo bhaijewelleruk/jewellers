@@ -15,16 +15,16 @@ const NO_CACHE_HEADERS = {
 };
 
 let SERVER_HERO_CONFIG = {
-  brandPretitle: 'BHAI JEWELLER',
-  headlineLine1: 'Jewellery, made',
-  headlineLine2: 'unforgettable',
-  headlineLine3: '',
-  description: 'Timeless pieces for modern souls. Discover fine jewellery designed to celebrate your most precious moments.',
+  brandPretitle: 'TIMELESS ELEGANCE',
+  headlineLine1: 'Jewellery',
+  headlineLine2: 'that tells your',
+  headlineLine3: 'story',
+  description: 'Discover fine jewellery designed to celebrate your most precious moments.',
   primaryCtaText: 'Shop Collection',
   primaryCtaHref: '/shop',
-  heroImage: '/images/hero-img.jpg',
-  featuredTitle: 'Diamond Elegance',
-  featuredSubtitle: 'Classic pieces, endless beauty.',
+  heroImage: '/hero-bg.png',
+  featuredTitle: 'Diamond Elegance Ring',
+  featuredSubtitle: 'Handcrafted in 21ct Gold with certified diamond.',
   featuredImage: '/images/featured-ring.jpg',
 };
 

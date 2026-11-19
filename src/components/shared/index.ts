@@ -13,3 +13,4 @@ export { MobileBottomNav } from './MobileBottomNav';
 export { AppShell } from './AppShell';
 export { ScrollReveal } from './ScrollReveal';
 export { ProductReviews } from './ProductReviews';
+export { default as TextLoop } from './TextLoop/TextLoop';

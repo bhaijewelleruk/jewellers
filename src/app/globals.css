@@ -1,8 +1,9 @@
 @import "tailwindcss";
 
 @theme {
-  --font-serif: var(--font-serif), Georgia, serif;
-  --font-sans: var(--font-sans), system-ui, sans-serif;
+  --font-serif: var(--font-sora), system-ui, sans-serif;
+  --font-sans: var(--font-sora), system-ui, sans-serif;
+  --font-script: var(--font-script), 'Alex Brush', cursive;
 }
 
 /* Prevent any horizontal overflow/scroll across the entire document */
@@ -39,8 +40,13 @@ html {
   background: #b38b40;
 }
 
-body {
-  font-family: var(--font-sans);
+html,
+body,
+button,
+input,
+select,
+textarea {
+  font-family: var(--font-sora), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 /* Hide scrollbar utility — used by horizontal product carousel */

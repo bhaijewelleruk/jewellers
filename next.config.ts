@@ -17,7 +17,9 @@ const nextConfig: NextConfig = {
 
   images: {
     // Allow Next.js to optimise local /public images (WebP/AVIF conversion + compression)
-    localPatterns: [{ pathname: '/images/**' }],
+    localPatterns: [
+      { pathname: '/**' },
+    ],
     formats: ['image/avif', 'image/webp'],
     // Cache optimised images for 7 days on the CDN
     minimumCacheTTL: 60 * 60 * 24 * 7,

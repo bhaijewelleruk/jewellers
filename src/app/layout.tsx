@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Cormorant_Garamond, Plus_Jakarta_Sans } from 'next/font/google';
+import { Sora, Bodoni_Moda, Alex_Brush } from 'next/font/google';
 import { SITE_CONFIG, SITE_URL } from '@/lib/constants';
 import { getCanonicalUrl } from '@/lib/utils';
 import { JsonLd } from '@/components/seo/JsonLd';
@@ -15,18 +15,26 @@ export const viewport: Viewport = {
   themeColor: '#120e0b',
 };
 
-const serifFont = Cormorant_Garamond({
-  variable: '--font-serif',
+const soraFont = Sora({
+  variable: '--font-sora',
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
+  weight: ['300', '400', '500', '600', '700', '800'],
   display: 'swap',
-  preload: true,  // LCP font — fetch in parallel with HTML
+  preload: true,
 });
 
-const sansFont = Plus_Jakarta_Sans({
-  variable: '--font-sans',
+const bodoniFont = Bodoni_Moda({
+  variable: '--font-serif',
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600'],  // only weights actually used
+  style: ['normal', 'italic'],
+  weight: ['400', '500', '600', '700', '800', '900'],
+  display: 'swap',
+});
+
+const scriptFont = Alex_Brush({
+  variable: '--font-script',
+  subsets: ['latin'],
+  weight: ['400'],
   display: 'swap',
 });
 
@@ -73,7 +81,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en-GB" className={`${serifFont.variable} ${sansFont.variable} overflow-x-hidden`} suppressHydrationWarning>
+    <html lang="en-GB" className={`${soraFont.variable} ${bodoniFont.variable} ${scriptFont.variable} overflow-x-hidden`} suppressHydrationWarning>
       <body
         className="min-h-screen antialiased flex flex-col bg-[#120e0b] text-[#fbf8f5] selection:bg-[#d8bb93]/30 selection:text-[#fbf8f5] overflow-x-hidden w-full max-w-full"
         suppressHydrationWarning

@@ -271,11 +271,12 @@ export async function sendCheckoutLinkMessage(
       code: 'MESSAGING_NOT_CONFIGURED',
       message: 'No messaging provider is configured.',
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : 'Messaging delivery encountered an unexpected error.';
     return {
       success: false,
       code: 'PROVIDER_EXCEPTION',
-      message: error.message || 'Messaging delivery encountered an unexpected error.',
+      message: msg,
     };
   }
 }

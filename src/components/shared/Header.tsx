@@ -33,10 +33,21 @@ export function Header({
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isScrolled, setIsScrolled] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const { cartCount, wishlistCount, products } = useShop();
   const router = useRouter();
   const pathname = usePathname();
+
+  // Track window scroll to make floating header sticky
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Focus input when search opens
   useEffect(() => {
@@ -105,48 +116,41 @@ export function Header({
 
   const navLinks = [
     { name: 'Home', href: '/' },
-    { name: 'Categories', href: '/categories' },
+    { name: 'Categories', href: '/categories', hasDropdown: true },
     { name: 'Shop All', href: '/shop' },
     { name: 'Rings', href: '/shop?category=Rings' },
     { name: 'Necklaces', href: '/shop?category=Necklaces' },
     { name: 'Earrings', href: '/shop?category=Earrings' },
-    { name: 'Our Story', href: '/about' },
-    { name: 'Contact', href: '/contact' },
   ];
 
+  const isHomeActive = pathname === '/';
 
   return (
     <>
       <header
         className={`${
-          isRelative ? 'relative' : 'absolute top-0 md:top-[37px]'
-        } left-0 w-full max-w-full z-40 transition-all duration-300 ${
-          drawerOpen ? 'opacity-0 pointer-events-none md:opacity-100 md:pointer-events-auto' : ''
+          isRelative
+            ? 'relative w-full z-40'
+            : `relative w-full z-40 bg-transparent ${
+                solidBg ? '' : '-mb-16 md:mb-0'
+              } md:fixed md:left-0 md:max-w-full md:pointer-events-none md:transition-all md:duration-300 md:ease-out ${
+                isScrolled
+                  ? 'md:top-2 md:sm:top-3.5'
+                  : 'md:top-[33px] md:sm:top-[35px] md:top-[37px]'
+              }`
         } ${
-          solidBg || isSearchOpen
-            ? 'bg-[#140f0c] shadow-lg border-b border-[#2a2018]'
-            : 'bg-gradient-to-b from-[#140f0c]/90 via-[#140f0c]/50 to-transparent'
+          drawerOpen ? 'opacity-0 pointer-events-none md:opacity-100 md:pointer-events-auto' : ''
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16 h-16 sm:h-20 md:h-24 flex items-center justify-between">
-
-          {/* ── SEARCH OPEN MODE (Full Header Search Bar + Live Dropdown) ── */}
-          {isSearchOpen ? (
-            <div className="w-full flex items-center justify-between gap-3 animate-fadeIn">
-
+        {/* ── SEARCH OPEN MODE (Full Header Glass Search Bar + Live Dropdown) ── */}
+        {isSearchOpen ? (
+          <div className="w-full bg-[#140e0b]/95 backdrop-blur-2xl border-b border-white/10 shadow-2xl py-3 px-4 sm:px-8 pointer-events-auto">
+            <div className="max-w-6xl mx-auto flex items-center justify-between gap-3 animate-fadeIn">
               {/* Logo (Desktop only when search is open) */}
-              <Link href="/" onClick={() => setIsSearchOpen(false)} className="hidden md:flex items-center gap-2.5 flex-shrink-0 group">
-                <div className="w-8 h-8 rounded-full border border-[#d8bb93]/60 bg-[#1e1713] flex items-center justify-center">
-                  <span className="font-serif text-base text-[#dec29b] italic font-semibold">B</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="font-serif text-sm tracking-[0.2em] text-[#f5efe8]">
-                    {brandName}
-                  </span>
-                  <span className="text-[7.5px] tracking-[0.3em] text-[#c0b0a0] uppercase">
-                    — {brandSubline} —
-                  </span>
-                </div>
+              <Link href="/" onClick={() => setIsSearchOpen(false)} className="hidden md:flex items-center flex-shrink-0 group">
+                <span className="text-sm tracking-[0.24em] text-[#f5efe8] font-semibold uppercase group-hover:text-[#dec29b] transition-colors whitespace-nowrap">
+                  {brandName}
+                </span>
               </Link>
 
               {/* Expanded Search Bar Form */}
@@ -183,82 +187,105 @@ export function Header({
                   setSearchQuery('');
                 }}
                 aria-label="Close search"
-                className="flex-shrink-0 px-3 py-1.5 rounded-full border border-[#3d2e24] text-[#d8bb93] hover:text-white hover:bg-[#2a2018] transition-all flex items-center gap-1.5 text-xs font-light"
+                className="flex-shrink-0 px-3.5 py-1.5 rounded-full border border-white/15 text-[#d8bb93] hover:text-white hover:bg-white/10 transition-all flex items-center gap-1.5 text-xs font-light cursor-pointer"
               >
                 <span>Close</span>
                 <svg className="w-3.5 h-3.5 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
-
             </div>
-          ) : (
-            /* ── NORMAL HEADER MODE ── */
-            <>
-              {/* Left: Mobile Hamburger Button */}
+          </div>
+        ) : (
+          /* ── NORMAL HEADER: Transparent & In-Flow on Mobile; Floating Glass Capsule on Desktop ── */
+          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-0 md:pt-2.5 md:sm:pt-3 pointer-events-auto">
+            <div
+              className={`w-full transition-all duration-300 flex items-center justify-between gap-2 sm:gap-4 py-3 md:py-2 ${
+                solidBg
+                  ? 'bg-[#140e0b] md:bg-[#140e0b]/90 md:rounded-full md:backdrop-blur-2xl md:border md:border-white/15 md:shadow-[0_12px_45px_rgba(0,0,0,0.75)] md:px-6'
+                  : isScrolled
+                  ? 'bg-transparent md:bg-[#140e0b]/90 md:rounded-full md:backdrop-blur-2xl md:border md:border-white/15 md:shadow-[0_12px_45px_rgba(0,0,0,0.75)] md:px-6'
+                  : 'bg-transparent md:bg-[#160f0b]/70 md:rounded-full md:backdrop-blur-xl md:border md:border-white/10 md:shadow-[0_10px_35px_rgba(0,0,0,0.6)] md:px-6'
+              }`}
+            >
+              {/* Left: Mobile Menu Toggle Button */}
               <div className="flex items-center md:hidden">
                 <button
                   type="button"
                   onClick={() => setDrawerOpen(true)}
                   aria-label="Open navigation menu"
-                  className="text-[#f5efe8] hover:text-[#d8bb93] p-1.5 -ml-1 transition-colors"
+                  className="text-[#f5efe8] hover:text-[#dec29b] p-1.5 -ml-1 transition-colors"
                 >
-                  <svg className="w-6 h-6 stroke-[1.8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 stroke-[1.8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5M3.75 17.25h16.5" />
                   </svg>
                 </button>
               </div>
 
-              {/* Center (Mobile) / Left (Desktop): Brand Logo */}
-              <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group mx-auto md:mx-0">
-                <div className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center border border-[#d8bb93]/60 rounded-full bg-[#1e1713]/80 backdrop-blur-sm group-hover:border-[#d8bb93] shadow-sm transition-colors">
-                  <span className="font-serif text-base sm:text-lg text-[#dec29b] italic font-semibold leading-none select-none">
-                    B
-                  </span>
-                </div>
-
-                <div className="flex flex-col text-center md:text-left">
-                  <span className="font-serif text-base sm:text-lg lg:text-xl tracking-[0.24em] text-[#f5efe8] font-normal leading-tight group-hover:text-[#dec29b] transition-colors">
+              {/* Left Brand Name */}
+              <div className="flex items-center">
+                <Link href="/" className="flex items-center group">
+                  <span className="text-xs sm:text-sm tracking-[0.24em] text-[#fbf8f5] font-semibold uppercase group-hover:text-[#dec29b] transition-colors whitespace-nowrap">
                     {brandName}
                   </span>
-                  <span className="text-[8px] sm:text-[9px] tracking-[0.38em] text-[#c0b0a0] font-light uppercase">
-                    — {brandSubline} —
-                  </span>
-                </div>
-              </Link>
+                </Link>
 
-              {/* Desktop Navigation Links */}
-              <nav className="hidden md:flex items-center gap-7 lg:gap-9">
-              {navLinks.slice(0, 6).map((link) => {
-                const isActive = pathname === link.href;
-                return (
-                  <Link
-                    key={link.name}
-                    href={link.href}
-                    aria-current={isActive ? 'page' : undefined}
-                    className="text-[#e2dad1] hover:text-[#d8bb93] text-sm tracking-wide font-normal transition-colors duration-200 relative group py-1"
-                  >
-                    {link.name}
-                    <span
-                      className={`absolute bottom-0 left-0 h-[1.5px] bg-[#d8bb93] transition-all duration-300 ${
-                        isActive ? 'w-full' : 'w-0 group-hover:w-full'
+                {/* Thin Vertical Divider (Desktop) */}
+                <span className="h-4 w-[1px] bg-white/15 mx-3 sm:mx-4 hidden lg:block" aria-hidden="true" />
+              </div>
+
+              {/* Center Navigation Links (Editorial Pill Luxury) */}
+              <nav className="hidden md:flex items-center gap-1 lg:gap-2">
+                {navLinks.map((link) => {
+                  const isCurrent = link.name === 'Home' ? isHomeActive : pathname === link.href;
+
+                  if (link.name === 'Home') {
+                    return (
+                      <Link
+                        key={link.name}
+                        href={link.href}
+                        className={`px-4 py-1.5 rounded-full text-xs sm:text-[13px] font-medium transition-all duration-300 ${
+                          isHomeActive
+                            ? 'bg-[#f3dfc8] text-[#1c140e] shadow-sm font-semibold'
+                            : 'text-[#ded5cb] hover:text-white hover:bg-white/5'
+                        }`}
+                      >
+                        {link.name}
+                      </Link>
+                    );
+                  }
+
+                  return (
+                    <Link
+                      key={link.name}
+                      href={link.href}
+                      className={`px-3 py-1.5 rounded-full text-xs sm:text-[13px] font-normal transition-all duration-200 inline-flex items-center gap-1 ${
+                        isCurrent
+                          ? 'text-[#f3dfc8] font-medium'
+                          : 'text-[#ded5cb] hover:text-[#f3dfc8] hover:bg-white/5'
                       }`}
-                    />
-                  </Link>
-                );
-              })}
+                    >
+                      <span>{link.name}</span>
+                      {link.hasDropdown && (
+                        <svg className="w-2.5 h-2.5 opacity-60 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                        </svg>
+                      )}
+                    </Link>
+                  );
+                })}
               </nav>
 
-              {/* Right Utility Icons */}
-              <div className="flex items-center gap-3.5 sm:gap-5 text-[#f5efe8]">
+              {/* Right Utility Icons (Search, Wishlist, Account, Cart) */}
+              <div className="flex items-center gap-2 sm:gap-3 text-[#ded5cb]">
                 {/* Search Icon */}
                 <button
                   type="button"
                   onClick={() => setIsSearchOpen(true)}
                   aria-label="Search jewellery"
-                  className="hover:text-[#d8bb93] transition-colors p-1"
+                  className="hover:text-[#f3dfc8] transition-colors p-1.5 rounded-full hover:bg-white/5 cursor-pointer"
                 >
-                  <svg className="w-5 h-5 stroke-[1.7]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 sm:w-[18px] sm:h-[18px] stroke-[1.8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                   </svg>
                 </button>
@@ -267,30 +294,14 @@ export function Header({
                 <Link
                   href="/wishlist"
                   aria-label="Wishlist"
-                  className="hidden md:block relative hover:text-[#d8bb93] transition-colors p-1"
+                  className="relative hover:text-[#f3dfc8] transition-colors p-1.5 rounded-full hover:bg-white/5"
                 >
-                  <svg className="w-5 h-5 stroke-[1.7]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 sm:w-[18px] sm:h-[18px] stroke-[1.8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
                   </svg>
                   {wishlistCount > 0 && (
-                    <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#dec29b] text-[#1c1510] font-bold text-[9px] rounded-full flex items-center justify-center shadow-md">
+                    <span className="absolute 0 top-0.5 right-0.5 w-3.5 h-3.5 bg-[#dec29b] text-[#1c1510] font-bold text-[8.5px] rounded-full flex items-center justify-center shadow-xs">
                       {wishlistCount}
-                    </span>
-                  )}
-                </Link>
-
-                {/* Shopping Bag Icon */}
-                <Link
-                  href="/cart"
-                  aria-label="Shopping bag"
-                  className="hidden md:block relative hover:text-[#d8bb93] transition-colors p-1"
-                >
-                  <svg className="w-5 h-5 stroke-[1.7]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25c-.669 0-1.189-.578-1.119-1.243l1.263-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-                  </svg>
-                  {cartCount > 0 && (
-                    <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#dec29b] text-[#1c1510] font-bold text-[9px] rounded-full flex items-center justify-center shadow-md">
-                      {cartCount}
                     </span>
                   )}
                 </Link>
@@ -299,23 +310,35 @@ export function Header({
                 <Link
                   href="/account"
                   aria-label="User Account"
-                  className="hidden md:block hover:text-[#d8bb93] transition-colors p-1"
+                  className="hover:text-[#f3dfc8] transition-colors p-1.5 rounded-full hover:bg-white/5"
                 >
-                  <svg className="w-5 h-5 stroke-[1.7]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 sm:w-[18px] sm:h-[18px] stroke-[1.8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
                   </svg>
                 </Link>
+
+                {/* Shopping Bag / Cart Icon with pill counter */}
+                <Link
+                  href="/cart"
+                  aria-label="Shopping bag"
+                  className="relative hover:text-[#f3dfc8] transition-colors p-1.5 rounded-full hover:bg-white/5 flex items-center"
+                >
+                  <svg className="w-4 h-4 sm:w-[18px] sm:h-[18px] stroke-[1.8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25c-.669 0-1.189-.578-1.119-1.243l1.263-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                  </svg>
+                  <span className="absolute 0 top-0.5 right-0.5 w-3.5 h-3.5 bg-[#dec29b] text-[#1c1510] font-bold text-[8.5px] rounded-full flex items-center justify-center shadow-xs">
+                    {cartCount}
+                  </span>
+                </Link>
               </div>
-            </>
-          )}
+            </div>
+          </div>
+        )}
 
-        </div>
-
-        {/* ── LIVE SEARCH RESULTS DRAWER & QUICK TAGS OVERLAY ── */}
+        {/* ── LIVE SEARCH RESULTS OVERLAY ── */}
         {isSearchOpen && (
           <div className="w-full bg-[#16100d] border-b border-[#2e231b] shadow-2xl animate-fadeIn text-[#f5efe8]">
-            <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16 py-5 sm:py-6">
-
+            <div className="max-w-6xl mx-auto px-4 sm:px-8 py-5">
               {/* Trending Quick Search Tags */}
               <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide text-xs">
                 <span className="text-[11px] text-[#9e8d7d] uppercase tracking-wider font-medium mr-1 whitespace-nowrap">
@@ -326,7 +349,7 @@ export function Header({
                     key={tag}
                     type="button"
                     onClick={() => handleTagClick(tag)}
-                    className="px-3 py-1 rounded-full bg-[#241a14] hover:bg-[#dec29b] text-[#d4c5b5] hover:text-[#140e0b] border border-[#3b2c21] hover:border-[#dec29b] transition-all text-xs font-light whitespace-nowrap active:scale-95"
+                    className="px-3 py-1 rounded-full bg-[#241a14] hover:bg-[#dec29b] text-[#d4c5b5] hover:text-[#140e0b] border border-[#3b2c21] hover:border-[#dec29b] transition-all text-xs font-light whitespace-nowrap active:scale-95 cursor-pointer"
                   >
                     {tag}
                   </button>
@@ -344,7 +367,7 @@ export function Header({
                       <button
                         type="button"
                         onClick={() => handleSearchSubmit()}
-                        className="text-xs text-[#dec29b] hover:underline font-light"
+                        className="text-xs text-[#dec29b] hover:underline font-light cursor-pointer"
                       >
                         View all in Shop →
                       </button>
@@ -398,13 +421,12 @@ export function Header({
                   )}
                 </div>
               )}
-
             </div>
           </div>
         )}
       </header>
 
-      {/* Backdrop overlay when search is open (hides rest of page under dark overlay) */}
+      {/* Backdrop overlay when search is open */}
       {isSearchOpen && (
         <div
           className="fixed inset-0 bg-black/75 backdrop-blur-md z-30 animate-fadeIn"
@@ -416,40 +438,29 @@ export function Header({
         />
       )}
 
-      {/* ── Mobile Side Navigation Drawer (Slides OVER EVERYTHING including BottomNav - Pure White Theme) ── */}
+      {/* ── Mobile Side Navigation Drawer ── */}
       {drawerOpen && (
         <div className="fixed inset-0 z-[100] md:hidden">
-          {/* Backdrop overlay */}
           <div
             className="fixed inset-0 bg-black/75 backdrop-blur-sm transition-opacity duration-300 z-[100]"
             onClick={() => setDrawerOpen(false)}
             aria-hidden="true"
           />
 
-          {/* Drawer Content - Ultra-Luxury Pure White */}
           <div className="fixed top-0 left-0 bottom-0 w-[86%] max-w-[340px] bg-white text-[#1c1510] border-r border-[#e8ded4] shadow-2xl flex flex-col z-[101] animate-slideRight">
-
-            {/* Drawer Header: Brand + Close button */}
+            {/* Drawer Header */}
             <div className="p-5 border-b border-[#f0e6dc] flex items-center justify-between bg-white">
-              <Link href="/" onClick={() => setDrawerOpen(false)} className="flex items-center gap-2.5">
-                <div className="w-8.5 h-8.5 rounded-full border border-[#d8bb93] bg-[#1c1510] flex items-center justify-center shadow-xs">
-                  <span className="font-serif text-sm text-[#dec29b] italic font-semibold">B</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="font-serif text-sm tracking-[0.2em] text-[#1c1510] font-medium leading-tight">
-                    {brandName}
-                  </span>
-                  <span className="text-[8px] tracking-[0.3em] text-[#8c7a6b] uppercase">
-                    — {brandSubline} —
-                  </span>
-                </div>
+              <Link href="/" onClick={() => setDrawerOpen(false)} className="flex items-center">
+                <span className="text-sm tracking-[0.22em] text-[#1c1510] font-semibold uppercase leading-tight">
+                  {brandName}
+                </span>
               </Link>
 
               <button
                 type="button"
                 onClick={() => setDrawerOpen(false)}
                 aria-label="Close menu"
-                className="w-8.5 h-8.5 rounded-full bg-[#faf7f2] border border-[#e8ded4] flex items-center justify-center text-[#1c1510] hover:bg-[#1c1510] hover:text-white transition-all shadow-2xs"
+                className="w-8.5 h-8.5 rounded-full bg-[#faf7f2] border border-[#e8ded4] flex items-center justify-center text-[#1c1510] hover:bg-[#1c1510] hover:text-white transition-all cursor-pointer shadow-2xs"
               >
                 <svg className="w-4 h-4 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -457,7 +468,7 @@ export function Header({
               </button>
             </div>
 
-            {/* Search Input inside Drawer - Triggers full width search mode */}
+            {/* Search Input inside Drawer */}
             <div className="px-5 pt-4 pb-2 bg-white">
               <button
                 type="button"
@@ -501,10 +512,10 @@ export function Header({
                 </p>
                 <div className="grid grid-cols-2 gap-2">
                   {[
-                    { name: 'Rings', href: '/collections' },
-                    { name: 'Necklaces', href: '/collections' },
-                    { name: 'Earrings', href: '/collections' },
-                    { name: 'Bracelets', href: '/collections' },
+                    { name: 'Rings', href: '/shop?category=Rings' },
+                    { name: 'Necklaces', href: '/shop?category=Necklaces' },
+                    { name: 'Earrings', href: '/shop?category=Earrings' },
+                    { name: 'Bracelets', href: '/shop?category=Bracelets' },
                   ].map((cat) => (
                     <Link
                       key={cat.name}
@@ -537,14 +548,6 @@ export function Header({
                   </div>
                   <span>+44 (0) 1274 000 000</span>
                 </div>
-                <div className="flex items-center gap-2.5">
-                  <div className="w-6 h-6 rounded-full bg-[#f0e6d8] flex items-center justify-center text-[#9e7d56] flex-shrink-0">
-                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
-                    </svg>
-                  </div>
-                  <span>info@bhaijeweller.co.uk</span>
-                </div>
               </div>
             </div>
 
@@ -556,7 +559,6 @@ export function Header({
                 <Link href="/contact" onClick={() => setDrawerOpen(false)} className="hover:text-[#9e7d56]">Support</Link>
               </div>
             </div>
-
           </div>
         </div>
       )}

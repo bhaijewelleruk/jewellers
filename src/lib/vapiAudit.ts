@@ -1,5 +1,3 @@
-import { createClient } from '@supabase/supabase-js';
-
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
 import { supabase as defaultSupabase } from '@/lib/supabase';
 
@@ -19,7 +17,7 @@ export interface VapiAuditLogEntry {
 }
 
 // In-memory fallback audit store
-let SERVER_VAPI_LOGS: VapiAuditLogEntry[] = [];
+const SERVER_VAPI_LOGS: VapiAuditLogEntry[] = [];
 
 /**
  * Sanitizes an object to ensure sensitive credentials (passwords, tokens, secret keys)

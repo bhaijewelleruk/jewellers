@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
 import { hashPassword, signSession, SESSION_COOKIE_NAME } from '@/lib/auth';
 import { sanitizeString, sanitizeEmail, sanitizePhone } from '@/lib/sanitize';
 import { checkRateLimit, getClientIp } from '@/lib/rateLimit';
@@ -87,7 +86,7 @@ export async function POST(request: Request) {
     const userId = `usr-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
     const hashedPassword = hashPassword(password);
     // Security: New registrations are ALWAYS client role. Admin privileges cannot be self-assigned.
-    const role: 'client' = 'client';
+    const role = 'client' as const;
 
     if (supabase) {
       const { error } = await supabase.from('users').insert({

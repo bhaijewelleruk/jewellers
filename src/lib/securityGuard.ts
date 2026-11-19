@@ -95,7 +95,7 @@ export function validateRequestSecurity(
 /**
  * Checks for honeypot bot trap values in submitted form bodies
  */
-export function isBotSubmission(body: Record<string, any>): boolean {
+export function isBotSubmission(body: Record<string, unknown>): boolean {
   if (!body || typeof body !== 'object') return false;
 
   // Common honeypot field names hidden from real users

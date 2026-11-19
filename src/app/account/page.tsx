@@ -6,13 +6,50 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import ScrollReveal from '@/components/shared/ScrollReveal';
 
+type AccountTab = 'account' | 'orders' | 'addresses' | 'payments' | 'settings';
+
+interface AccountOrder {
+  id: string;
+  customer?: string;
+  email?: string;
+  amount: number;
+  status: string;
+  date: string;
+  items: string;
+  address?: string;
+  paymentMethod?: string;
+}
+
+interface AccountAddress {
+  id: string;
+  title: string;
+  name: string;
+  street: string;
+  city: string;
+  postcode: string;
+  country: string;
+  phone?: string;
+  isDefault?: boolean;
+}
+
+interface AccountPaymentMethod {
+  id: string;
+  holder: string;
+  cardNumber?: string;
+  last4?: string;
+  expiry: string;
+  cvv?: string;
+  brand?: string;
+  type?: string;
+  isDefault?: boolean;
+  cardColor?: string;
+}
+
 export default function AccountPage() {
   const router = useRouter();
 
   // Active Tab State (Wishlist & Returns removed as requested)
-  const [activeTab, setActiveTab] = useState<
-    'account' | 'orders' | 'addresses' | 'payments' | 'settings'
-  >('account');
+  const [activeTab, setActiveTab] = useState<AccountTab>('account');
 
   // User Session State (Connected to real database session)
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -31,13 +68,13 @@ export default function AccountPage() {
     role: 'client',
   });
 
-  const [realOrders, setRealOrders] = useState<any[]>([]);
+  const [realOrders, setRealOrders] = useState<AccountOrder[]>([]);
   const [ordersLoading, setOrdersLoading] = useState(true);
   const [orderSearchQuery, setOrderSearchQuery] = useState('');
   const [orderFilter, setOrderFilter] = useState<'all' | 'processing' | 'delivered'>('all');
 
   // Real Address State Management (Starts strictly empty: 0 hardcoded fake addresses)
-  const [addresses, setAddresses] = useState<any[]>([]);
+  const [addresses, setAddresses] = useState<AccountAddress[]>([]);
   const [showAddAddressModal, setShowAddAddressModal] = useState(false);
   const [newAddress, setNewAddress] = useState({
     title: 'Primary Residence',
@@ -50,7 +87,7 @@ export default function AccountPage() {
   });
 
   // Real Payment Methods State Management (Starts strictly empty: 0 hardcoded fake cards)
-  const [paymentMethods, setPaymentMethods] = useState<any[]>([]);
+  const [paymentMethods, setPaymentMethods] = useState<AccountPaymentMethod[]>([]);
   const [showAddPaymentModal, setShowAddPaymentModal] = useState(false);
   const [newCard, setNewCard] = useState({
     holder: '',
@@ -124,7 +161,7 @@ export default function AccountPage() {
                   setRealOrders(orderData.data);
                 } else {
                   const myOrders = orderData.data.filter(
-                    (o: any) => !o.email || o.email.toLowerCase() === userEmail.toLowerCase()
+                    (o: AccountOrder) => !o.email || o.email.toLowerCase() === userEmail.toLowerCase()
                   );
                   setRealOrders(myOrders);
                 }
@@ -155,10 +192,8 @@ export default function AccountPage() {
   const handleLogout = async () => {
     try {
       await fetch('/api/auth/logout', { method: 'POST' });
-      window.location.href = '/login';
-    } catch (err) {
-      window.location.href = '/login';
-    }
+    } catch {}
+    router.push('/login');
   };
 
   const handleAddAddress = (e: React.FormEvent) => {
@@ -504,7 +539,7 @@ export default function AccountPage() {
                 return (
                   <button
                     key={item.id}
-                    onClick={() => setActiveTab(item.id as any)}
+                    onClick={() => setActiveTab(item.id as AccountTab)}
                     className={`flex-shrink-0 px-4 py-2 rounded-full text-xs font-medium transition-all flex items-center gap-2 cursor-pointer ${
                       isActive
                         ? 'bg-[#1c1510] text-[#f5efe8] shadow-sm'
@@ -546,7 +581,7 @@ export default function AccountPage() {
                 return (
                   <button
                     key={item.id}
-                    onClick={() => setActiveTab(item.id as any)}
+                    onClick={() => setActiveTab(item.id as AccountTab)}
                     className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-xs font-light transition-all cursor-pointer ${
                       isActive
                         ? 'bg-[#ede4d8] text-[#1c1510] font-medium shadow-2xs border border-[#ded3c5]/60'
@@ -848,7 +883,7 @@ export default function AccountPage() {
                           }
                           return true;
                         })
-                        .map((ord: any) => (
+                        .map((ord: AccountOrder) => (
                           <div key={ord.id} className="border border-[#ded3c5] rounded-2xl p-5 bg-white space-y-4 shadow-2xs hover:border-[#1c1510] transition-colors">
                             <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#ede4d8] pb-3">
                               <div className="flex items-center gap-3">

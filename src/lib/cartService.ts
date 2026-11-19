@@ -1,4 +1,3 @@
-import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
 import { SITE_URL } from './constants';
 
