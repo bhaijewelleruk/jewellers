@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { animate, stagger } from 'animejs';
 import ScrollReveal from '@/components/shared/ScrollReveal';
 
 type AccountTab = 'account' | 'orders' | 'addresses' | 'payments' | 'settings';
@@ -43,6 +44,106 @@ interface AccountPaymentMethod {
   type?: string;
   isDefault?: boolean;
   cardColor?: string;
+}
+
+function UnauthenticatedAccountView() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const headline = 'Sign In to Your Account';
+  const headlineWords = headline.split(' ');
+
+  useEffect(() => {
+    // Animate headline words in Sora font with Anime.js
+    animate('.account-anim-word', {
+      translateY: [35, 0],
+      opacity: [0, 1],
+      rotateZ: [2, 0],
+      delay: stagger(60, { start: 120 }),
+      duration: 850,
+      ease: 'outExpo',
+    });
+
+    // Animate subtitle, crest and buttons
+    animate('.account-anim-elem', {
+      translateY: [25, 0],
+      opacity: [0, 1],
+      delay: stagger(100, { start: 320 }),
+      duration: 800,
+      ease: 'outExpo',
+    });
+  }, []);
+
+  return (
+    <div
+      ref={containerRef}
+      className="relative w-full min-h-[92vh] sm:min-h-screen bg-[#0c0806] text-white flex flex-col items-center justify-center overflow-hidden px-5 py-24 select-none"
+    >
+      {/* ── Background Editorial Photography (Subtle & Dark) ── */}
+      <div className="absolute inset-0 w-full h-full z-0 pointer-events-none overflow-hidden">
+        <Image
+          src="/hero-bg.png"
+          alt="Bhai Jeweller Editorial"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center opacity-30 scale-105 pointer-events-none"
+        />
+        {/* Soft Luxury Gradients */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0c0806] via-[#0c0806]/80 to-[#0c0806]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(222,194,155,0.15)_0%,transparent_70%)]" />
+      </div>
+
+      {/* ── Content (Direct on full page, NO isolated black box) ── */}
+      <div className="relative z-10 max-w-2xl mx-auto text-center space-y-6 sm:space-y-8">
+        
+        {/* Gold Seal & Brand Pretitle */}
+        <div className="account-anim-elem opacity-0 space-y-3">
+          <div className="w-16 h-16 rounded-full bg-[#1c140f] border border-[#dec29b]/40 text-[#dec29b] flex items-center justify-center mx-auto shadow-[0_4px_25px_rgba(222,194,155,0.2)]">
+            <span className="text-2xl text-transparent bg-clip-text bg-gradient-to-b from-[#fbf3e8] to-[#dec29b]">✦</span>
+          </div>
+
+          <div className="flex items-center justify-center gap-3 pt-1">
+            <span className="w-8 sm:w-12 h-[1px] bg-gradient-to-r from-transparent to-[#dec29b]" />
+            <span className="text-[11px] sm:text-xs font-semibold tracking-[0.32em] uppercase text-[#dec29b]">
+              BHAI JEWELLER
+            </span>
+            <span className="w-8 sm:w-12 h-[1px] bg-gradient-to-l from-transparent to-[#dec29b]" />
+          </div>
+        </div>
+
+        {/* Main Headline in Sora Font with Animation */}
+        <h1 className="font-sans text-3xl sm:text-5xl md:text-6xl text-white font-normal leading-tight tracking-tight">
+          {headlineWords.map((word, i) => (
+            <span key={i} className="account-anim-word inline-block mr-2.5 sm:mr-3.5 opacity-0">
+              {word}
+            </span>
+          ))}
+        </h1>
+
+        {/* Subtitle in Sora Font */}
+        <p className="account-anim-elem opacity-0 font-sans text-xs sm:text-sm md:text-base text-[#c8bdb5] font-light leading-relaxed max-w-md mx-auto">
+          Your personal sanctuary for bespoke fine jewellery, real-time order tracking, and private collection previews.
+        </p>
+
+        {/* Action Buttons */}
+        <div className="account-anim-elem opacity-0 flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-5 pt-3 max-w-md mx-auto">
+          <Link
+            href="/login"
+            className="w-full sm:w-auto min-w-[200px] px-9 py-4 rounded-full bg-[#f3dfc8] hover:bg-white text-[#1c140e] font-semibold text-xs sm:text-sm tracking-wider uppercase shadow-[0_4px_25px_rgba(243,223,200,0.3)] hover:shadow-[0_6px_30px_rgba(255,255,255,0.45)] hover:scale-105 active:scale-95 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <span>Sign In</span>
+            <span className="text-sm sm:text-base transition-transform group-hover:translate-x-1">→</span>
+          </Link>
+          <Link
+            href="/signup"
+            className="w-full sm:w-auto min-w-[200px] px-8 py-3.5 sm:py-4 rounded-full border border-white/25 hover:border-[#f3dfc8] bg-white/[0.05] hover:bg-white/10 text-white hover:text-[#f3dfc8] font-medium text-xs sm:text-sm tracking-wider uppercase backdrop-blur-sm transition-all duration-300 flex items-center justify-center cursor-pointer"
+          >
+            <span>Create New Account</span>
+          </Link>
+        </div>
+
+      </div>
+    </div>
+  );
 }
 
 export default function AccountPage() {
@@ -382,48 +483,9 @@ export default function AccountPage() {
     );
   }
 
-  // ── AUTHENTICATION REQUIRED (NEW WINDOW / LOGGED OUT USERS) ──
+  // ── AUTHENTICATION REQUIRED (FULL PAGE SORA ANIMATED VIEW — NO FLOATING BOX) ──
   if (!isAuthenticated) {
-    return (
-      <div className="min-h-[85vh] bg-[#faf7f2] text-[#1c1510] flex items-center justify-center px-4 py-16">
-        <div className="max-w-md w-full bg-[#140e0b] border border-[#dec29b]/35 rounded-3xl p-8 sm:p-10 shadow-[0_24px_60px_rgba(0,0,0,0.45)] text-center space-y-6 relative overflow-hidden backdrop-blur-xl">
-          {/* Subtle Golden Ambient Glow */}
-          <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-48 h-48 bg-[#dec29b]/15 rounded-full blur-3xl pointer-events-none" />
-
-          <div className="w-14 h-14 rounded-full bg-[#1c140f] border border-[#dec29b]/50 text-[#dec29b] flex items-center justify-center mx-auto shadow-lg relative z-10">
-            <span className="text-xl">✦</span>
-          </div>
-
-          <div className="space-y-2 relative z-10">
-            <span className="text-[10px] tracking-[0.32em] uppercase text-[#dec29b] font-medium block">
-              BHAI JEWELLER
-            </span>
-            <h1 className="font-serif text-2xl sm:text-3xl font-normal text-white tracking-wide">
-              Sign In to Your Account
-            </h1>
-            <p className="text-xs text-[#c8bdb5] font-light leading-relaxed max-w-xs mx-auto">
-              Access your personal portal, order history, active deliveries, and saved jewellery.
-            </p>
-          </div>
-
-          <div className="space-y-3 pt-2 relative z-10">
-            <Link
-              href="/login"
-              className="w-full py-3.5 rounded-full bg-[#f3dfc8] hover:bg-white text-[#1c140e] font-semibold text-xs tracking-wider uppercase transition-all shadow-[0_4px_20px_rgba(243,223,200,0.25)] hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer"
-            >
-              <span>Sign In</span>
-              <span className="text-sm">→</span>
-            </Link>
-            <Link
-              href="/signup"
-              className="w-full py-3.5 rounded-full bg-white/[0.06] hover:bg-white/10 text-white font-medium text-xs tracking-wider uppercase transition-all border border-white/20 hover:border-[#dec29b]/50 flex items-center justify-center gap-2 cursor-pointer"
-            >
-              <span>Create New Account</span>
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
+    return <UnauthenticatedAccountView />;
   }
 
   // ── AUTHENTICATED USER VIEW ──
