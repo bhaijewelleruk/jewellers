@@ -66,22 +66,22 @@ export default function HomePage() {
           />
         </div>
 
-        {/* Mobile View: Balanced legible text, no overlapping, and smooth slow speed */}
+        {/* Mobile View: Taller ribbon, 3 clear phrases, larger bold font, and calm slow speed */}
         <div className="block sm:hidden">
           <TextLoop
-            text="BHAI JEWELLER ✦ BRITISH HALLMARKED GOLD ✦ 21CT & 18K FINE JEWELLERY ✦ CRAFTED WITH PASSION"
+            text="BHAI JEWELLER ✦ BRITISH HALLMARKED GOLD ✦ 21CT FINE JEWELLERY"
             separator="✦"
             shape="wave"
-            speed={26}
-            fontSize={30}
+            speed={24}
+            fontSize={38}
             fontWeight={600}
-            letterSpacing={3}
-            curviness={16}
+            letterSpacing={3.5}
+            curviness={20}
             ribbon={true}
             ribbonColor="#18110c"
             color="#f3dfc8"
-            ribbonWidth={90}
-            viewHeight={118}
+            ribbonWidth={115}
+            viewHeight={150}
             viewWidth={1200}
             draggable={true}
             scrollBoost={50}
