@@ -204,17 +204,18 @@ export function Header({
             </div>
           </div>
         ) : (
-          /* ── NORMAL HEADER: Transparent & In-Flow on Mobile; Floating Glass Capsule on Desktop ── */
-          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-0 md:pt-2.5 md:sm:pt-3 pointer-events-auto">
-            <div
-              className={`w-full transition-all duration-300 flex items-center justify-between gap-2 sm:gap-4 py-3 md:py-2 ${
-                solidBg
-                  ? 'bg-[#140e0b] md:bg-[#140e0b]/90 md:rounded-full md:backdrop-blur-2xl md:border md:border-white/15 md:shadow-[0_12px_45px_rgba(0,0,0,0.75)] md:px-6'
-                  : isScrolled
-                  ? 'bg-transparent md:bg-[#140e0b]/90 md:rounded-full md:backdrop-blur-2xl md:border md:border-white/15 md:shadow-[0_12px_45px_rgba(0,0,0,0.75)] md:px-6'
-                  : 'bg-transparent md:bg-[#160f0b]/70 md:rounded-full md:backdrop-blur-xl md:border md:border-white/10 md:shadow-[0_10px_35px_rgba(0,0,0,0.6)] md:px-6'
-              }`}
-            >
+          /* ── NORMAL HEADER: Full-Width on Mobile; Floating Glass Capsule on Desktop ── */
+          <div className={`w-full ${solidBg ? 'bg-[#140e0b] border-b border-white/5 md:border-b-0' : 'bg-transparent'} md:bg-transparent pointer-events-auto`}>
+            <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-0 md:pt-2.5 md:sm:pt-3">
+              <div
+                className={`w-full transition-all duration-300 flex items-center justify-between gap-2 sm:gap-4 py-3 md:py-2 ${
+                  solidBg
+                    ? 'bg-transparent md:bg-[#140e0b]/90 md:rounded-full md:backdrop-blur-2xl md:border md:border-white/15 md:shadow-[0_12px_45px_rgba(0,0,0,0.75)] md:px-6'
+                    : isScrolled
+                    ? 'bg-transparent md:bg-[#140e0b]/90 md:rounded-full md:backdrop-blur-2xl md:border md:border-white/15 md:shadow-[0_12px_45px_rgba(0,0,0,0.75)] md:px-6'
+                    : 'bg-transparent md:bg-[#160f0b]/70 md:rounded-full md:backdrop-blur-xl md:border md:border-white/10 md:shadow-[0_10px_35px_rgba(0,0,0,0.6)] md:px-6'
+                }`}
+              >
               {/* Left: Mobile Menu Toggle Button (Unique Asymmetrical Luxury Lines) */}
               <div className="flex items-center md:hidden">
                 <button
@@ -342,6 +343,7 @@ export function Header({
               </div>
             </div>
           </div>
+        </div>
         )}
 
         {/* ── LIVE SEARCH RESULTS OVERLAY ── */}

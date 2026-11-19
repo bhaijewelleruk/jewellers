@@ -131,6 +131,36 @@ textarea {
   animation: tabBounce 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
+@keyframes slideUpFade {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-slideUpFade {
+  animation: slideUpFade 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes shimmerText {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+.animate-shimmerText {
+  background: linear-gradient(90deg, #ffffff 0%, #f7e7ce 28%, #dfc39a 50%, #f7e7ce 72%, #ffffff 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmerText 6s linear infinite;
+}
+
 /* ── Ultra-Luxury Design Tokens & Utilities ── */
 .text-gold-gradient {
   background: linear-gradient(135deg, #f5ebd9 0%, #dec29b 45%, #b58d57 100%);

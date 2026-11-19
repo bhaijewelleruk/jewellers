@@ -58,28 +58,28 @@ export default function AuthHeroBanner({ isLogin, onSwitchMode }: AuthHeroBanner
         </div>
 
         {/* Dynamic Bottom Hero Quote with Crossfade */}
-        <div className="relative z-10 max-w-md min-h-[160px] flex flex-col justify-end">
+        <div className="relative z-10 max-w-lg min-h-[180px] flex flex-col justify-end">
           {isLogin ? (
-            <div key="login-quote" className="animate-fadeIn">
-              <p className="text-[10.5px] tracking-[0.32em] uppercase text-[#e3c79e] font-bold mb-2.5 drop-shadow-xs">
+            <div key="login-quote" className="animate-slideUpFade">
+              <p className="text-xs tracking-[0.32em] uppercase text-[#e3c79e] font-bold mb-3 drop-shadow-xs">
                 TIMELESS ELEGANCE
               </p>
-              <h2 className="font-serif text-3xl xl:text-4xl text-[#ffffff] font-semibold leading-[1.2] drop-shadow-md">
+              <h2 className="font-sans text-3xl sm:text-4xl xl:text-5xl text-white font-bold leading-[1.15] drop-shadow-md animate-shimmerText">
                 Your Story,<br />Adorned in Gold
               </h2>
-              <p className="text-xs xl:text-sm text-[#d6c9be] font-light mt-3 leading-relaxed">
+              <p className="text-sm xl:text-base text-[#d6c9be] font-light mt-3.5 leading-relaxed">
                 Discover fine jewellery pieces crafted for life&apos;s most precious moments.
               </p>
             </div>
           ) : (
-            <div key="signup-quote" className="animate-fadeIn">
-              <p className="text-[10.5px] tracking-[0.32em] uppercase text-[#e3c79e] font-bold mb-2.5 drop-shadow-xs">
+            <div key="signup-quote" className="animate-slideUpFade">
+              <p className="text-xs tracking-[0.32em] uppercase text-[#e3c79e] font-bold mb-3 drop-shadow-xs">
                 JOIN BHAI JEWELLER
               </p>
-              <h2 className="font-serif text-3xl xl:text-4xl text-[#ffffff] font-semibold leading-[1.2] drop-shadow-md">
+              <h2 className="font-sans text-3xl sm:text-4xl xl:text-5xl text-white font-bold leading-[1.15] drop-shadow-md animate-shimmerText">
                 Elegance Awaits<br />You
               </h2>
-              <p className="text-xs xl:text-sm text-[#d6c9be] font-light mt-3 leading-relaxed">
+              <p className="text-sm xl:text-base text-[#d6c9be] font-light mt-3.5 leading-relaxed">
                 Create your account and be the first to know about new collections, bespoke previews and private releases.
               </p>
             </div>

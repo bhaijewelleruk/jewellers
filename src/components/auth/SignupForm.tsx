@@ -96,19 +96,11 @@ export default function SignupForm({ onSwitchToLogin }: SignupFormProps) {
 
   return (
     <div className="w-full">
-      <div className="mb-5">
-        <div className="flex items-center gap-2 mb-2">
-          <div className="w-8 h-8 rounded-full border border-[#d8bb93] flex items-center justify-center bg-[#faf6ee] shadow-2xs">
-            <span className="font-serif text-sm text-[#9e7d56] font-semibold italic">B</span>
-          </div>
-          <span className="font-serif text-[11px] tracking-[0.25em] text-[#1c1510] uppercase font-normal">
-            BHAI JEWELLER
-          </span>
-        </div>
-        <h1 className="font-serif text-2xl sm:text-3xl text-[#1c1510] font-normal">
+      <div className="mb-5 sm:mb-6">
+        <h1 className="font-sans text-3xl sm:text-4xl text-[#1c1510] font-bold tracking-tight">
           Create Your Account
         </h1>
-        <p className="text-xs text-[#8a796c] font-light mt-1">
+        <p className="text-xs sm:text-sm text-[#8a796c] font-light mt-1.5">
           Join Bhai Jeweller and enjoy bespoke previews and private releases.
         </p>
       </div>

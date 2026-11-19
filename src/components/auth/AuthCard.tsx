@@ -201,30 +201,21 @@ export default function AuthCard({ initialMode = 'login' }: AuthCardProps) {
               </svg>
             </Link>
 
-            <Link href="/" className="flex items-center gap-2 px-3 py-1 rounded-full bg-black/40 backdrop-blur-md border border-[#dec29b]/50 shadow-sm">
-              <div className="w-5 h-5 rounded-full border border-[#dec29b] flex items-center justify-center bg-[#1a1410]">
-                <span className="font-serif text-[11px] text-[#dec29b] font-semibold leading-none">B</span>
-              </div>
-              <span className="font-serif text-[10.5px] tracking-[0.22em] text-[#f5efe8] uppercase font-light">
-                BHAI JEWELLER
-              </span>
-            </Link>
-
             <button
               type="button"
               onClick={() => switchMode(isLogin ? 'signup' : 'login')}
-              className="text-[11px] font-medium text-[#f5efe8] px-3 py-1 rounded-full bg-black/40 backdrop-blur-md border border-[#dec29b]/50 hover:text-[#dec29b] transition-colors shadow-sm cursor-pointer"
+              className="text-[11px] font-medium text-[#f5efe8] px-3.5 py-1.5 rounded-full bg-black/40 backdrop-blur-md border border-[#dec29b]/50 hover:text-[#dec29b] transition-colors shadow-sm cursor-pointer"
             >
               {isLogin ? 'Sign Up' : 'Log In'}
             </button>
           </div>
 
           {/* Dynamic Mobile Banner Quote */}
-          <div key={mode} className="relative z-10 px-6 pb-10 sm:pb-12 transition-all duration-500 animate-fadeIn">
-            <p className="text-[10px] sm:text-[11px] tracking-[0.32em] uppercase text-[#e3c79e] font-bold drop-shadow-xs">
+          <div key={mode} className="relative z-10 px-6 pb-10 sm:pb-12 transition-all duration-500 animate-slideUpFade">
+            <p className="text-[11px] sm:text-xs tracking-[0.32em] uppercase text-[#e3c79e] font-bold drop-shadow-xs">
               {isLogin ? 'WELCOME BACK' : 'JOIN THE FAMILY'}
             </p>
-            <h2 className="font-serif text-xl sm:text-2xl text-[#ffffff] font-semibold leading-tight mt-1 drop-shadow-md">
+            <h2 className="font-sans text-2xl sm:text-3xl text-white font-bold leading-tight mt-1.5 drop-shadow-md animate-shimmerText">
               {isLogin ? 'Your Story, Adorned in Gold' : 'Elegance Awaits You'}
             </h2>
           </div>
