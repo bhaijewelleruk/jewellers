@@ -42,13 +42,13 @@ export default function HomePage() {
 
       {/* ── Interactive GSAP Ribbon TextLoop (Responsive Desktop & Mobile) ── */}
       <div className="w-full overflow-hidden bg-[#0c0806] py-0 my-0 relative z-20">
-        {/* Desktop & Tablet View */}
+        {/* Desktop & Tablet View (Calm Slow Speed) */}
         <div className="hidden sm:block">
           <TextLoop
             text="BHAI JEWELLER ✦ BRITISH HALLMARKED GOLD ✦ 21CT & 18K FINE JEWELLERY ✦ CRAFTED WITH PASSION"
             separator="✦"
             shape="wave"
-            speed={75}
+            speed={28}
             fontSize={17}
             fontWeight={600}
             letterSpacing={2.2}
@@ -60,31 +60,31 @@ export default function HomePage() {
             viewHeight={54}
             viewWidth={1200}
             draggable={true}
-            scrollBoost={300}
+            scrollBoost={50}
             pauseOnHover={true}
             className="w-full select-none"
           />
         </div>
 
-        {/* Mobile View: Increased font size, larger ribbon height, and legible spacing */}
+        {/* Mobile View: Balanced legible text, no overlapping, and smooth slow speed */}
         <div className="block sm:hidden">
           <TextLoop
             text="BHAI JEWELLER ✦ BRITISH HALLMARKED GOLD ✦ 21CT & 18K FINE JEWELLERY ✦ CRAFTED WITH PASSION"
             separator="✦"
             shape="wave"
-            speed={50}
-            fontSize={13}
+            speed={26}
+            fontSize={30}
             fontWeight={600}
-            letterSpacing={1.6}
-            curviness={8}
+            letterSpacing={3}
+            curviness={16}
             ribbon={true}
             ribbonColor="#18110c"
             color="#f3dfc8"
-            ribbonWidth={34}
-            viewHeight={42}
-            viewWidth={390}
+            ribbonWidth={90}
+            viewHeight={118}
+            viewWidth={1200}
             draggable={true}
-            scrollBoost={200}
+            scrollBoost={50}
             pauseOnHover={true}
             className="w-full select-none"
           />

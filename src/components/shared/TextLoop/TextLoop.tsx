@@ -43,6 +43,7 @@ export interface TextLoopProps {
 interface Metrics {
   length: number;
   reps: number;
+  unitWidth: number;
   crossLength: number;
   crossReps: number;
 }
@@ -198,7 +199,7 @@ const TextLoop = ({
   const crossTailRef = useRef<SVGTextPathElement | null>(null);
   const progressRef = useRef(0);
 
-  const [metrics, setMetrics] = useState<Metrics>({ length: 0, reps: 1, crossLength: 0, crossReps: 1 });
+  const [metrics, setMetrics] = useState<Metrics>({ length: 0, reps: 1, unitWidth: 0, crossLength: 0, crossReps: 1 });
 
   const rawId = useId();
   const pathId = `text-loop-${rawId.replace(/[^a-zA-Z0-9_-]/g, '')}`;
@@ -264,11 +265,17 @@ const TextLoop = ({
       }
       if (!length) return;
 
-      const repsFor = (total: number) => (unitWidth > 0 ? Math.max(1, Math.round(total / unitWidth)) : 1);
-      const next = { length, reps: repsFor(length), crossLength, crossReps: repsFor(crossLength) };
+      const repsFor = (total: number) => {
+        if (unitWidth <= 0) return 1;
+        // Use Math.floor so text is never compressed into negative spacing
+        const r = Math.floor(total / unitWidth);
+        return Math.max(1, r);
+      };
+      const next = { length, reps: repsFor(length), unitWidth, crossLength, crossReps: repsFor(crossLength) };
       setMetrics(prev =>
         prev.length === next.length &&
         prev.reps === next.reps &&
+        prev.unitWidth === next.unitWidth &&
         prev.crossLength === next.crossLength &&
         prev.crossReps === next.crossReps
           ? prev
@@ -493,6 +500,8 @@ const TextLoop = ({
   const crossText = unit.repeat(metrics.crossReps);
   const fitLength = metrics.length || undefined;
   const crossFit = metrics.crossLength || undefined;
+  const shouldFit = Boolean(fitLength && metrics.unitWidth > 0 && fitLength >= metrics.unitWidth * metrics.reps);
+  const shouldCrossFit = Boolean(crossFit && metrics.unitWidth > 0 && crossFit >= metrics.unitWidth * metrics.crossReps);
   const paint = (ink: string, opacity: number): SVGProps<SVGTextElement> =>
     outline
       ? {
@@ -592,8 +601,8 @@ const TextLoop = ({
                 {...crossPaint}
                 dominantBaseline="central"
                 aria-hidden="true"
-                textLength={crossFit}
-                lengthAdjust="spacing"
+                textLength={shouldCrossFit ? crossFit : undefined}
+                lengthAdjust={shouldCrossFit ? "spacing" : undefined}
               >
                 <textPath ref={crossHeadRef} href={`#${crossId}`} startOffset={0}>
                   {crossText}
@@ -606,8 +615,8 @@ const TextLoop = ({
                 {...crossPaint}
                 dominantBaseline="central"
                 aria-hidden="true"
-                textLength={crossFit}
-                lengthAdjust="spacing"
+                textLength={shouldCrossFit ? crossFit : undefined}
+                lengthAdjust={shouldCrossFit ? "spacing" : undefined}
               >
                 <textPath ref={crossTailRef} href={`#${crossId}`} startOffset={0}>
                   {crossText}
@@ -652,8 +661,8 @@ const TextLoop = ({
               {...mainPaint}
               dominantBaseline="central"
               aria-hidden="true"
-              textLength={fitLength}
-              lengthAdjust="spacing"
+              textLength={shouldFit ? fitLength : undefined}
+              lengthAdjust={shouldFit ? "spacing" : undefined}
             >
               <textPath ref={headRef} href={`#${pathId}`} startOffset={0}>
                 {loopText}
@@ -666,8 +675,8 @@ const TextLoop = ({
               {...mainPaint}
               dominantBaseline="central"
               aria-hidden="true"
-              textLength={fitLength}
-              lengthAdjust="spacing"
+              textLength={shouldFit ? fitLength : undefined}
+              lengthAdjust={shouldFit ? "spacing" : undefined}
             >
               <textPath ref={tailRef} href={`#${pathId}`} startOffset={0}>
                 {loopText}
