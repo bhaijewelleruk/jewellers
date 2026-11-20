@@ -8,13 +8,14 @@ import { BullionProduct, INITIAL_GOLD_ITEMS } from "@/data/bullion-items";
 
 export default function GoldBarsPage() {
   const [rates, setRates] = useState(DEFAULT_RATES);
-  const [goldProducts] = useState<BullionProduct[]>(INITIAL_GOLD_ITEMS);
+  const [goldProducts, setGoldProducts] = useState<BullionProduct[]>(INITIAL_GOLD_ITEMS);
   const [lastUpdatedDisplay, setLastUpdatedDisplay] = useState("");
   const [filter, setFilter] = useState<"all" | "bar" | "coin">("all");
 
   useEffect(() => {
     setLastUpdatedDisplay(formatUKDateTime());
 
+    // Fetch live rates
     fetch(`/api/rates?t=${Date.now()}`, { cache: "no-store" })
       .then((res) => res.json())
       .then((data) => {
@@ -27,6 +28,16 @@ export default function GoldBarsPage() {
             currency: "GBP",
           });
           setLastUpdatedDisplay(formatUKDateTime(new Date(data.lastUpdated)));
+        }
+      })
+      .catch(() => {});
+
+    // Fetch live bullion items from database/store
+    fetch(`/api/bullion?metal=gold&t=${Date.now()}`, { cache: "no-store" })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && Array.isArray(data.items)) {
+          setGoldProducts(data.items);
         }
       })
       .catch(() => {});

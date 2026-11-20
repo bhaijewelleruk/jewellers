@@ -8,7 +8,7 @@ import { BullionProduct, INITIAL_SILVER_ITEMS } from "@/data/bullion-items";
 
 export default function SilverBullionPage() {
   const [rates, setRates] = useState(DEFAULT_RATES);
-  const [silverProducts] = useState<BullionProduct[]>(INITIAL_SILVER_ITEMS);
+  const [silverProducts, setSilverProducts] = useState<BullionProduct[]>(INITIAL_SILVER_ITEMS);
   const [lastUpdatedDisplay, setLastUpdatedDisplay] = useState("");
   const [filter, setFilter] = useState<"all" | "bar" | "coin">("all");
 
@@ -27,6 +27,16 @@ export default function SilverBullionPage() {
             currency: "GBP",
           });
           setLastUpdatedDisplay(formatUKDateTime(new Date(data.lastUpdated)));
+        }
+      })
+      .catch(() => {});
+
+    // Fetch live silver items
+    fetch(`/api/bullion?metal=silver&t=${Date.now()}`, { cache: "no-store" })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && Array.isArray(data.items)) {
+          setSilverProducts(data.items);
         }
       })
       .catch(() => {});

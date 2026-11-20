@@ -47,6 +47,7 @@ import EnquiriesTab, { AdminEnquiry } from '@/components/admin/tabs/EnquiriesTab
 import CustomersTab from '@/components/admin/tabs/CustomersTab';
 import GoldRatesTab from '@/components/admin/tabs/GoldRatesTab';
 import SettingsTab, { AnnouncementFormState } from '@/components/admin/tabs/SettingsTab';
+import BullionTab from '@/components/admin/tabs/BullionTab';
 
 export default function AdminDashboardPage() {
   const router = useRouter();
@@ -911,6 +912,18 @@ export default function AdminDashboardPage() {
 
   // Gold rates & store settings
   const [gold24kRate, setGold24kRate] = useState('24,500');
+  const [liveBullionRates, setLiveBullionRates] = useState({ gold: 87.9, silver: 1.04 });
+
+  useEffect(() => {
+    fetch('/api/rates')
+      .then((r) => r.json())
+      .then((d) => {
+        if (d && d.goldGbpPerGram) {
+          setLiveBullionRates({ gold: d.goldGbpPerGram, silver: d.silverGbpPerGram || 1.04 });
+        }
+      })
+      .catch(() => {});
+  }, []);
   const [gold22kRate, setGold22kRate] = useState('22,450');
   const [shippingThreshold, setShippingThreshold] = useState('500');
 
@@ -970,8 +983,14 @@ export default function AdminDashboardPage() {
       count: registeredUsers.length,
     },
     {
+      id: 'bullion',
+      label: 'Gold Bars & Bullion',
+      icon: <GoldRatesIcon className="w-4 h-4" />,
+      count: null,
+    },
+    {
       id: 'goldrates',
-      label: 'Gold Rates',
+      label: 'PKR Rates Engine',
       icon: <GoldRatesIcon className="w-4 h-4" />,
       count: null,
     },
@@ -1094,6 +1113,8 @@ export default function AdminDashboardPage() {
                 ? editingProduct
                   ? `Edit Product: ${editingProduct.name}`
                   : 'Add New Product Studio'
+                : activeTab === 'bullion'
+                ? 'Gold Bars & Bullion Manager'
                 : activeTab}
             </h1>
             <p className={`text-xs ${themeStyles.subtitleColor}`}>
@@ -1238,6 +1259,15 @@ export default function AdminDashboardPage() {
             userActionMsg={userActionMsg}
             setUserActionMsg={setUserActionMsg}
             onExportAuditCSV={handleExportAuditCSV}
+          />
+        )}
+
+        {/* TAB: BULLION & GOLD BARS MANAGER */}
+        {activeTab === 'bullion' && (
+          <BullionTab
+            themeStyles={themeStyles}
+            goldGram={liveBullionRates.gold}
+            silverGram={liveBullionRates.silver}
           />
         )}
 

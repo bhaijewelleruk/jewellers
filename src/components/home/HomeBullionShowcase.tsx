@@ -8,6 +8,7 @@ import { INITIAL_GOLD_ITEMS } from "@/data/bullion-items";
 
 export default function HomeBullionShowcase() {
   const [rates, setRates] = useState(DEFAULT_RATES);
+  const [goldItems, setGoldItems] = useState(INITIAL_GOLD_ITEMS);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -22,6 +23,16 @@ export default function HomeBullionShowcase() {
             isLive: true,
             currency: "GBP",
           });
+        }
+      })
+      .catch(() => {});
+
+    // Fetch live bullion items
+    fetch(`/api/bullion?metal=gold&t=${Date.now()}`, { cache: "no-store" })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && Array.isArray(data.items)) {
+          setGoldItems(data.items);
         }
       })
       .catch(() => {});
@@ -40,7 +51,7 @@ export default function HomeBullionShowcase() {
   };
 
   // Top 8 handpicked bullion items for home showcase
-  const featuredGoldItems = INITIAL_GOLD_ITEMS.slice(0, 8);
+  const featuredGoldItems = goldItems.slice(0, 8);
 
   return (
     <section className="w-full bg-[#fdfbf7] py-10 sm:py-16 px-4 sm:px-6 lg:px-8 select-none overflow-hidden">

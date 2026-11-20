@@ -10,6 +10,7 @@ export type AdminTab =
   | 'enquiries'
   | 'customers'
   | 'goldrates'
+  | 'bullion'
   | 'settings';
 
 export interface OrderItem {
