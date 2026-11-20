@@ -72,18 +72,18 @@ export default function CategoriesTab({
       {/* KPI STAT CARDS */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className={`${cardBg} p-4 rounded-[5px] border-l-4 border-gray-900`}>
-          <p className={`text-[10px] ${subtitleColor} uppercase font-semibold tracking-wider`}>Total Categories</p>
+          <p className={`text-xs font-bold text-gray-800 dark:text-gray-200 uppercase font-semibold tracking-wider`}>Total Categories</p>
           <div className="flex items-center justify-between mt-1">
             <span className={`text-2xl font-serif font-bold ${titleColor}`}>{categories.length}</span>
             <div className="p-1.5 rounded-[5px] bg-gray-100 border border-gray-200 text-gray-900">
               <CategoriesIcon className="w-4 h-4" />
             </div>
           </div>
-          <p className={`text-[10px] ${subtitleColor} mt-1`}>Active storefront collections</p>
+          <p className={`text-xs font-bold text-gray-800 dark:text-gray-200 mt-1`}>Active storefront collections</p>
         </div>
 
         <div className={`${cardBg} p-4 rounded-[5px] border-l-4 border-emerald-500`}>
-          <p className={`text-[10px] ${subtitleColor} uppercase font-semibold tracking-wider`}>Active Status</p>
+          <p className={`text-xs font-bold text-gray-800 dark:text-gray-200 uppercase font-semibold tracking-wider`}>Active Status</p>
           <div className="flex items-center justify-between mt-1">
             <span className="text-2xl font-serif font-bold text-emerald-600 dark:text-emerald-400">
               {categories.filter((c) => c.is_active !== false).length}
@@ -96,18 +96,18 @@ export default function CategoriesTab({
         </div>
 
         <div className={`${cardBg} p-4 rounded-[5px] border-l-4 border-sky-500`}>
-          <p className={`text-[10px] ${subtitleColor} uppercase font-semibold tracking-wider`}>Catalog Products</p>
+          <p className={`text-xs font-bold text-gray-800 dark:text-gray-200 uppercase font-semibold tracking-wider`}>Catalog Products</p>
           <div className="flex items-center justify-between mt-1">
             <span className={`text-2xl font-serif font-bold ${titleColor}`}>{products.length}</span>
             <div className="p-1.5 rounded-[5px] bg-sky-50 dark:bg-sky-950/40 border border-sky-200 dark:border-sky-800 text-sky-600">
               <DiamondIcon className="w-4 h-4" />
             </div>
           </div>
-          <p className={`text-[10px] ${subtitleColor} mt-1`}>Total products distributed</p>
+          <p className={`text-xs font-bold text-gray-800 dark:text-gray-200 mt-1`}>Total products distributed</p>
         </div>
 
         <div className={`${cardBg} p-4 rounded-[5px] border-l-4 border-gray-900`}>
-          <p className={`text-[10px] ${subtitleColor} uppercase font-semibold tracking-wider`}>Database Sync</p>
+          <p className={`text-xs font-bold text-gray-800 dark:text-gray-200 uppercase font-semibold tracking-wider`}>Database Sync</p>
           <div className="flex items-center justify-between mt-1">
             <span className="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
@@ -117,7 +117,7 @@ export default function CategoriesTab({
               <BoltIcon className="w-4 h-4" />
             </div>
           </div>
-          <p className={`text-[10px] ${subtitleColor} mt-1`}>Real-time auto replication</p>
+          <p className={`text-xs font-bold text-gray-800 dark:text-gray-200 mt-1`}>Real-time auto replication</p>
         </div>
       </div>
 
@@ -155,7 +155,7 @@ export default function CategoriesTab({
                     </>
                   )}
                 </h3>
-                <p className={`text-[11px] ${subtitleColor}`}>
+                <p className={`text-xs font-semibold text-gray-800 dark:text-gray-200`}>
                   {editingCategory ? `Modifying: ${editingCategory.name}` : 'Instantly visible on storefront'}
                 </p>
               </div>
@@ -181,7 +181,7 @@ export default function CategoriesTab({
 
             <form onSubmit={onCategorySubmit} className="space-y-3.5 text-xs">
               <div>
-                <label className={`block text-[11px] font-semibold ${subtitleColor} mb-1`}>
+                <label className={`block text-[14px] font-bold text-black dark:text-white mb-1`}>
                   Category Name *
                 </label>
                 <input
@@ -199,13 +199,13 @@ export default function CategoriesTab({
                         : prev.slug,
                     }));
                   }}
-                  className={`w-full text-xs px-3.5 py-2.5 rounded-[5px] focus:outline-none ${inputBg}`}
+                  className={`w-full text-[14.5px] px-3.5 py-2.5 font-medium text-black rounded-[5px] focus:outline-none ${inputBg}`}
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className={`block text-[11px] font-semibold ${subtitleColor} mb-1`}>
+                  <label className={`block text-[14px] font-bold text-black dark:text-white mb-1`}>
                     Slug (URL Path)
                   </label>
                   <input
@@ -213,12 +213,12 @@ export default function CategoriesTab({
                     placeholder="e.g. bridal-sets"
                     value={categoryForm.slug}
                     onChange={(e) => setCategoryForm({ ...categoryForm, slug: e.target.value })}
-                    className={`w-full text-xs px-3.5 py-2.5 rounded-[5px] font-mono focus:outline-none ${inputBg}`}
+                    className={`w-full text-[14.5px] px-3.5 py-2.5 font-medium text-black rounded-[5px] font-mono focus:outline-none ${inputBg}`}
                   />
                 </div>
 
                 <div>
-                  <label className={`block text-[11px] font-semibold ${subtitleColor} mb-1`}>
+                  <label className={`block text-[14px] font-bold text-black dark:text-white mb-1`}>
                     Display Order
                   </label>
                   <input
@@ -228,13 +228,13 @@ export default function CategoriesTab({
                     onChange={(e) =>
                       setCategoryForm({ ...categoryForm, display_order: parseInt(e.target.value) || 1 })
                     }
-                    className={`w-full text-xs px-3.5 py-2.5 rounded-[5px] focus:outline-none ${inputBg}`}
+                    className={`w-full text-[14.5px] px-3.5 py-2.5 font-medium text-black rounded-[5px] focus:outline-none ${inputBg}`}
                   />
                 </div>
               </div>
 
               <div>
-                <label className={`block text-[11px] font-semibold ${subtitleColor} mb-1`}>
+                <label className={`block text-[14px] font-bold text-black dark:text-white mb-1`}>
                   Category Description
                 </label>
                 <textarea
@@ -247,7 +247,7 @@ export default function CategoriesTab({
               </div>
 
               <div>
-                <label className={`block text-[11px] font-semibold ${subtitleColor} mb-1`}>
+                <label className={`block text-[14px] font-bold text-black dark:text-white mb-1`}>
                   Image Path / URL
                 </label>
                 <input
@@ -255,7 +255,7 @@ export default function CategoriesTab({
                   placeholder="/images/category-rings.jpg"
                   value={categoryForm.image}
                   onChange={(e) => setCategoryForm({ ...categoryForm, image: e.target.value })}
-                  className={`w-full text-xs px-3.5 py-2.5 rounded-[5px] focus:outline-none ${inputBg}`}
+                  className={`w-full text-[14.5px] px-3.5 py-2.5 font-medium text-black rounded-[5px] focus:outline-none ${inputBg}`}
                 />
               </div>
 
@@ -288,7 +288,7 @@ export default function CategoriesTab({
                 <h3 className={`font-serif text-base font-bold ${titleColor}`}>
                   Active Categories Catalog ({categories.length})
                 </h3>
-                <p className={`text-[11px] ${subtitleColor}`}>
+                <p className={`text-xs font-semibold text-gray-800 dark:text-gray-200`}>
                   Live synced with Supabase Real-Time database
                 </p>
               </div>
@@ -303,7 +303,7 @@ export default function CategoriesTab({
             </div>
 
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
+              <table className="w-full text-left text-[14px] font-medium text-black dark:text-white">
                 <thead className={`${tableHeaderBg} uppercase tracking-wider font-semibold text-[10.5px]`}>
                   <tr>
                     <th className="p-3.5">Category</th>
@@ -332,7 +332,7 @@ export default function CategoriesTab({
                           </div>
                           <div>
                             <p className={`font-semibold ${titleColor}`}>{cat.name}</p>
-                            <p className={`text-[10px] ${subtitleColor} line-clamp-1`}>{cat.description}</p>
+                            <p className={`text-xs font-bold text-gray-800 dark:text-gray-200 line-clamp-1`}>{cat.description}</p>
                           </div>
                         </td>
                         <td className="p-3.5 font-mono text-xs">{cat.slug}</td>

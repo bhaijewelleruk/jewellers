@@ -122,7 +122,7 @@ export default function ProductsTab({
             </div>
           </div>
           <p className={`text-2xl font-bold font-sans ${titleColor} mt-2`}>{products.length}</p>
-          <p className="text-[11px] text-gray-500 mt-0.5">Live store listings</p>
+          <p className="text-[11px] text-gray-800 dark:text-gray-200 mt-0.5">Live store listings</p>
         </div>
 
         <div className={`${cardBg} p-4 rounded-lg border border-gray-200 dark:border-neutral-800 shadow-xs`}>
@@ -133,7 +133,7 @@ export default function ProductsTab({
             </div>
           </div>
           <p className="text-2xl font-bold font-sans text-emerald-600 dark:text-emerald-400 mt-2">{healthyStockCount}</p>
-          <p className="text-[11px] text-gray-500 mt-0.5">&gt; 5 units ready</p>
+          <p className="text-[11px] text-gray-800 dark:text-gray-200 mt-0.5">&gt; 5 units ready</p>
         </div>
 
         <div className={`${cardBg} p-4 rounded-lg border border-gray-200 dark:border-neutral-800 shadow-xs`}>
@@ -144,7 +144,7 @@ export default function ProductsTab({
             </div>
           </div>
           <p className="text-2xl font-bold font-sans text-amber-600 dark:text-amber-400 mt-2">{lowStockCount}</p>
-          <p className="text-[11px] text-gray-500 mt-0.5">1 to 5 units remaining</p>
+          <p className="text-[11px] text-gray-800 dark:text-gray-200 mt-0.5">1 to 5 units remaining</p>
         </div>
 
         <div className={`${cardBg} p-4 rounded-lg border border-gray-200 dark:border-neutral-800 shadow-xs`}>
@@ -155,7 +155,7 @@ export default function ProductsTab({
             </div>
           </div>
           <p className="text-2xl font-bold font-sans text-rose-600 dark:text-rose-400 mt-2">{outOfStockCount}</p>
-          <p className="text-[11px] text-gray-500 mt-0.5">Hidden / Sold out</p>
+          <p className="text-[11px] text-gray-800 dark:text-gray-200 mt-0.5">Hidden / Sold out</p>
         </div>
       </div>
 
@@ -219,7 +219,7 @@ export default function ProductsTab({
           <select
             value={productCategory}
             onChange={(e) => setProductCategory(e.target.value)}
-            className={`text-xs px-3 py-2 rounded-md border border-gray-200 dark:border-neutral-700 focus:outline-none ${inputBg}`}
+            className={`text-[14px] px-3.5 py-2 font-medium text-black rounded-md border border-gray-200 dark:border-neutral-700 focus:outline-none ${inputBg}`}
           >
             <option value="All">All Categories</option>
             {categories.map((c) => (
@@ -253,8 +253,8 @@ export default function ProductsTab({
       {/* PRODUCTS TABLE (Shopify Polaris Clean Style with Inline Price Edit & Restock) */}
       <div className={`${cardBg} rounded-lg border border-gray-200 dark:border-neutral-800 shadow-xs overflow-hidden`}>
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className={`${tableHeaderBg} border-b border-gray-200 dark:border-neutral-800 font-medium text-gray-500 uppercase tracking-wider text-[11px]`}>
+          <table className="w-full text-left text-[14px] font-medium text-black dark:text-white">
+            <thead className={`${tableHeaderBg} border-b border-gray-200 dark:border-neutral-800 font-medium text-gray-800 dark:text-gray-200 uppercase tracking-wider text-[11px]`}>
               <tr>
                 <th className="py-3 px-4">Product</th>
                 <th className="py-3 px-4">Status</th>
@@ -295,7 +295,7 @@ export default function ProductsTab({
                             <p className={`font-semibold ${titleColor} truncate text-xs hover:text-amber-700 cursor-pointer`} onClick={() => onStartEditProduct(p)}>
                               {p.name}
                             </p>
-                            <p className="text-[10.5px] text-gray-400 font-mono truncate">{p.id}</p>
+                            <p className="text-[10.5px] text-gray-600 dark:text-gray-400 font-semibold font-mono truncate">{p.id}</p>
                           </div>
                         </div>
                       </td>
@@ -331,7 +331,7 @@ export default function ProductsTab({
                               type="button"
                               onClick={() => onQuickRestock(p.id, p.name, p.stock, -1)}
                               disabled={p.stock <= 0}
-                              className="px-1.5 py-1 text-gray-500 hover:text-black hover:bg-gray-100 dark:hover:bg-neutral-700 text-[10px] font-bold border-r border-gray-200 dark:border-neutral-700 disabled:opacity-30 cursor-pointer"
+                              className="px-1.5 py-1 text-gray-800 dark:text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-neutral-700 text-[10px] font-bold border-r border-gray-200 dark:border-neutral-700 disabled:opacity-30 cursor-pointer"
                               title="Decrease stock by 1"
                             >
                               -1
@@ -368,7 +368,7 @@ export default function ProductsTab({
                         {isEditingThisPrice ? (
                           <div className="flex items-center gap-1 animate-fadeIn">
                             <div className="relative flex items-center">
-                              <span className="absolute left-2 text-gray-500 text-xs font-semibold">&pound;</span>
+                              <span className="absolute left-2 text-gray-800 dark:text-gray-200 text-xs font-semibold">&pound;</span>
                               <input
                                 type="number"
                                 autoFocus
@@ -423,7 +423,7 @@ export default function ProductsTab({
                       </td>
 
                       {/* SKU & Metal */}
-                      <td className="py-2.5 px-4 font-mono text-[11px] text-gray-500">
+                      <td className="py-2.5 px-4 font-mono text-[11px] text-gray-800 dark:text-gray-200">
                         <div>{p.sku || 'N/A'}</div>
                         <div className="text-[10px] text-gray-400 font-sans">{p.metal}</div>
                       </td>

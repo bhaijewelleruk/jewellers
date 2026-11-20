@@ -1030,15 +1030,15 @@ export default function AdminDashboardPage() {
     cardBg: isLight ? 'bg-white border border-gray-200 shadow-xs' : 'bg-[#1e293b] border border-slate-700 shadow-lg',
     cardHeaderBorder: isLight ? 'border-gray-100' : 'border-slate-700/60',
     inputBg: isLight
-      ? 'bg-white border-gray-300 text-black font-medium placeholder:text-gray-500 focus:border-black focus:ring-1 focus:ring-black'
-      : 'bg-slate-800 border-slate-600 text-white placeholder:text-slate-400 focus:border-white',
-    tableHeaderBg: isLight ? 'bg-gray-100 border-gray-300 text-black font-bold' : 'bg-slate-800/80 border-slate-700 text-slate-200 font-bold',
-    tableRowHover: isLight ? 'hover:bg-gray-50/80 divide-gray-100' : 'hover:bg-slate-800/50 divide-slate-800',
+      ? 'bg-white border-gray-300 text-black font-semibold text-[14.5px] placeholder:text-gray-500 focus:border-black focus:ring-1 focus:ring-black'
+      : 'bg-slate-800 border-slate-600 text-white font-semibold text-[14.5px] placeholder:text-slate-400 focus:border-white',
+    tableHeaderBg: isLight ? 'bg-gray-100 border-gray-300 text-black font-extrabold text-[13px]' : 'bg-slate-800/80 border-slate-700 text-slate-200 font-extrabold text-[13px]',
+    tableRowHover: isLight ? 'hover:bg-gray-50/80 divide-gray-100 text-black' : 'hover:bg-slate-800/50 divide-slate-800 text-white',
     titleColor: isLight ? 'text-black font-extrabold' : 'text-white font-extrabold',
     accentGold: isLight ? 'text-black font-bold' : 'text-slate-100 font-bold',
-    subtitleColor: isLight ? 'text-gray-800 font-medium' : 'text-slate-300 font-medium',
-    badgeBg: isLight ? 'bg-gray-100 text-gray-800 border-gray-200' : 'bg-slate-800 text-slate-200 border-slate-700',
-    primaryBtn: isLight ? 'bg-gray-900 hover:bg-black text-white shadow-xs' : 'bg-white hover:bg-slate-100 text-slate-900',
+    subtitleColor: isLight ? 'text-black font-bold text-[14px]' : 'text-slate-100 font-bold text-[14px]',
+    badgeBg: isLight ? 'bg-gray-100 text-black font-bold border-gray-300' : 'bg-slate-800 text-slate-200 border-slate-700 font-bold',
+    primaryBtn: isLight ? 'bg-black hover:bg-gray-800 text-white font-bold shadow-xs' : 'bg-white hover:bg-slate-100 text-black font-bold',
   };
 
   if (authChecking) {

@@ -73,7 +73,7 @@ export default function SlidesTab({
               <BoltIcon className="w-5 h-5 text-gray-900" />
               <span>Main Storefront Hero Section Editor</span>
             </h2>
-            <p className={`text-xs ${subtitleColor}`}>
+            <p className={`text-[13.5px] font-medium text-gray-800 dark:text-gray-200`}>
               Edit headline, subtext, button links, background campaign image, and featured card live on the main website homepage.
             </p>
           </div>
@@ -237,7 +237,7 @@ export default function SlidesTab({
       <div className={`flex flex-col sm:flex-row items-center justify-between gap-4 ${cardBg} p-5 rounded-[5px]`}>
         <div>
           <h2 className={`font-serif text-lg font-semibold ${accentGold}`}>Additional Homepage Banner Slides</h2>
-          <p className={`text-xs ${subtitleColor}`}>
+          <p className={`text-[13.5px] font-medium text-gray-800 dark:text-gray-200`}>
             Add, edit, toggle visibility, and reorder extra banner slides for the storefront slider.
           </p>
         </div>
@@ -279,7 +279,7 @@ export default function SlidesTab({
 
               <div className="p-3 space-y-1.5">
                 <h3 className={`font-serif font-bold ${titleColor} text-sm leading-snug`}>{slide.title}</h3>
-                <p className={`text-xs ${subtitleColor} line-clamp-2`}>{slide.subtitle}</p>
+                <p className={`text-[13.5px] font-medium text-gray-800 dark:text-gray-200 line-clamp-2`}>{slide.subtitle}</p>
               </div>
             </div>
 

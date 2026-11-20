@@ -119,7 +119,7 @@ export default function AddProductTab({
               <h2 className={`font-serif text-xl font-bold ${accentGold}`}>
                 {editingProduct ? `Edit Product: ${editingProduct.name}` : 'Full Product Creation Studio'}
               </h2>
-              <p className={`text-xs ${subtitleColor}`}>
+              <p className={`text-[13.5px] text-gray-800 dark:text-gray-200 font-semibold`}>
                 {editingProduct
                   ? 'Modify specifications, prices, stock, and photos. Updates in real-time.'
                   : 'Configure metal specifications, upload multiple photos, and auto-generate SEO metadata.'}
@@ -171,7 +171,7 @@ export default function AddProductTab({
 
               <div className="space-y-3">
                 <div>
-                  <label className={`block text-xs font-semibold ${subtitleColor} mb-1`}>
+                  <label className={`block text-[14px] font-bold text-black dark:text-white mb-1`}>
                     Product Title *
                   </label>
                   <input
@@ -180,19 +180,19 @@ export default function AddProductTab({
                     placeholder="e.g. Royal Aurelia Solitaire Diamond Ring"
                     value={addForm.name}
                     onChange={(e) => setAddForm({ ...addForm, name: e.target.value })}
-                    className={`w-full text-xs px-4 py-2.5 rounded-[5px] focus:outline-none ${inputBg}`}
+                    className={`w-full text-[14.5px] px-4 py-2.5 font-medium text-black rounded-[5px] focus:outline-none ${inputBg}`}
                   />
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className={`block text-xs font-semibold ${subtitleColor} mb-1`}>
+                    <label className={`block text-[14px] font-bold text-black dark:text-white mb-1`}>
                       Category *
                     </label>
                     <select
                       value={addForm.category}
                       onChange={(e) => setAddForm({ ...addForm, category: e.target.value })}
-                      className={`w-full text-xs px-4 py-2.5 rounded-[5px] focus:outline-none ${inputBg}`}
+                      className={`w-full text-[14.5px] px-4 py-2.5 font-medium text-black rounded-[5px] focus:outline-none ${inputBg}`}
                     >
                       {categories.map((c) => (
                         <option key={c.id || c.slug} value={c.name}>
@@ -204,10 +204,10 @@ export default function AddProductTab({
 
                   <div>
                     <div className="flex items-center justify-between mb-1">
-                      <label className={`block text-xs font-semibold ${subtitleColor}`}>
+                      <label className={`block text-[14px] font-bold text-black dark:text-white`}>
                         Metal Purity &amp; Spec *
                       </label>
-                      <span className="text-[10px] text-gray-900 font-mono flex items-center gap-1">
+                      <span className="text-xs text-black font-bold font-mono flex items-center gap-1">
                         <EditIcon className="w-3 h-3" />
                         Type custom
                       </span>
@@ -219,7 +219,7 @@ export default function AddProductTab({
                       placeholder="e.g. 21ct Gold, 22k Pure Gold, 24k Bullion..."
                       value={addForm.metal}
                       onChange={(e) => setAddForm({ ...addForm, metal: e.target.value })}
-                      className={`w-full text-xs px-4 py-2.5 rounded-[5px] focus:outline-none ${inputBg}`}
+                      className={`w-full text-[14.5px] px-4 py-2.5 font-medium text-black rounded-[5px] focus:outline-none ${inputBg}`}
                     />
                     <datalist id="admin-gold-purity-presets">
                       <option value="22k Pure Gold" />
@@ -238,7 +238,7 @@ export default function AddProductTab({
                           key={preset}
                           type="button"
                           onClick={() => setAddForm({ ...addForm, metal: preset })}
-                          className={`px-2 py-0.5 rounded-[3px] text-[10px] border border-gray-300 hover:border-gray-900 transition-all cursor-pointer ${
+                          className={`px-2 py-0.5 rounded-[3px] text-xs font-bold border border-gray-400 text-black hover:border-gray-900 transition-all cursor-pointer ${
                             addForm.metal === preset ? 'bg-gray-900/15 text-gray-900 font-bold' : subtitleColor
                           }`}
                         >
@@ -251,7 +251,7 @@ export default function AddProductTab({
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
-                    <label className={`block text-xs font-semibold ${subtitleColor} mb-1`}>
+                    <label className={`block text-[14px] font-bold text-black dark:text-white mb-1`}>
                       Price (&pound; GBP) *
                     </label>
                     <input
@@ -260,12 +260,12 @@ export default function AddProductTab({
                       placeholder="1280"
                       value={addForm.price}
                       onChange={(e) => setAddForm({ ...addForm, price: e.target.value })}
-                      className={`w-full text-xs px-4 py-2.5 rounded-[5px] focus:outline-none ${inputBg}`}
+                      className={`w-full text-[14.5px] px-4 py-2.5 font-medium text-black rounded-[5px] focus:outline-none ${inputBg}`}
                     />
                   </div>
 
                   <div>
-                    <label className={`block text-xs font-semibold ${subtitleColor} mb-1`}>
+                    <label className={`block text-[14px] font-bold text-black dark:text-white mb-1`}>
                       Compare Price (&pound;)
                     </label>
                     <input
@@ -273,12 +273,12 @@ export default function AddProductTab({
                       placeholder="1650"
                       value={addForm.originalPrice}
                       onChange={(e) => setAddForm({ ...addForm, originalPrice: e.target.value })}
-                      className={`w-full text-xs px-4 py-2.5 rounded-[5px] focus:outline-none ${inputBg}`}
+                      className={`w-full text-[14.5px] px-4 py-2.5 font-medium text-black rounded-[5px] focus:outline-none ${inputBg}`}
                     />
                   </div>
 
                   <div>
-                    <label className={`block text-xs font-semibold ${subtitleColor} mb-1`}>
+                    <label className={`block text-[14px] font-bold text-black dark:text-white mb-1`}>
                       Stock Quantity *
                     </label>
                     <input
@@ -287,7 +287,7 @@ export default function AddProductTab({
                       placeholder="10"
                       value={addForm.stock}
                       onChange={(e) => setAddForm({ ...addForm, stock: e.target.value })}
-                      className={`w-full text-xs px-4 py-2.5 rounded-[5px] focus:outline-none ${inputBg}`}
+                      className={`w-full text-[14.5px] px-4 py-2.5 font-medium text-black rounded-[5px] focus:outline-none ${inputBg}`}
                     />
                   </div>
                 </div>
@@ -295,7 +295,7 @@ export default function AddProductTab({
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <div className="flex justify-between items-center mb-1">
-                      <label className={`text-xs font-semibold ${subtitleColor}`}>
+                      <label className={`text-[14px] font-bold text-black dark:text-white`}>
                         SKU Code
                       </label>
                       <button
@@ -312,16 +312,16 @@ export default function AddProductTab({
                       placeholder="BJ-RNG-8472"
                       value={addForm.sku}
                       onChange={(e) => setAddForm({ ...addForm, sku: e.target.value })}
-                      className={`w-full text-xs px-4 py-2.5 rounded-[5px] font-mono focus:outline-none ${inputBg}`}
+                      className={`w-full text-[14.5px] px-4 py-2.5 font-medium text-black rounded-[5px] font-mono focus:outline-none ${inputBg}`}
                     />
                   </div>
 
                   <div>
                     <div className="flex justify-between items-center mb-1">
-                      <label className={`text-xs font-semibold ${subtitleColor}`}>
+                      <label className={`text-[14px] font-bold text-black dark:text-white`}>
                         Gold / Metal Weight (Grams) *
                       </label>
-                      <span className="text-[10px] text-gray-500 font-mono">e.g. 0.6g, 5.5g</span>
+                      <span className="text-xs text-gray-800 font-semibold font-mono">e.g. 0.6g, 5.5g</span>
                     </div>
                     <div className="relative">
                       <input
@@ -329,7 +329,7 @@ export default function AddProductTab({
                         placeholder="e.g. 0.6g or 5.5"
                         value={addForm.weightGrams}
                         onChange={(e) => setAddForm({ ...addForm, weightGrams: e.target.value })}
-                        className={`w-full text-xs px-4 py-2.5 rounded-[5px] focus:outline-none ${inputBg}`}
+                        className={`w-full text-[14.5px] px-4 py-2.5 font-medium text-black rounded-[5px] focus:outline-none ${inputBg}`}
                       />
                       <span className="absolute right-3 top-2.5 text-xs text-gray-400 select-none">grams</span>
                     </div>
@@ -347,7 +347,7 @@ export default function AddProductTab({
                           key={preset.label}
                           type="button"
                           onClick={() => setAddForm({ ...addForm, weightGrams: preset.val })}
-                          className="px-2 py-0.5 rounded-[3px] text-[10px] border border-gray-300 hover:border-gray-900 transition-all text-gray-700 bg-white dark:bg-gray-800 dark:text-gray-200 cursor-pointer"
+                          className="px-2 py-0.5 rounded-[3px] text-xs font-bold border border-gray-400 text-black hover:border-gray-900 transition-all text-gray-700 bg-white dark:bg-gray-800 dark:text-gray-200 cursor-pointer"
                         >
                           {preset.label}
                         </button>
@@ -360,17 +360,17 @@ export default function AddProductTab({
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div className="sm:col-span-2">
                     <div className="flex justify-between items-center mb-1">
-                      <label className={`text-xs font-semibold ${subtitleColor}`}>
+                      <label className={`text-[14px] font-bold text-black dark:text-white`}>
                         Available Sizes / Variations (Comma separated)
                       </label>
-                      <span className="text-[10px] text-gray-500 font-mono">e.g. 5, 6, 7, 8, 9</span>
+                      <span className="text-xs text-gray-800 font-semibold font-mono">e.g. 5, 6, 7, 8, 9</span>
                     </div>
                     <input
                       type="text"
                       placeholder="e.g. 5, 6, 7, 8, 9 or 16', 18', 20' or 2.4, 2.6, 2.8"
                       value={addForm.sizesText}
                       onChange={(e) => setAddForm({ ...addForm, sizesText: e.target.value })}
-                      className={`w-full text-xs px-4 py-2.5 rounded-[5px] focus:outline-none ${inputBg}`}
+                      className={`w-full text-[14.5px] px-4 py-2.5 font-medium text-black rounded-[5px] focus:outline-none ${inputBg}`}
                     />
                     <div className="flex flex-wrap gap-1 mt-1.5">
                       {[
@@ -390,7 +390,7 @@ export default function AddProductTab({
                               size: preset.val.split(',')[0].trim(),
                             })
                           }
-                          className="px-2 py-0.5 rounded-[3px] text-[10px] border border-gray-300 hover:border-gray-900 transition-all text-gray-700 bg-white dark:bg-gray-800 dark:text-gray-200 cursor-pointer"
+                          className="px-2 py-0.5 rounded-[3px] text-xs font-bold border border-gray-400 text-black hover:border-gray-900 transition-all text-gray-700 bg-white dark:bg-gray-800 dark:text-gray-200 cursor-pointer"
                         >
                           {preset.label}
                         </button>
@@ -399,7 +399,7 @@ export default function AddProductTab({
                   </div>
 
                   <div>
-                    <label className={`block text-xs font-semibold ${subtitleColor} mb-1`}>
+                    <label className={`block text-[14px] font-bold text-black dark:text-white mb-1`}>
                       Default / Featured Size
                     </label>
                     <input
@@ -407,7 +407,7 @@ export default function AddProductTab({
                       placeholder="e.g. 7"
                       value={addForm.size}
                       onChange={(e) => setAddForm({ ...addForm, size: e.target.value })}
-                      className={`w-full text-xs px-4 py-2.5 rounded-[5px] focus:outline-none ${inputBg}`}
+                      className={`w-full text-[14.5px] px-4 py-2.5 font-medium text-black rounded-[5px] focus:outline-none ${inputBg}`}
                     />
                     <p className={`text-[10px] ${subtitleColor} mt-1.5`}>Shows as active on review &amp; storefront</p>
                   </div>
@@ -415,7 +415,7 @@ export default function AddProductTab({
 
                 <div>
                   <div className="flex items-center justify-between mb-1.5">
-                    <label className={`block text-xs font-semibold ${subtitleColor}`}>
+                    <label className={`block text-[14px] font-bold text-black dark:text-white`}>
                       Detailed Description &amp; Craftsmanship Details
                     </label>
                     <button
@@ -446,9 +446,9 @@ A beautiful gift for birthdays, anniversaries or any special celebration.`;
                     placeholder="Describe design story, metal purity, specifications, and gifting details..."
                     value={addForm.description}
                     onChange={(e) => setAddForm({ ...addForm, description: e.target.value })}
-                    className={`w-full text-xs px-4 py-2.5 rounded-[5px] focus:outline-none font-mono ${inputBg}`}
+                    className={`w-full text-[14.5px] px-4 py-2.5 font-medium text-black rounded-[5px] focus:outline-none font-mono ${inputBg}`}
                   />
-                  <div className="flex items-center justify-between mt-1 text-[10px] text-gray-500">
+                  <div className="flex items-center justify-between mt-1 text-xs text-gray-800 font-semibold">
                     <span>Supports markdown: **Bold**, - **Key:** Value bullet lists, and paragraphs</span>
                     <span>{addForm.description.length} chars</span>
                   </div>
@@ -463,7 +463,7 @@ A beautiful gift for birthdays, anniversaries or any special celebration.`;
                   <ImageIcon className="w-4 h-4" />
                   <span>2. Multiple Product Images Studio</span>
                 </h3>
-                <span className={`text-xs ${subtitleColor}`}>
+                <span className={`text-[13.5px] text-gray-800 dark:text-gray-200 font-semibold`}>
                   Total:{' '}
                   {(addForm.primaryImage ? 1 : 0) +
                     addForm.additionalImages.filter((img) => img && img !== addForm.primaryImage).length}{' '}
@@ -501,7 +501,7 @@ A beautiful gift for birthdays, anniversaries or any special celebration.`;
 
                 {/* Primary Cover Image URL Input */}
                 <div>
-                  <label className={`block text-xs font-semibold ${subtitleColor} mb-1`}>
+                  <label className={`block text-[14px] font-bold text-black dark:text-white mb-1`}>
                     Primary Cover Image (Uploaded Device File or Image URL) *
                   </label>
                   <input
@@ -509,13 +509,13 @@ A beautiful gift for birthdays, anniversaries or any special celebration.`;
                     placeholder="Upload file above or paste image URL..."
                     value={addForm.primaryImage}
                     onChange={(e) => setAddForm({ ...addForm, primaryImage: e.target.value })}
-                    className={`w-full text-xs px-4 py-2.5 rounded-[5px] focus:outline-none ${inputBg}`}
+                    className={`w-full text-[14.5px] px-4 py-2.5 font-medium text-black rounded-[5px] focus:outline-none ${inputBg}`}
                   />
                 </div>
 
                 {/* Additional Image URLs List */}
                 <div className="space-y-2">
-                  <label className={`block text-xs font-semibold ${subtitleColor}`}>
+                  <label className={`block text-[14px] font-bold text-black dark:text-white`}>
                     Additional Angle Photos &amp; Gallery Images
                   </label>
 
@@ -525,7 +525,7 @@ A beautiful gift for birthdays, anniversaries or any special celebration.`;
                       placeholder="Paste image URL (e.g. /images/shop-prod-2.jpg)..."
                       value={addForm.newImageUrlInput}
                       onChange={(e) => setAddForm({ ...addForm, newImageUrlInput: e.target.value })}
-                      className={`flex-1 text-xs px-4 py-2.5 rounded-[5px] focus:outline-none ${inputBg}`}
+                      className={`flex-1 text-[14.5px] px-4 py-2.5 font-medium text-black rounded-[5px] focus:outline-none ${inputBg}`}
                     />
                     <button
                       type="button"
@@ -540,7 +540,7 @@ A beautiful gift for birthdays, anniversaries or any special celebration.`;
 
                 {/* Interactive Gallery Thumbnails */}
                 <div className="pt-2">
-                  <p className={`text-xs font-semibold ${subtitleColor} mb-2`}>Gallery Thumbnails Preview:</p>
+                  <p className={`text-[14px] font-bold text-black dark:text-white mb-2`}>Gallery Thumbnails Preview:</p>
 
                   {!addForm.primaryImage && addForm.additionalImages.length === 0 ? (
                     <div className={`p-4 text-center rounded-[5px] border border-dashed ${subtitleColor} text-xs italic`}>
@@ -600,7 +600,7 @@ A beautiful gift for birthdays, anniversaries or any special celebration.`;
                     <SparklesIcon className="w-4 h-4" />
                     <span>3. Automated SEO Metadata &amp; Search Keywords</span>
                   </h3>
-                  <p className={`text-xs ${subtitleColor}`}>Google SEO tags and search keywords automatically generated.</p>
+                  <p className={`text-[13.5px] text-gray-800 dark:text-gray-200 font-semibold`}>Google SEO tags and search keywords automatically generated.</p>
                 </div>
                 <button
                   type="button"
@@ -614,51 +614,51 @@ A beautiful gift for birthdays, anniversaries or any special celebration.`;
 
               <div className="space-y-3">
                 <div>
-                  <label className={`block text-xs font-semibold ${subtitleColor} mb-1`}>
+                  <label className={`block text-[14px] font-bold text-black dark:text-white mb-1`}>
                     SEO Page Title
                   </label>
                   <input
                     type="text"
                     value={addForm.seoTitle}
                     onChange={(e) => setAddForm({ ...addForm, seoTitle: e.target.value })}
-                    className={`w-full text-xs px-4 py-2.5 rounded-[5px] focus:outline-none ${inputBg}`}
+                    className={`w-full text-[14.5px] px-4 py-2.5 font-medium text-black rounded-[5px] focus:outline-none ${inputBg}`}
                   />
                 </div>
 
                 <div>
-                  <label className={`block text-xs font-semibold ${subtitleColor} mb-1`}>
+                  <label className={`block text-[14px] font-bold text-black dark:text-white mb-1`}>
                     Meta Description
                   </label>
                   <textarea
                     rows={2}
                     value={addForm.seoDescription}
                     onChange={(e) => setAddForm({ ...addForm, seoDescription: e.target.value })}
-                    className={`w-full text-xs px-4 py-2.5 rounded-[5px] focus:outline-none ${inputBg}`}
+                    className={`w-full text-[14.5px] px-4 py-2.5 font-medium text-black rounded-[5px] focus:outline-none ${inputBg}`}
                   />
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className={`block text-xs font-semibold ${subtitleColor} mb-1`}>
+                    <label className={`block text-[14px] font-bold text-black dark:text-white mb-1`}>
                       URL Permaslug
                     </label>
                     <input
                       type="text"
                       value={addForm.slug}
                       onChange={(e) => setAddForm({ ...addForm, slug: e.target.value })}
-                      className={`w-full text-xs px-4 py-2.5 rounded-[5px] font-mono focus:outline-none ${inputBg}`}
+                      className={`w-full text-[14.5px] px-4 py-2.5 font-medium text-black rounded-[5px] font-mono focus:outline-none ${inputBg}`}
                     />
                   </div>
 
                   <div>
-                    <label className={`block text-xs font-semibold ${subtitleColor} mb-1`}>
+                    <label className={`block text-[14px] font-bold text-black dark:text-white mb-1`}>
                       Focus Keywords (Comma Separated)
                     </label>
                     <input
                       type="text"
                       value={addForm.focusKeywordsText}
                       onChange={(e) => setAddForm({ ...addForm, focusKeywordsText: e.target.value })}
-                      className={`w-full text-xs px-4 py-2.5 rounded-[5px] focus:outline-none ${inputBg}`}
+                      className={`w-full text-[14.5px] px-4 py-2.5 font-medium text-black rounded-[5px] focus:outline-none ${inputBg}`}
                     />
                   </div>
                 </div>

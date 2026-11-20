@@ -55,7 +55,7 @@ export default function SettingsTab({
               <StoreIcon className="w-5 h-5 text-gray-900" />
               <span>Real-Time Top Announcement Bar Manager</span>
             </h2>
-            <p className={`text-xs ${subtitleColor}`}>Edit promotional top-bar text slides &amp; toggle visibility on main site live.</p>
+            <p className={`text-[13.5px] font-medium text-gray-800 dark:text-gray-200`}>Edit promotional top-bar text slides &amp; toggle visibility on main site live.</p>
           </div>
           {announcementSaveMsg && (
             <span className="px-3 py-1 bg-emerald-600 text-white text-xs font-bold rounded-[5px] shadow flex items-center gap-1">
@@ -70,7 +70,7 @@ export default function SettingsTab({
           <div className="flex items-center justify-between p-3 rounded-[5px] border border-current border-opacity-20">
             <div>
               <span className={`font-bold ${titleColor}`}>Enable Announcement Top Bar</span>
-              <p className={`text-[10px] ${subtitleColor}`}>Shows rotating notification bar at top of desktop site.</p>
+              <p className={`text-xs font-bold text-gray-800 dark:text-gray-200`}>Shows rotating notification bar at top of desktop site.</p>
             </div>
             <button
               type="button"

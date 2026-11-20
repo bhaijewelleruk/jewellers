@@ -58,7 +58,7 @@ export default function EnquiriesTab({
               <p className={`font-semibold ${titleColor} truncate`} title={enq.name}>
                 {enq.name}
               </p>
-              <p className={`text-[10px] ${subtitleColor} truncate`} title={enq.email}>
+              <p className={`text-xs font-bold text-gray-800 dark:text-gray-200 truncate`} title={enq.email}>
                 {enq.email}
               </p>
               <p className={`text-[10px] font-mono ${accentGold}`}>{enq.phone}</p>

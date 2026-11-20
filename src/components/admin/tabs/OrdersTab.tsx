@@ -29,7 +29,7 @@ export default function OrdersTab({
   return (
     <ScrollReveal direction="up" delay={100} className="space-y-6">
       <div className={`flex flex-col sm:flex-row items-center justify-between gap-4 ${cardBg} p-4 rounded-[5px]`}>
-        <span className={`text-xs ${subtitleColor}`}>Filter Status:</span>
+        <span className={`text-[13.5px] font-medium text-gray-800 dark:text-gray-200`}>Filter Status:</span>
         <div className="flex items-center space-x-2">
           {['All', 'Processing', 'Shipped', 'Delivered'].map((st) => (
             <button
@@ -78,13 +78,13 @@ export default function OrdersTab({
               <p className={`font-semibold ${titleColor} truncate`} title={order.customer}>
                 {order.customer}
               </p>
-              <p className={`text-[10px] ${subtitleColor} truncate`} title={order.email}>
+              <p className={`text-xs font-bold text-gray-800 dark:text-gray-200 truncate`} title={order.email}>
                 {order.email}
               </p>
-              <p className={`text-[10px] ${subtitleColor} pt-1 truncate`} title={order.items}>
+              <p className={`text-xs font-bold text-gray-800 dark:text-gray-200 pt-1 truncate`} title={order.items}>
                 <span className="font-semibold text-opacity-80">Item:</span> {order.items}
               </p>
-              <p className={`text-[10px] ${subtitleColor} truncate`} title={order.address}>
+              <p className={`text-xs font-bold text-gray-800 dark:text-gray-200 truncate`} title={order.address}>
                 <span className="font-semibold text-opacity-80">Address:</span> {order.address}
               </p>
             </div>

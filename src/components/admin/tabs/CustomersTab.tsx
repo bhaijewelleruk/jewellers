@@ -103,7 +103,7 @@ export default function CustomersTab({
               </>
             )}
           </h2>
-          <p className={`text-xs ${subtitleColor}`}>
+          <p className={`text-[13.5px] font-medium text-gray-800 dark:text-gray-200`}>
             {userTabMode === 'users'
               ? 'Real-time list of all signed up clients and admin accounts stored in Supabase.'
               : 'Security tracking of login attempts, IP addresses, and 5-attempt lockout blocks.'}
@@ -197,7 +197,7 @@ export default function CustomersTab({
           {/* User Table */}
           <div className={`${cardBg} rounded-[5px] overflow-hidden`}>
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
+              <table className="w-full text-left text-[14px] font-medium text-black dark:text-white">
                 <thead className={`${tableHeaderBg} uppercase tracking-wider font-semibold`}>
                   <tr>
                     <th className="p-4">Client / Account</th>
@@ -386,7 +386,7 @@ export default function CustomersTab({
           {/* Audit Log Table */}
           <div className={`${cardBg} rounded-[5px] overflow-hidden`}>
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
+              <table className="w-full text-left text-[14px] font-medium text-black dark:text-white">
                 <thead className={`${tableHeaderBg} uppercase tracking-wider font-semibold`}>
                   <tr>
                     <th className="p-4">Log ID</th>
@@ -403,7 +403,7 @@ export default function CustomersTab({
                   {filteredAuditLogs.map((log) => (
                     <tr key={log.id} className="transition-colors">
                       <td className="p-4 font-mono font-bold text-gray-900">{log.id}</td>
-                      <td className="p-4 font-mono text-[11px] text-gray-500">{log.timestamp}</td>
+                      <td className="p-4 font-mono text-[11px] text-gray-800 dark:text-gray-200">{log.timestamp}</td>
                       <td className="p-4 font-semibold text-[10px]">{log.category}</td>
                       <td className="p-4 font-bold text-gray-800">{log.action}</td>
                       <td className="p-4 text-gray-600 max-w-xs truncate" title={log.details}>
@@ -422,7 +422,7 @@ export default function CustomersTab({
                           {log.severity}
                         </span>
                       </td>
-                      <td className="p-4 font-mono text-[10px] text-gray-500">{log.ip}</td>
+                      <td className="p-4 font-mono text-[10px] text-gray-800 dark:text-gray-200">{log.ip}</td>
                       <td className="p-4 text-right font-medium text-gray-800">{log.actor}</td>
                     </tr>
                   ))}

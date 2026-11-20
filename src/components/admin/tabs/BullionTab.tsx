@@ -285,7 +285,7 @@ export default function BullionTab({
           <h2 className={`font-serif text-2xl font-bold ${titleColor}`}>
             Gold Bars & Bullion Products
           </h2>
-          <p className={`text-xs ${subtitleColor} mt-1 max-w-xl`}>
+          <p className={`text-[13.5px] font-medium text-gray-800 dark:text-gray-200 mt-1 max-w-xl`}>
             Add, edit, remove, and manage minted gold bars, coins, and silver items with real-time LBMA spot pricing.
           </p>
         </div>
@@ -359,7 +359,7 @@ export default function BullionTab({
                 className={`px-3 py-1 rounded-lg text-xs font-semibold capitalize transition-all cursor-pointer ${
                   typeFilter === t
                     ? 'bg-white dark:bg-slate-800 text-stone-900 dark:text-white shadow-xs'
-                    : 'text-gray-500 hover:text-gray-900'
+                    : 'text-gray-800 dark:text-gray-200 hover:text-gray-900'
                 }`}
               >
                 {t === 'all' ? 'All' : t === 'bar' ? 'Bars Only' : 'Coins Only'}
@@ -404,9 +404,9 @@ export default function BullionTab({
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs border-collapse">
+            <table className="w-full text-left text-[14px] font-medium text-black dark:text-white border-collapse">
               <thead>
-                <tr className="border-b border-gray-200 dark:border-slate-800 bg-gray-50/60 dark:bg-slate-900/60 text-gray-500 font-bold uppercase tracking-wider text-[10px]">
+                <tr className="border-b border-gray-200 dark:border-slate-800 bg-gray-50/60 dark:bg-slate-900/60 text-gray-800 dark:text-gray-200 font-bold uppercase tracking-wider text-[10px]">
                   <th className="py-3 px-4">Product</th>
                   <th className="py-3 px-4">Refiner / Mint</th>
                   <th className="py-3 px-4">Weight &amp; Purity</th>
@@ -441,7 +441,7 @@ export default function BullionTab({
                             <span className="font-semibold text-stone-900 dark:text-stone-100 block text-[13px]">
                               {item.name}
                             </span>
-                            <span className="text-[10px] text-gray-400 font-mono">ID: {item.id}</span>
+                            <span className="text-[10px] text-gray-600 dark:text-gray-400 font-semibold font-mono">ID: {item.id}</span>
                           </div>
                         </div>
                       </td>
@@ -549,14 +549,14 @@ export default function BullionTab({
                 <h3 className={`font-serif text-lg font-bold ${titleColor}`}>
                   {editingItem ? `Edit Bullion Item: ${editingItem.name}` : 'Add New Bullion Product'}
                 </h3>
-                <p className={`text-xs ${subtitleColor}`}>
+                <p className={`text-[13.5px] font-medium text-gray-800 dark:text-gray-200`}>
                   Configure metal specifications, weight, refiner, live pricing, and image.
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => setIsModalOpen(false)}
-                className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-slate-800 flex items-center justify-center text-gray-500 cursor-pointer"
+                className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-slate-800 flex items-center justify-center text-gray-800 dark:text-gray-200 cursor-pointer"
               >
                 ✕
               </button>
@@ -576,7 +576,7 @@ export default function BullionTab({
                   placeholder="e.g. 10 Gram Minted Gold Bar"
                   value={formData.name || ''}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className={`w-full text-xs px-3.5 py-2.5 rounded-lg border border-gray-200 dark:border-slate-800 focus:outline-none focus:border-amber-600 ${inputBg}`}
+                  className={`w-full text-[14.5px] px-3.5 py-2.5 font-medium text-black rounded-lg border border-gray-200 dark:border-slate-800 focus:outline-none focus:border-amber-600 ${inputBg}`}
                 />
               </div>
 
@@ -596,7 +596,7 @@ export default function BullionTab({
                         vatStatus: e.target.value === 'gold' ? '0% VAT Exempt' : '20% Standard VAT',
                       })
                     }
-                    className={`w-full text-xs px-3.5 py-2.5 rounded-lg border border-gray-200 dark:border-slate-800 focus:outline-none focus:border-amber-600 ${inputBg}`}
+                    className={`w-full text-[14.5px] px-3.5 py-2.5 font-medium text-black rounded-lg border border-gray-200 dark:border-slate-800 focus:outline-none focus:border-amber-600 ${inputBg}`}
                   >
                     <option value="gold">Gold</option>
                     <option value="silver">Silver</option>
@@ -610,7 +610,7 @@ export default function BullionTab({
                   <select
                     value={formData.type}
                     onChange={(e) => setFormData({ ...formData, type: e.target.value as 'bar' | 'coin' })}
-                    className={`w-full text-xs px-3.5 py-2.5 rounded-lg border border-gray-200 dark:border-slate-800 focus:outline-none focus:border-amber-600 ${inputBg}`}
+                    className={`w-full text-[14.5px] px-3.5 py-2.5 font-medium text-black rounded-lg border border-gray-200 dark:border-slate-800 focus:outline-none focus:border-amber-600 ${inputBg}`}
                   >
                     <option value="bar">Minted Bar</option>
                     <option value="coin">Bullion Coin</option>
@@ -631,9 +631,9 @@ export default function BullionTab({
                     required
                     value={formData.weightGrams || ''}
                     onChange={(e) => setFormData({ ...formData, weightGrams: parseFloat(e.target.value) || 0 })}
-                    className={`w-full text-xs px-3.5 py-2.5 rounded-lg border border-gray-200 dark:border-slate-800 focus:outline-none focus:border-amber-600 ${inputBg}`}
+                    className={`w-full text-[14.5px] px-3.5 py-2.5 font-medium text-black rounded-lg border border-gray-200 dark:border-slate-800 focus:outline-none focus:border-amber-600 ${inputBg}`}
                   />
-                  <span className="text-xs font-bold text-gray-500">grams</span>
+                  <span className="text-xs font-bold text-gray-800 dark:text-gray-200">grams</span>
                 </div>
                 {/* Quick weight preset chips */}
                 <div className="flex flex-wrap gap-1.5 mt-2">
@@ -669,7 +669,7 @@ export default function BullionTab({
                     placeholder="e.g. PAMP Suisse, Royal Mint, Valcambi"
                     value={formData.refiner || ''}
                     onChange={(e) => setFormData({ ...formData, refiner: e.target.value })}
-                    className={`w-full text-xs px-3.5 py-2.5 rounded-lg border border-gray-200 dark:border-slate-800 focus:outline-none focus:border-amber-600 ${inputBg}`}
+                    className={`w-full text-[14.5px] px-3.5 py-2.5 font-medium text-black rounded-lg border border-gray-200 dark:border-slate-800 focus:outline-none focus:border-amber-600 ${inputBg}`}
                   />
                 </div>
 
@@ -683,7 +683,7 @@ export default function BullionTab({
                     placeholder="e.g. 999.9 (24K) or 916.7 (22K)"
                     value={formData.purity || ''}
                     onChange={(e) => setFormData({ ...formData, purity: e.target.value })}
-                    className={`w-full text-xs px-3.5 py-2.5 rounded-lg border border-gray-200 dark:border-slate-800 focus:outline-none focus:border-amber-600 ${inputBg}`}
+                    className={`w-full text-[14.5px] px-3.5 py-2.5 font-medium text-black rounded-lg border border-gray-200 dark:border-slate-800 focus:outline-none focus:border-amber-600 ${inputBg}`}
                   />
                 </div>
               </div>
@@ -728,7 +728,7 @@ export default function BullionTab({
                       max="1"
                       value={formData.premiumPercentage ?? 0.08}
                       onChange={(e) => setFormData({ ...formData, premiumPercentage: parseFloat(e.target.value) || 0 })}
-                      className={`w-full text-xs px-3 py-2 rounded-lg border border-gray-200 dark:border-slate-800 ${inputBg}`}
+                      className={`w-full text-[14px] px-3.5 py-2 font-medium text-black rounded-lg border border-gray-200 dark:border-slate-800 ${inputBg}`}
                     />
                   </div>
                 ) : (
@@ -743,7 +743,7 @@ export default function BullionTab({
                       placeholder="e.g. 98.50"
                       value={formData.customPriceOverride || ''}
                       onChange={(e) => setFormData({ ...formData, customPriceOverride: parseFloat(e.target.value) || 0 })}
-                      className={`w-full text-xs px-3 py-2 rounded-lg border border-gray-200 dark:border-slate-800 ${inputBg}`}
+                      className={`w-full text-[14px] px-3.5 py-2 font-medium text-black rounded-lg border border-gray-200 dark:border-slate-800 ${inputBg}`}
                     />
                   </div>
                 )}
