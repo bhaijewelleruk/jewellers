@@ -472,249 +472,204 @@ export function Header({
         />
       )}
 
-      {/* ── Mobile Side Navigation Drawer (High-End Luxury Editorial Structure) ── */}
+      {/* ── Mobile Side Navigation Drawer (Clean Haute Joaillerie Luxury) ── */}
       {drawerOpen && (
         <div className="fixed inset-0 z-[100] md:hidden">
+          {/* Dark Backdrop */}
           <div
             className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 z-[100] animate-fadeIn"
             onClick={() => setDrawerOpen(false)}
             aria-hidden="true"
           />
 
-          <div className="fixed top-0 left-0 bottom-0 w-[86%] max-w-[340px] bg-[#faf9f6] text-slate-800 border-r border-[#dfcca6] shadow-[0_0_60px_rgba(0,0,0,0.35)] flex flex-col z-[101] animate-slideRight">
+          {/* Drawer Panel */}
+          <div className="fixed top-0 left-0 bottom-0 w-[88%] max-w-[350px] bg-white text-stone-900 border-r border-[#e8dfcf] shadow-[0_0_50px_rgba(0,0,0,0.25)] flex flex-col z-[101] animate-slideRight">
             
-            {/* Drawer Luxury Header */}
-            <div className="p-4 sm:p-5 border-b border-[#dfcca6]/60 flex items-center justify-between bg-white">
-              <Link href="/" onClick={() => setDrawerOpen(false)} className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-full bg-[#1c1510] text-[#dec29b] flex items-center justify-center font-serif font-bold text-xs shadow-2xs border border-[#dfcca6]">
-                  BJ
-                </div>
-                <div>
-                  <span className="block text-[13px] tracking-[0.22em] text-slate-900 font-bold uppercase font-serif leading-tight">
-                    {brandName}
-                  </span>
-                  <span className="block text-[9px] tracking-[0.16em] text-[#8b6914] uppercase font-semibold">
-                    Haute Joaillerie & Bullion
-                  </span>
-                </div>
+            {/* ── Header: Brand Identity & Close ── */}
+            <div className="px-5 py-4 border-b border-[#f0e8db] flex items-center justify-between bg-white">
+              <Link href="/" onClick={() => setDrawerOpen(false)} className="block">
+                <span className="font-serif text-[15px] tracking-[0.22em] font-normal text-stone-900 uppercase">
+                  {brandName}
+                </span>
+                <span className="block text-[9px] tracking-[0.2em] text-[#9b7b32] uppercase font-medium mt-0.5">
+                  British Hallmarked • Est. 1985
+                </span>
               </Link>
 
               <button
                 type="button"
                 onClick={() => setDrawerOpen(false)}
                 aria-label="Close menu"
-                className="w-8 h-8 rounded-full bg-[#faf5ea] border border-[#dfcca6] flex items-center justify-center text-[#8b6914] hover:bg-[#8b6914] hover:text-white transition-all cursor-pointer shadow-2xs active:scale-90"
+                className="w-8 h-8 rounded-full bg-[#faf7f2] hover:bg-[#1a130f] hover:text-white text-stone-700 flex items-center justify-center transition-all cursor-pointer active:scale-95"
               >
-                <svg className="w-4 h-4 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
 
-            {/* Live Spot Quick Ribbon */}
-            <div className="px-4 pt-3 bg-[#faf9f6]">
-              <Link
-                href="/rates"
-                onClick={() => setDrawerOpen(false)}
-                className="flex items-center justify-between px-3.5 py-2 rounded-xl bg-white border border-[#dfcca6] hover:border-[#8b6914] transition-all shadow-2xs group"
-              >
-                <div className="flex items-center gap-2">
-                  <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-600"></span>
-                  </span>
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-slate-800">
-                    Live Bullion Spot
-                  </span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <span className="text-[11.5px] font-mono font-extrabold text-[#8b6914]">
-                    24K: £87.90/g
-                  </span>
-                  <span className="text-xs text-[#8b6914] group-hover:translate-x-0.5 transition-transform">
-                    →
-                  </span>
-                </div>
-              </Link>
-            </div>
+            {/* ── Quick Live Rates Bar (Clean, Minimalist Gold Ribbon) ── */}
+            <Link
+              href="/rates"
+              onClick={() => setDrawerOpen(false)}
+              className="mx-5 mt-3 px-3.5 py-2 rounded-xl bg-[#faf7f2] border border-[#e8dfcf] hover:border-[#9b7b32] flex items-center justify-between transition-all group"
+            >
+              <div className="flex items-center gap-2">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-600"></span>
+                </span>
+                <span className="text-[10.5px] font-bold text-stone-800 tracking-wider uppercase">
+                  Live Spot Desk
+                </span>
+              </div>
+              <div className="flex items-center gap-1.5 text-xs font-mono">
+                <span className="font-bold text-[#9b7b32]">
+                  24K: £87.90/g
+                </span>
+                <span className="text-stone-400 group-hover:translate-x-0.5 transition-transform text-[11px]">→</span>
+              </div>
+            </Link>
 
-            {/* Search Input inside Drawer */}
-            <div className="px-4 pt-2.5 pb-2 bg-[#faf9f6]">
+            {/* ── Search Input ── */}
+            <div className="px-5 pt-2.5 pb-1">
               <button
                 type="button"
                 onClick={() => {
                   setDrawerOpen(false);
                   setIsSearchOpen(true);
                 }}
-                className="w-full text-left flex items-center gap-2.5 px-3.5 py-2.5 rounded-full bg-white border border-[#dfcca6] hover:border-[#8b6914] active:scale-[0.98] transition-all shadow-2xs group cursor-pointer"
+                className="w-full text-left flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-[#faf9f7] border border-[#e8dfcf] hover:border-[#9b7b32] transition-all text-xs text-stone-500 group cursor-pointer"
               >
-                <svg className="w-4 h-4 text-[#8b6914] stroke-[2] flex-shrink-0 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-3.5 h-3.5 text-stone-400 group-hover:text-[#9b7b32] transition-colors" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                 </svg>
-                <span className="text-xs text-zinc-500 font-medium truncate">
-                  Search rings, necklaces, 21ct gold...
-                </span>
+                <span className="truncate">Search jewellery, bullion, 21ct...</span>
               </button>
             </div>
 
-            {/* Navigation Body */}
-            <div className="flex-1 overflow-y-auto px-4 py-2 space-y-4 bg-[#faf9f6]">
+            {/* ── Scrollable Menu Content (Clean Luxury Editorial Hierarchy) ── */}
+            <div className="flex-1 overflow-y-auto px-5 py-2 divide-y divide-[#f0e8db]">
               
-              {/* Primary Luxury Nav Links */}
-              <div className="bg-white rounded-2xl p-2 border border-[#dfcca6]/60 shadow-2xs">
+              {/* Section 1: Fine Jewellery */}
+              <div className="py-2.5">
+                <p className="text-[10px] tracking-[0.24em] uppercase text-[#9b7b32] font-bold mb-1.5">
+                  Fine Jewellery
+                </p>
                 <nav className="flex flex-col space-y-0.5">
                   {[
-                    { name: 'Home', href: '/' },
-                    { name: 'Live Rates Portal', href: '/rates', isLive: true, badge: 'Live Spot' },
-                    { name: 'Minted Gold Bars', href: '/gold-bars', badge: '0% VAT' },
-                    { name: 'Investment Silver', href: '/silver' },
                     { name: 'Shop All Jewellery', href: '/shop' },
-                    { name: 'Zakat Calculator', href: '/zakat', badge: 'Nisab' },
-                    { name: 'Sell Scrap Gold', href: '/sell-your-gold', badge: 'Cash Out' },
-                  ].map((link, idx) => {
-                    const isCurrent = link.name === 'Home' ? isHomeActive : pathname === link.href;
-                    return (
-                      <Link
-                        key={link.name}
-                        href={link.href}
-                        onClick={() => setDrawerOpen(false)}
-                        className={`flex items-center justify-between py-2.5 px-3 rounded-xl text-xs sm:text-[13px] tracking-wide transition-all ${
-                          isCurrent
-                            ? 'bg-[#faf5ea] text-[#8b6914] font-bold shadow-2xs'
-                            : 'text-slate-800 hover:text-[#8b6914] hover:bg-[#faf8f5] font-semibold'
-                        }`}
-                      >
-                        <span className="flex items-center gap-2">
-                          {link.isLive ? (
-                            <span className="relative flex h-2 w-2">
-                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
-                              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-600"></span>
-                            </span>
-                          ) : (
-                            <span className={`w-1.5 h-1.5 rounded-full ${isCurrent ? 'bg-[#8b6914]' : 'bg-[#dfcca6]'}`} />
-                          )}
-                          <span>{link.name}</span>
-                        </span>
-
-                        <div className="flex items-center gap-1.5">
-                          {link.badge && (
-                            <span className="text-[9px] font-bold uppercase tracking-wider bg-[#faf5ea] text-[#8b6914] px-1.5 py-0.2 rounded border border-[#dfcca6]">
-                              {link.badge}
-                            </span>
-                          )}
-                          <svg className="w-3.5 h-3.5 stroke-[2] text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-                          </svg>
-                        </div>
-                      </Link>
-                    );
-                  })}
+                    { name: 'Rings & Solitaires', href: '/shop?category=Rings' },
+                    { name: 'Necklaces & Pendants', href: '/shop?category=Necklaces' },
+                    { name: 'Earrings & Drops', href: '/shop?category=Earrings' },
+                    { name: 'Bracelets & Bangles', href: '/shop?category=Bracelets' },
+                  ].map((link) => (
+                    <Link
+                      key={link.name}
+                      href={link.href}
+                      onClick={() => setDrawerOpen(false)}
+                      className="flex items-center justify-between py-2 text-[13px] font-medium text-stone-800 hover:text-[#9b7b32] hover:translate-x-1 transition-all"
+                    >
+                      <span>{link.name}</span>
+                      <span className="text-stone-300 text-xs">›</span>
+                    </Link>
+                  ))}
                 </nav>
               </div>
 
-              {/* Curated Jewellery Categories (Clean Luxury Strip) */}
-              <div>
-                <p className="text-[10px] tracking-[0.22em] uppercase text-[#8b6914] font-bold mb-2 px-1">
-                  COLLECTIONS & JEWELLERY
+              {/* Section 2: Bullion & Investment */}
+              <div className="py-2.5">
+                <p className="text-[10px] tracking-[0.24em] uppercase text-[#9b7b32] font-bold mb-1.5">
+                  Bullion & Investment
                 </p>
-                <div className="grid grid-cols-2 gap-2">
+                <nav className="flex flex-col space-y-0.5">
                   {[
-                    { name: 'Rings', href: '/shop?category=Rings', icon: '💍' },
-                    { name: 'Necklaces', href: '/shop?category=Necklaces', icon: '✨' },
-                    { name: 'Earrings', href: '/shop?category=Earrings', icon: '💎' },
-                    { name: 'Bracelets', href: '/shop?category=Bracelets', icon: '💫' },
-                  ].map((cat) => (
+                    { name: 'Live Rates Portal', href: '/rates', badge: 'Live Spot' },
+                    { name: 'Minted Gold Bars', href: '/gold-bars', badge: '0% VAT' },
+                    { name: 'Investment Silver', href: '/silver' },
+                    { name: 'Zakat Calculator', href: '/zakat', badge: 'Nisab' },
+                    { name: 'Sell Scrap Gold', href: '/sell-your-gold', badge: 'Cash Out' },
+                  ].map((link) => (
                     <Link
-                      key={cat.name}
-                      href={cat.href}
+                      key={link.name}
+                      href={link.href}
                       onClick={() => setDrawerOpen(false)}
-                      className="flex items-center gap-2 p-2.5 rounded-xl bg-white border border-[#dfcca6]/70 text-xs font-bold text-slate-800 hover:border-[#8b6914] hover:bg-[#faf5ea] hover:text-[#8b6914] transition-all shadow-2xs active:scale-95 cursor-pointer"
+                      className="flex items-center justify-between py-2 text-[13px] font-medium text-stone-800 hover:text-[#9b7b32] hover:translate-x-1 transition-all"
                     >
-                      <span className="text-sm">{cat.icon}</span>
-                      <span className="truncate">{cat.name}</span>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-
-              {/* Curated Bullion & Wealth Services (Professional 2-Column Cards) */}
-              <div>
-                <p className="text-[10px] tracking-[0.22em] uppercase text-[#8b6914] font-bold mb-2 px-1 flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
-                  BULLION & WEALTH SERVICES
-                </p>
-                <div className="grid grid-cols-2 gap-2">
-                  {[
-                    { title: 'Gold Bars', desc: '0% VAT PAMP Bars', href: '/gold-bars', icon: '🪙' },
-                    { title: 'Live Rates', desc: 'LBMA Spot Desk', href: '/rates', icon: '📈' },
-                    { title: 'Zakat Nisab', desc: 'Islamic Calculator', href: '/zakat', icon: '⚖️' },
-                    { title: 'Sell Gold', desc: 'Instant Cash Estimate', href: '/sell-your-gold', icon: '💰' },
-                  ].map((srv) => (
-                    <Link
-                      key={srv.title}
-                      href={srv.href}
-                      onClick={() => setDrawerOpen(false)}
-                      className="p-2.5 rounded-xl bg-white border border-[#dfcca6]/70 hover:border-[#8b6914] hover:bg-[#faf5ea] transition-all shadow-2xs group flex flex-col justify-between"
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="text-base">{srv.icon}</span>
-                        <span className="text-[10px] text-[#8b6914] group-hover:translate-x-0.5 transition-transform">→</span>
-                      </div>
-                      <div className="mt-1.5">
-                        <p className="text-xs font-bold text-slate-900 leading-tight group-hover:text-[#8b6914]">
-                          {srv.title}
-                        </p>
-                        <p className="text-[9.5px] text-zinc-500 font-medium leading-tight mt-0.5">
-                          {srv.desc}
-                        </p>
+                      <span>{link.name}</span>
+                      <div className="flex items-center gap-1.5">
+                        {link.badge && (
+                          <span className="text-[9px] font-semibold uppercase tracking-wider bg-[#faf5ea] text-[#8b6914] px-1.5 py-0.5 rounded border border-[#dfcca6]">
+                            {link.badge}
+                          </span>
+                        )}
+                        <span className="text-stone-300 text-xs">›</span>
                       </div>
                     </Link>
                   ))}
-                </div>
+                </nav>
               </div>
 
-              {/* Showroom & Concierge Card */}
-              <div className="bg-white rounded-2xl p-3.5 border border-[#dfcca6]/80 shadow-2xs space-y-2.5">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] uppercase tracking-wider font-bold text-[#8b6914]">
+              {/* Section 3: The Maison */}
+              <div className="py-2.5">
+                <p className="text-[10px] tracking-[0.24em] uppercase text-[#9b7b32] font-bold mb-1.5">
+                  The Maison
+                </p>
+                <nav className="flex flex-col space-y-0.5">
+                  {[
+                    { name: 'Home', href: '/' },
+                    { name: 'About Our Heritage', href: '/about' },
+                    { name: 'Contact Showroom', href: '/contact' },
+                  ].map((link) => (
+                    <Link
+                      key={link.name}
+                      href={link.href}
+                      onClick={() => setDrawerOpen(false)}
+                      className="flex items-center justify-between py-2 text-[13px] font-medium text-stone-800 hover:text-[#9b7b32] hover:translate-x-1 transition-all"
+                    >
+                      <span>{link.name}</span>
+                      <span className="text-stone-300 text-xs">›</span>
+                    </Link>
+                  ))}
+                </nav>
+              </div>
+
+              {/* Section 4: Bradford Showroom & Concierge */}
+              <div className="pt-3 pb-3 space-y-2.5">
+                <div className="bg-[#faf8f5] rounded-xl p-3 border border-[#e8dfcf]">
+                  <p className="text-[10.5px] font-bold text-stone-900 uppercase tracking-wider mb-0.5">
                     Bradford Showroom
-                  </span>
-                  <span className="text-[9px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200">
-                    Open Mon-Sat
-                  </span>
+                  </p>
+                  <p className="text-[11px] text-stone-500 leading-relaxed mb-2.5">
+                    West Yorkshire • Private boutique & bullion desk by appointment.
+                  </p>
+                  <div className="grid grid-cols-2 gap-2">
+                    <a
+                      href="https://wa.me/447472027202?text=Hello%20Bhai%20Jeweller,%20I%20would%20like%20to%20inquire%20about%20bullion%20and%20rates."
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="py-2 px-2 text-center rounded-lg bg-[#1a130f] hover:bg-[#8b6914] text-white text-[10.5px] font-semibold transition-all shadow-xs"
+                    >
+                      WhatsApp Desk
+                    </a>
+                    <Link
+                      href="/contact"
+                      onClick={() => setDrawerOpen(false)}
+                      className="py-2 px-2 text-center rounded-lg bg-white hover:bg-[#faf5ea] text-stone-800 border border-[#dfcca6] text-[10.5px] font-semibold transition-all"
+                    >
+                      VIP Booking
+                    </Link>
+                  </div>
                 </div>
-                <p className="text-[11px] text-slate-700 leading-snug">
-                  Experience our private bullion desk and bespoke fine jewellery showroom.
-                </p>
-                <div className="grid grid-cols-2 gap-2 pt-1">
-                  <a
-                    href="https://wa.me/447472027202?text=Hello%20Bhai%20Jeweller,%20I%20would%20like%20to%20inquire%20about%20bullion%20and%20rates."
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="py-2 px-2 text-center rounded-xl bg-[#1c1510] hover:bg-[#8b6914] text-white text-[10.5px] font-bold transition-all shadow-xs"
-                  >
-                    WhatsApp Desk
-                  </a>
-                  <Link
-                    href="/contact"
-                    onClick={() => setDrawerOpen(false)}
-                    className="py-2 px-2 text-center rounded-xl bg-[#faf5ea] hover:bg-white text-[#8b6914] border border-[#dfcca6] text-[10.5px] font-bold transition-all"
-                  >
-                    VIP Booking
-                  </Link>
-                </div>
-              </div>
 
-              {/* Bottom Copyright and quick footer links */}
-              <div className="pt-2 pb-3 flex items-center justify-between text-[10.5px] text-zinc-500 font-normal">
-                <span>© {new Date().getFullYear()} Bhai Jeweller</span>
-                <div className="flex items-center gap-3">
-                  <Link href="/about" onClick={() => setDrawerOpen(false)} className="text-[#8b6914] hover:underline font-bold">About</Link>
-                  <Link href="/contact" onClick={() => setDrawerOpen(false)} className="text-[#8b6914] hover:underline font-bold">Support</Link>
+                <div className="flex items-center justify-between text-[10.5px] text-stone-400 pt-0.5">
+                  <span>© {new Date().getFullYear()} Bhai Jeweller</span>
+                  <span>UK Assay Hallmarked</span>
                 </div>
               </div>
 
             </div>
+
           </div>
         </div>
       )}
