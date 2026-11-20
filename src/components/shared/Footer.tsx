@@ -137,6 +137,14 @@ export function Footer() {
     { name: 'Contact', href: '/contact' },
   ];
 
+  const bullionLinks = [
+    { name: 'Live Spot Rates', href: '/rates' },
+    { name: 'Investment Gold Bars', href: '/gold-bars' },
+    { name: 'Silver Bullion', href: '/silver' },
+    { name: 'Zakat Calculator', href: '/zakat' },
+    { name: 'Sell Your Scrap Gold', href: '/sell-your-gold' },
+  ];
+
   const customerCare = [
     { name: 'Terms & Conditions', href: '/terms' },
     { name: 'Privacy Policy', href: '/privacy' },
@@ -202,8 +210,8 @@ export function Footer() {
           </form>
         </div>
 
-        {/* 2-Column Links on Mobile */}
-        <div className="grid grid-cols-2 gap-4 py-5 border-b border-[#eee5dc] text-left">
+        {/* 3-Column Links on Mobile */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 py-5 border-b border-[#eee5dc] text-left">
           <div>
             <h4 className="text-[10px] tracking-[0.22em] uppercase text-[#9e7d56] font-semibold mb-2.5">
               Quick Links
@@ -220,6 +228,22 @@ export function Footer() {
           </div>
 
           <div>
+            <h4 className="text-[10px] tracking-[0.22em] uppercase text-[#9e7d56] font-semibold mb-2.5 flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              Bullion & Rates
+            </h4>
+            <ul className="space-y-2">
+              {bullionLinks.map((link) => (
+                <li key={link.name}>
+                  <Link href={link.href} className="text-xs text-[#4d3d31] hover:text-[#9e7d56] font-normal transition-colors block">
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="col-span-2 sm:col-span-1 pt-2 sm:pt-0">
             <h4 className="text-[10px] tracking-[0.22em] uppercase text-[#9e7d56] font-semibold mb-2.5">
               Customer Care
             </h4>
@@ -307,7 +331,7 @@ export function Footer() {
         </div>
 
         {/* Middle Links Grid */}
-        <div className="grid grid-cols-4 gap-8 py-10 border-b border-[#eee5dc]">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-8 py-10 border-b border-[#eee5dc]">
           {/* Col 1: Collections */}
           <div>
             <h4 className="text-xs tracking-[0.22em] uppercase text-[#1c1510] font-semibold mb-4">
@@ -324,7 +348,24 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Col 2: Customer Care */}
+          {/* Col 2: Bullion & Rates */}
+          <div>
+            <h4 className="text-xs tracking-[0.22em] uppercase text-[#1c1510] font-semibold mb-4 flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              Bullion & Rates
+            </h4>
+            <ul className="space-y-2.5">
+              {bullionLinks.map((link) => (
+                <li key={link.name}>
+                  <Link href={link.href} className="text-xs lg:text-[13px] text-[#4d3d31] hover:text-[#9e7d56] font-normal transition-colors">
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Col 3: Customer Care */}
           <div>
             <h4 className="text-xs tracking-[0.22em] uppercase text-[#1c1510] font-semibold mb-4">
               Customer Care

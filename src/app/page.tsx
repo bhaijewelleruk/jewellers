@@ -6,6 +6,8 @@ import {
   TrustFeaturesBar,
   CollectionsBanner,
 } from '@/components/shared';
+import LiveRateTicker from '@/components/rates/LiveRateTicker';
+import HomeBullionShowcase from '@/components/home/HomeBullionShowcase';
 
 // Lazy-load interactive and below-fold components
 const TextLoop = dynamic(
@@ -91,10 +93,17 @@ export default function HomePage() {
         </div>
       </div>
 
+      {/* ── Live Bullion Spot Market Ticker ── */}
+      <LiveRateTicker />
+
       {/* ── Trust Features Bar & Collections ── */}
       <TrustFeaturesBar />
       <CollectionsBanner />
       <CuratedCollections />
+
+      {/* ── LBMA Accredited Investment Gold Bars Carousel Showcase ── */}
+      <HomeBullionShowcase />
+
       <FeaturedProducts />
       <OurStory />
       <div className="hidden md:block">

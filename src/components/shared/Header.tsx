@@ -116,14 +116,21 @@ export function Header({
 
   const navLinks = [
     { name: 'Home', href: '/' },
+    { name: 'Live Rates', href: '/rates', isLive: true },
+    { name: 'Gold Bars', href: '/gold-bars' },
     { name: 'Categories', href: '/categories', hasDropdown: true },
     { name: 'Shop All', href: '/shop' },
     { name: 'Rings', href: '/shop?category=Rings' },
     { name: 'Necklaces', href: '/shop?category=Necklaces' },
-    { name: 'Earrings', href: '/shop?category=Earrings' },
   ];
 
   const isHomeActive = pathname === '/';
+  const isRatesOrBullionPage =
+    pathname?.startsWith('/rates') ||
+    pathname?.startsWith('/gold-bars') ||
+    pathname?.startsWith('/silver') ||
+    pathname?.startsWith('/zakat') ||
+    pathname?.startsWith('/sell-your-gold');
 
   return (
     <>
@@ -131,6 +138,12 @@ export function Header({
         className={`${
           isRelative
             ? 'relative w-full z-40'
+            : isRatesOrBullionPage
+            ? `sticky top-0 left-0 w-full z-40 bg-[#120e0b] md:bg-transparent md:fixed md:left-0 md:max-w-full md:pointer-events-none md:transition-all md:duration-300 md:ease-out ${
+                isScrolled
+                  ? 'md:top-2 md:sm:top-3.5'
+                  : 'md:top-[33px] md:sm:top-[35px] md:top-[37px]'
+              }`
             : `relative w-full z-40 bg-transparent ${
                 solidBg ? '' : '-mb-16 md:mb-0'
               } md:fixed md:left-0 md:max-w-full md:pointer-events-none md:transition-all md:duration-300 md:ease-out ${
@@ -205,7 +218,11 @@ export function Header({
           </div>
         ) : (
           /* ── NORMAL HEADER: Full-Width on Mobile; Floating Glass Capsule on Desktop ── */
-          <div className={`w-full ${solidBg ? 'bg-[#140e0b] border-b border-white/5 md:border-b-0' : 'bg-transparent'} md:bg-transparent pointer-events-auto`}>
+          <div className={`w-full ${
+            solidBg || isRatesOrBullionPage
+              ? 'bg-[#120e0b] border-b border-[#dfcca6]/30 shadow-md md:border-b-0 md:bg-transparent'
+              : 'bg-transparent'
+          } md:bg-transparent pointer-events-auto`}>
             <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-0 md:pt-2.5 md:sm:pt-3">
               <div
                 className={`w-full transition-all duration-300 flex items-center justify-between gap-2 sm:gap-4 py-3 md:py-2 ${
@@ -269,12 +286,18 @@ export function Header({
                     <Link
                       key={link.name}
                       href={link.href}
-                      className={`px-3 py-1.5 rounded-full text-xs sm:text-[13px] font-normal transition-all duration-200 inline-flex items-center gap-1 ${
+                      className={`px-3 py-1.5 rounded-full text-xs sm:text-[13px] font-normal transition-all duration-200 inline-flex items-center gap-1.5 ${
                         isCurrent
                           ? 'text-[#f3dfc8] font-medium'
                           : 'text-[#ded5cb] hover:text-[#f3dfc8] hover:bg-white/5'
                       }`}
                     >
+                      {link.isLive && (
+                        <span className="relative flex h-2 w-2">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                          <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                        </span>
+                      )}
                       <span>{link.name}</span>
                       {link.hasDropdown && (
                         <svg className="w-2.5 h-2.5 opacity-60 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -449,138 +472,248 @@ export function Header({
         />
       )}
 
-      {/* ── Mobile Side Navigation Drawer (Animated Luxury Slider) ── */}
+      {/* ── Mobile Side Navigation Drawer (High-End Luxury Editorial Structure) ── */}
       {drawerOpen && (
         <div className="fixed inset-0 z-[100] md:hidden">
           <div
-            className="fixed inset-0 bg-black/80 backdrop-blur-md transition-opacity duration-300 z-[100] animate-fadeIn"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 z-[100] animate-fadeIn"
             onClick={() => setDrawerOpen(false)}
             aria-hidden="true"
           />
 
-          <div className="fixed top-0 left-0 bottom-0 w-[86%] max-w-[340px] bg-[#140e0b] text-[#f5efe8] border-r border-[#dec29b]/30 shadow-[0_0_60px_rgba(0,0,0,0.85)] flex flex-col z-[101] animate-slideRight">
-            {/* Drawer Header */}
-            <div className="p-5 border-b border-white/10 flex items-center justify-between bg-[#140e0b]">
-              <Link href="/" onClick={() => setDrawerOpen(false)} className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-[#dec29b] shadow-[0_0_8px_rgba(222,194,155,0.8)]" />
-                <span className="text-sm tracking-[0.24em] text-[#f5efe8] font-semibold uppercase leading-tight">
-                  {brandName}
-                </span>
+          <div className="fixed top-0 left-0 bottom-0 w-[86%] max-w-[340px] bg-[#faf9f6] text-slate-800 border-r border-[#dfcca6] shadow-[0_0_60px_rgba(0,0,0,0.35)] flex flex-col z-[101] animate-slideRight">
+            
+            {/* Drawer Luxury Header */}
+            <div className="p-4 sm:p-5 border-b border-[#dfcca6]/60 flex items-center justify-between bg-white">
+              <Link href="/" onClick={() => setDrawerOpen(false)} className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-full bg-[#1c1510] text-[#dec29b] flex items-center justify-center font-serif font-bold text-xs shadow-2xs border border-[#dfcca6]">
+                  BJ
+                </div>
+                <div>
+                  <span className="block text-[13px] tracking-[0.22em] text-slate-900 font-bold uppercase font-serif leading-tight">
+                    {brandName}
+                  </span>
+                  <span className="block text-[9px] tracking-[0.16em] text-[#8b6914] uppercase font-semibold">
+                    Haute Joaillerie & Bullion
+                  </span>
+                </div>
               </Link>
 
               <button
                 type="button"
                 onClick={() => setDrawerOpen(false)}
                 aria-label="Close menu"
-                className="w-8.5 h-8.5 rounded-full bg-white/[0.06] border border-white/15 flex items-center justify-center text-[#dec29b] hover:bg-[#dec29b] hover:text-[#140e0b] transition-all cursor-pointer shadow-xs active:scale-90"
+                className="w-8 h-8 rounded-full bg-[#faf5ea] border border-[#dfcca6] flex items-center justify-center text-[#8b6914] hover:bg-[#8b6914] hover:text-white transition-all cursor-pointer shadow-2xs active:scale-90"
               >
-                <svg className="w-4 h-4 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
 
+            {/* Live Spot Quick Ribbon */}
+            <div className="px-4 pt-3 bg-[#faf9f6]">
+              <Link
+                href="/rates"
+                onClick={() => setDrawerOpen(false)}
+                className="flex items-center justify-between px-3.5 py-2 rounded-xl bg-white border border-[#dfcca6] hover:border-[#8b6914] transition-all shadow-2xs group"
+              >
+                <div className="flex items-center gap-2">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-600"></span>
+                  </span>
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-slate-800">
+                    Live Bullion Spot
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[11.5px] font-mono font-extrabold text-[#8b6914]">
+                    24K: £87.90/g
+                  </span>
+                  <span className="text-xs text-[#8b6914] group-hover:translate-x-0.5 transition-transform">
+                    →
+                  </span>
+                </div>
+              </Link>
+            </div>
+
             {/* Search Input inside Drawer */}
-            <div className="px-5 pt-4 pb-2 bg-[#140e0b]">
+            <div className="px-4 pt-2.5 pb-2 bg-[#faf9f6]">
               <button
                 type="button"
                 onClick={() => {
                   setDrawerOpen(false);
                   setIsSearchOpen(true);
                 }}
-                className="w-full text-left flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-[#1c1511] border border-[#dec29b]/40 hover:border-[#dec29b] active:scale-[0.98] transition-all shadow-inner group cursor-pointer"
+                className="w-full text-left flex items-center gap-2.5 px-3.5 py-2.5 rounded-full bg-white border border-[#dfcca6] hover:border-[#8b6914] active:scale-[0.98] transition-all shadow-2xs group cursor-pointer"
               >
-                <svg className="w-4 h-4 text-[#dec29b] stroke-[2] flex-shrink-0 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-[#8b6914] stroke-[2] flex-shrink-0 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                 </svg>
-                <span className="text-xs text-white/90 font-medium truncate">
+                <span className="text-xs text-zinc-500 font-medium truncate">
                   Search rings, necklaces, 21ct gold...
                 </span>
               </button>
             </div>
 
-            {/* Navigation Links with Staggered Entrance (Crisp White Text) */}
-            <div className="flex-1 overflow-y-auto px-5 py-4 divide-y divide-white/10 bg-[#140e0b]">
-              <nav className="flex flex-col pb-4 space-y-1">
-                {navLinks.map((link, idx) => {
-                  const isCurrent = link.name === 'Home' ? isHomeActive : pathname === link.href;
-                  return (
-                    <Link
-                      key={link.name}
-                      href={link.href}
-                      onClick={() => setDrawerOpen(false)}
-                      style={{ animationDelay: `${idx * 40}ms` }}
-                      className={`flex items-center justify-between py-3 px-3.5 rounded-xl text-sm tracking-wide transition-all animate-fadeIn ${
-                        isCurrent
-                          ? 'bg-[#dec29b]/20 text-white border border-[#dec29b]/50 font-bold'
-                          : 'text-white hover:text-[#dec29b] hover:bg-white/[0.08] font-semibold'
-                      }`}
-                    >
-                      <span className="flex items-center gap-2.5">
-                        <span className={`w-1.5 h-1.5 rounded-full ${isCurrent ? 'bg-[#dec29b]' : 'bg-transparent'}`} />
-                        <span className="text-white">{link.name}</span>
-                      </span>
-                      <svg className="w-3.5 h-3.5 stroke-[2] text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-                      </svg>
-                    </Link>
-                  );
-                })}
-              </nav>
+            {/* Navigation Body */}
+            <div className="flex-1 overflow-y-auto px-4 py-2 space-y-4 bg-[#faf9f6]">
+              
+              {/* Primary Luxury Nav Links */}
+              <div className="bg-white rounded-2xl p-2 border border-[#dfcca6]/60 shadow-2xs">
+                <nav className="flex flex-col space-y-0.5">
+                  {[
+                    { name: 'Home', href: '/' },
+                    { name: 'Live Rates Portal', href: '/rates', isLive: true, badge: 'Live Spot' },
+                    { name: 'Minted Gold Bars', href: '/gold-bars', badge: '0% VAT' },
+                    { name: 'Investment Silver', href: '/silver' },
+                    { name: 'Shop All Jewellery', href: '/shop' },
+                    { name: 'Zakat Calculator', href: '/zakat', badge: 'Nisab' },
+                    { name: 'Sell Scrap Gold', href: '/sell-your-gold', badge: 'Cash Out' },
+                  ].map((link, idx) => {
+                    const isCurrent = link.name === 'Home' ? isHomeActive : pathname === link.href;
+                    return (
+                      <Link
+                        key={link.name}
+                        href={link.href}
+                        onClick={() => setDrawerOpen(false)}
+                        className={`flex items-center justify-between py-2.5 px-3 rounded-xl text-xs sm:text-[13px] tracking-wide transition-all ${
+                          isCurrent
+                            ? 'bg-[#faf5ea] text-[#8b6914] font-bold shadow-2xs'
+                            : 'text-slate-800 hover:text-[#8b6914] hover:bg-[#faf8f5] font-semibold'
+                        }`}
+                      >
+                        <span className="flex items-center gap-2">
+                          {link.isLive ? (
+                            <span className="relative flex h-2 w-2">
+                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
+                              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-600"></span>
+                            </span>
+                          ) : (
+                            <span className={`w-1.5 h-1.5 rounded-full ${isCurrent ? 'bg-[#8b6914]' : 'bg-[#dfcca6]'}`} />
+                          )}
+                          <span>{link.name}</span>
+                        </span>
 
-              {/* Collections Quick Cards */}
-              <div className="pt-4 pb-2">
-                <p className="text-[11px] tracking-[0.28em] uppercase text-[#dec29b] font-bold mb-3">
-                  FEATURED CATEGORIES
+                        <div className="flex items-center gap-1.5">
+                          {link.badge && (
+                            <span className="text-[9px] font-bold uppercase tracking-wider bg-[#faf5ea] text-[#8b6914] px-1.5 py-0.2 rounded border border-[#dfcca6]">
+                              {link.badge}
+                            </span>
+                          )}
+                          <svg className="w-3.5 h-3.5 stroke-[2] text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                          </svg>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </nav>
+              </div>
+
+              {/* Curated Jewellery Categories (Clean Luxury Strip) */}
+              <div>
+                <p className="text-[10px] tracking-[0.22em] uppercase text-[#8b6914] font-bold mb-2 px-1">
+                  COLLECTIONS & JEWELLERY
                 </p>
                 <div className="grid grid-cols-2 gap-2">
                   {[
-                    { name: 'Rings', href: '/shop?category=Rings' },
-                    { name: 'Necklaces', href: '/shop?category=Necklaces' },
-                    { name: 'Earrings', href: '/shop?category=Earrings' },
-                    { name: 'Bracelets', href: '/shop?category=Bracelets' },
+                    { name: 'Rings', href: '/shop?category=Rings', icon: '💍' },
+                    { name: 'Necklaces', href: '/shop?category=Necklaces', icon: '✨' },
+                    { name: 'Earrings', href: '/shop?category=Earrings', icon: '💎' },
+                    { name: 'Bracelets', href: '/shop?category=Bracelets', icon: '💫' },
                   ].map((cat) => (
                     <Link
                       key={cat.name}
                       href={cat.href}
                       onClick={() => setDrawerOpen(false)}
-                      className="p-3 rounded-lg bg-[#1c1511] border border-[#dec29b]/30 text-center text-xs font-bold text-white hover:border-[#dec29b] hover:bg-[#dec29b]/20 transition-all shadow-xs active:scale-95 cursor-pointer"
+                      className="flex items-center gap-2 p-2.5 rounded-xl bg-white border border-[#dfcca6]/70 text-xs font-bold text-slate-800 hover:border-[#8b6914] hover:bg-[#faf5ea] hover:text-[#8b6914] transition-all shadow-2xs active:scale-95 cursor-pointer"
                     >
-                      {cat.name}
+                      <span className="text-sm">{cat.icon}</span>
+                      <span className="truncate">{cat.name}</span>
                     </Link>
                   ))}
                 </div>
               </div>
 
-              {/* Customer Service info */}
-              <div className="pt-4 space-y-2.5 text-xs text-white/95 font-medium">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-6 h-6 rounded-full bg-[#1c1511] border border-[#dec29b]/40 flex items-center justify-center text-[#dec29b] flex-shrink-0">
-                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
-                    </svg>
-                  </div>
-                  <span className="text-white">Bradford, West Yorkshire, UK</span>
-                </div>
-                <div className="flex items-center gap-2.5">
-                  <div className="w-6 h-6 rounded-full bg-[#1c1511] border border-[#dec29b]/40 flex items-center justify-center text-[#dec29b] flex-shrink-0">
-                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
-                    </svg>
-                  </div>
-                  <span className="text-white">+44 (0) 1274 000 000</span>
+              {/* Curated Bullion & Wealth Services (Professional 2-Column Cards) */}
+              <div>
+                <p className="text-[10px] tracking-[0.22em] uppercase text-[#8b6914] font-bold mb-2 px-1 flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
+                  BULLION & WEALTH SERVICES
+                </p>
+                <div className="grid grid-cols-2 gap-2">
+                  {[
+                    { title: 'Gold Bars', desc: '0% VAT PAMP Bars', href: '/gold-bars', icon: '🪙' },
+                    { title: 'Live Rates', desc: 'LBMA Spot Desk', href: '/rates', icon: '📈' },
+                    { title: 'Zakat Nisab', desc: 'Islamic Calculator', href: '/zakat', icon: '⚖️' },
+                    { title: 'Sell Gold', desc: 'Instant Cash Estimate', href: '/sell-your-gold', icon: '💰' },
+                  ].map((srv) => (
+                    <Link
+                      key={srv.title}
+                      href={srv.href}
+                      onClick={() => setDrawerOpen(false)}
+                      className="p-2.5 rounded-xl bg-white border border-[#dfcca6]/70 hover:border-[#8b6914] hover:bg-[#faf5ea] transition-all shadow-2xs group flex flex-col justify-between"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-base">{srv.icon}</span>
+                        <span className="text-[10px] text-[#8b6914] group-hover:translate-x-0.5 transition-transform">→</span>
+                      </div>
+                      <div className="mt-1.5">
+                        <p className="text-xs font-bold text-slate-900 leading-tight group-hover:text-[#8b6914]">
+                          {srv.title}
+                        </p>
+                        <p className="text-[9.5px] text-zinc-500 font-medium leading-tight mt-0.5">
+                          {srv.desc}
+                        </p>
+                      </div>
+                    </Link>
+                  ))}
                 </div>
               </div>
-            </div>
 
-            {/* Drawer Footer */}
-            <div className="p-4 border-t border-white/10 bg-[#120e0b] flex items-center justify-between text-xs text-white">
-              <span className="text-white font-medium">© {new Date().getFullYear()} Bhai Jeweller</span>
-              <div className="flex items-center gap-3 font-semibold text-white">
-                <Link href="/about" onClick={() => setDrawerOpen(false)} className="text-white hover:text-[#dec29b] transition-colors">About</Link>
-                <Link href="/contact" onClick={() => setDrawerOpen(false)} className="text-white hover:text-[#dec29b] transition-colors">Support</Link>
+              {/* Showroom & Concierge Card */}
+              <div className="bg-white rounded-2xl p-3.5 border border-[#dfcca6]/80 shadow-2xs space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] uppercase tracking-wider font-bold text-[#8b6914]">
+                    Bradford Showroom
+                  </span>
+                  <span className="text-[9px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200">
+                    Open Mon-Sat
+                  </span>
+                </div>
+                <p className="text-[11px] text-slate-700 leading-snug">
+                  Experience our private bullion desk and bespoke fine jewellery showroom.
+                </p>
+                <div className="grid grid-cols-2 gap-2 pt-1">
+                  <a
+                    href="https://wa.me/447472027202?text=Hello%20Bhai%20Jeweller,%20I%20would%20like%20to%20inquire%20about%20bullion%20and%20rates."
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="py-2 px-2 text-center rounded-xl bg-[#1c1510] hover:bg-[#8b6914] text-white text-[10.5px] font-bold transition-all shadow-xs"
+                  >
+                    WhatsApp Desk
+                  </a>
+                  <Link
+                    href="/contact"
+                    onClick={() => setDrawerOpen(false)}
+                    className="py-2 px-2 text-center rounded-xl bg-[#faf5ea] hover:bg-white text-[#8b6914] border border-[#dfcca6] text-[10.5px] font-bold transition-all"
+                  >
+                    VIP Booking
+                  </Link>
+                </div>
               </div>
+
+              {/* Bottom Copyright and quick footer links */}
+              <div className="pt-2 pb-3 flex items-center justify-between text-[10.5px] text-zinc-500 font-normal">
+                <span>© {new Date().getFullYear()} Bhai Jeweller</span>
+                <div className="flex items-center gap-3">
+                  <Link href="/about" onClick={() => setDrawerOpen(false)} className="text-[#8b6914] hover:underline font-bold">About</Link>
+                  <Link href="/contact" onClick={() => setDrawerOpen(false)} className="text-[#8b6914] hover:underline font-bold">Support</Link>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
