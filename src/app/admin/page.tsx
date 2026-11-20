@@ -45,7 +45,6 @@ import SlidesTab, { HeroFormState, AdminSlide } from '@/components/admin/tabs/Sl
 import OrdersTab from '@/components/admin/tabs/OrdersTab';
 import EnquiriesTab, { AdminEnquiry } from '@/components/admin/tabs/EnquiriesTab';
 import CustomersTab from '@/components/admin/tabs/CustomersTab';
-import GoldRatesTab from '@/components/admin/tabs/GoldRatesTab';
 import SettingsTab, { AnnouncementFormState } from '@/components/admin/tabs/SettingsTab';
 import BullionTab from '@/components/admin/tabs/BullionTab';
 
@@ -69,6 +68,17 @@ export default function AdminDashboardPage() {
   // Theme State
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [activeTab, setActiveTab] = useState<AdminTab>('dashboard');
+
+  // Admin Panel 80% zoom
+  useEffect(() => {
+    const originalZoom = (document.body.style as any).zoom;
+    (document.body.style as any).zoom = '80%';
+    return () => {
+      (document.body.style as any).zoom = originalZoom || '';
+    };
+  }, []);
+
+
 
   // Edit Product Modal State
   const [editingAdminProduct, setEditingAdminProduct] = useState<ProductItem | null>(null);
@@ -911,7 +921,6 @@ export default function AdminDashboardPage() {
   };
 
   // Gold rates & store settings
-  const [gold24kRate, setGold24kRate] = useState('24,500');
   const [liveBullionRates, setLiveBullionRates] = useState({ gold: 87.9, silver: 1.04 });
 
   useEffect(() => {
@@ -924,7 +933,6 @@ export default function AdminDashboardPage() {
       })
       .catch(() => {});
   }, []);
-  const [gold22kRate, setGold22kRate] = useState('22,450');
   const [shippingThreshold, setShippingThreshold] = useState('500');
 
   // Metrics calculation
@@ -988,12 +996,7 @@ export default function AdminDashboardPage() {
       icon: <GoldRatesIcon className="w-4 h-4" />,
       count: null,
     },
-    {
-      id: 'goldrates',
-      label: 'PKR Rates Engine',
-      icon: <GoldRatesIcon className="w-4 h-4" />,
-      count: null,
-    },
+
     {
       id: 'settings',
       label: 'Settings',
@@ -1141,7 +1144,7 @@ export default function AdminDashboardPage() {
             totalRevenue={totalRevenue}
             totalProductsCount={products.length}
             pendingEnquiriesCount={pendingEnquiriesCount}
-            gold24kRate={gold24kRate}
+            gold24kRate={liveBullionRates.gold.toFixed(2)}
             orders={orders}
             slides={slides}
             onSelectInvoiceOrder={setSelectedInvoiceOrder}
@@ -1271,16 +1274,6 @@ export default function AdminDashboardPage() {
           />
         )}
 
-        {/* TAB 9: GOLD RATES */}
-        {activeTab === 'goldrates' && (
-          <GoldRatesTab
-            themeStyles={themeStyles}
-            gold24kRate={gold24kRate}
-            setGold24kRate={setGold24kRate}
-            gold22kRate={gold22kRate}
-            setGold22kRate={setGold22kRate}
-          />
-        )}
 
         {/* TAB 10: SETTINGS */}
         {activeTab === 'settings' && (

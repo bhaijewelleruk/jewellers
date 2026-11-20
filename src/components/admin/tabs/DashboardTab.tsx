@@ -118,22 +118,25 @@ export default function DashboardTab({
           </div>
         </div>
 
-        <div className={`${cardBg} p-4 rounded-lg border border-gray-200 dark:border-neutral-800 shadow-xs`}>
+        <div
+          onClick={() => onNavigateTab('bullion')}
+          className={`${cardBg} p-4 rounded-lg border border-gray-200 dark:border-neutral-800 shadow-xs cursor-pointer hover:border-amber-500/60 transition-all group`}
+        >
           <div className="flex justify-between items-start">
             <div>
               <p className={`text-[11px] ${subtitleColor} uppercase tracking-wider font-semibold`}>
-                Live 24K Gold Rate
+                Live 24K Gold Spot
               </p>
-              <p className="text-2xl font-bold font-sans text-gray-900 dark:text-white mt-1.5">
-                Rs. {gold24kRate}
+              <p className="text-2xl font-bold font-sans text-gray-900 dark:text-white mt-1.5 font-mono">
+                £{gold24kRate}/g
               </p>
             </div>
-            <div className="w-8 h-8 rounded-md bg-gray-100 dark:bg-neutral-800 flex items-center justify-center text-gray-800 dark:text-gray-200">
+            <div className="w-8 h-8 rounded-md bg-amber-50 dark:bg-amber-950 flex items-center justify-center text-amber-700 dark:text-amber-300 group-hover:scale-110 transition-transform">
               <GoldRatesIcon className="w-4 h-4" />
             </div>
           </div>
-          <div className="mt-3 flex items-center text-[11px] text-gray-500">
-            <span>PKR / Gram live pricing</span>
+          <div className="mt-3 flex items-center text-[11px] text-[#8b6914] font-medium">
+            <span>LBMA Bullion Desk &amp; Catalog →</span>
           </div>
         </div>
       </div>

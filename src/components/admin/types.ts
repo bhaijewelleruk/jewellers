@@ -9,7 +9,6 @@ export type AdminTab =
   | 'orders'
   | 'enquiries'
   | 'customers'
-  | 'goldrates'
   | 'bullion'
   | 'settings';
 
