@@ -1023,20 +1023,20 @@ export default function AdminDashboardPage() {
   const isLight = theme === 'light';
   const themeStyles: AdminThemeStyles = {
     isLight,
-    containerBg: isLight ? 'bg-[#f8fafc] text-gray-900' : 'bg-[#0f172a] text-slate-100',
+    containerBg: isLight ? 'bg-[#f8fafc] text-black' : 'bg-[#0f172a] text-slate-100',
     sidebarBg: isLight ? 'bg-white border-gray-200' : 'bg-[#1e293b] border-slate-700',
     sidebarHeaderBorder: isLight ? 'border-gray-200' : 'border-slate-700',
     sidebarFooterBg: isLight ? 'bg-gray-50 border-gray-200' : 'bg-[#0f172a] border-slate-700',
     cardBg: isLight ? 'bg-white border border-gray-200 shadow-xs' : 'bg-[#1e293b] border border-slate-700 shadow-lg',
     cardHeaderBorder: isLight ? 'border-gray-100' : 'border-slate-700/60',
     inputBg: isLight
-      ? 'bg-white border-gray-300 text-gray-900 placeholder:text-gray-400 focus:border-gray-900 focus:ring-1 focus:ring-gray-900'
+      ? 'bg-white border-gray-300 text-black font-medium placeholder:text-gray-500 focus:border-black focus:ring-1 focus:ring-black'
       : 'bg-slate-800 border-slate-600 text-white placeholder:text-slate-400 focus:border-white',
-    tableHeaderBg: isLight ? 'bg-gray-50 border-gray-200 text-gray-700 font-semibold' : 'bg-slate-800/80 border-slate-700 text-slate-300',
+    tableHeaderBg: isLight ? 'bg-gray-100 border-gray-300 text-black font-bold' : 'bg-slate-800/80 border-slate-700 text-slate-200 font-bold',
     tableRowHover: isLight ? 'hover:bg-gray-50/80 divide-gray-100' : 'hover:bg-slate-800/50 divide-slate-800',
-    titleColor: isLight ? 'text-gray-900' : 'text-white',
-    accentGold: isLight ? 'text-gray-900' : 'text-slate-100',
-    subtitleColor: isLight ? 'text-gray-500' : 'text-slate-400',
+    titleColor: isLight ? 'text-black font-extrabold' : 'text-white font-extrabold',
+    accentGold: isLight ? 'text-black font-bold' : 'text-slate-100 font-bold',
+    subtitleColor: isLight ? 'text-gray-800 font-medium' : 'text-slate-300 font-medium',
     badgeBg: isLight ? 'bg-gray-100 text-gray-800 border-gray-200' : 'bg-slate-800 text-slate-200 border-slate-700',
     primaryBtn: isLight ? 'bg-gray-900 hover:bg-black text-white shadow-xs' : 'bg-white hover:bg-slate-100 text-slate-900',
   };
@@ -1060,7 +1060,7 @@ export default function AdminDashboardPage() {
     <div
       suppressHydrationWarning
       style={{ minHeight: '125vh', height: '125vh' }}
-      className={`w-full overflow-hidden ${themeStyles.containerBg} flex flex-col md:flex-row font-sans selection:bg-gray-900 selection:text-white transition-colors duration-200 text-[13px]`}
+      className={`w-full overflow-hidden ${themeStyles.containerBg} flex flex-col md:flex-row font-sans selection:bg-gray-900 selection:text-white transition-colors duration-200 text-[15.5px] font-sans text-black`}
     >
       {/* MOBILE HEADER BAR */}
       <header className={`md:hidden flex items-center justify-between px-4 py-3 ${themeStyles.sidebarBg} border-b sticky top-0 z-40`}>

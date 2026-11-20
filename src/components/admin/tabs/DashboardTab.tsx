@@ -64,10 +64,10 @@ export default function DashboardTab({
         <div className={`${cardBg} p-4 rounded-lg border border-gray-200 dark:border-neutral-800 shadow-xs`}>
           <div className="flex justify-between items-start">
             <div>
-              <p className={`text-[11px] ${subtitleColor} uppercase tracking-wider font-semibold`}>
+              <p className="text-xs uppercase tracking-wider font-bold text-black dark:text-white">
                 Total Revenue
               </p>
-              <p className="text-2xl font-bold font-sans text-gray-900 dark:text-white mt-1.5">
+              <p className="text-3xl font-extrabold font-sans text-black dark:text-white mt-1.5">
                 &pound;{totalRevenue.toLocaleString()}
               </p>
             </div>
@@ -75,7 +75,7 @@ export default function DashboardTab({
               <ArrowTrendingUpIcon className="w-4 h-4" />
             </div>
           </div>
-          <div className="mt-3 flex items-center text-[11px] text-gray-500 font-medium">
+          <div className="mt-3 flex items-center text-xs text-gray-700 dark:text-gray-300 font-medium">
             <span>Verified store orders</span>
           </div>
         </div>
@@ -83,10 +83,10 @@ export default function DashboardTab({
         <div className={`${cardBg} p-4 rounded-lg border border-gray-200 dark:border-neutral-800 shadow-xs`}>
           <div className="flex justify-between items-start">
             <div>
-              <p className={`text-[11px] ${subtitleColor} uppercase tracking-wider font-semibold`}>
+              <p className="text-xs uppercase tracking-wider font-bold text-black dark:text-white">
                 Catalog Products
               </p>
-              <p className="text-2xl font-bold font-sans text-gray-900 dark:text-white mt-1.5">
+              <p className="text-3xl font-extrabold font-sans text-black dark:text-white mt-1.5">
                 {totalProductsCount}
               </p>
             </div>
@@ -94,7 +94,7 @@ export default function DashboardTab({
               <DiamondIcon className="w-4 h-4" />
             </div>
           </div>
-          <div className="mt-3 flex items-center text-[11px] text-gray-500">
+          <div className="mt-3 flex items-center text-xs text-gray-700 dark:text-gray-300 font-medium">
             <span>Live on Supabase database</span>
           </div>
         </div>
@@ -102,10 +102,10 @@ export default function DashboardTab({
         <div className={`${cardBg} p-4 rounded-lg border border-gray-200 dark:border-neutral-800 shadow-xs`}>
           <div className="flex justify-between items-start">
             <div>
-              <p className={`text-[11px] ${subtitleColor} uppercase tracking-wider font-semibold`}>
+              <p className="text-xs uppercase tracking-wider font-bold text-black dark:text-white">
                 Bespoke Inquiries
               </p>
-              <p className="text-2xl font-bold font-sans text-gray-900 dark:text-white mt-1.5">
+              <p className="text-3xl font-extrabold font-sans text-black dark:text-white mt-1.5">
                 {pendingEnquiriesCount}
               </p>
             </div>
@@ -113,7 +113,7 @@ export default function DashboardTab({
               <SparklesIcon className="w-4 h-4" />
             </div>
           </div>
-          <div className="mt-3 flex items-center text-[11px] text-amber-600 dark:text-amber-400 font-medium">
+          <div className="mt-3 flex items-center text-xs text-amber-800 dark:text-amber-300 font-semibold">
             <span>Customer consultation requests</span>
           </div>
         </div>
@@ -124,10 +124,10 @@ export default function DashboardTab({
         >
           <div className="flex justify-between items-start">
             <div>
-              <p className={`text-[11px] ${subtitleColor} uppercase tracking-wider font-semibold`}>
+              <p className="text-xs uppercase tracking-wider font-bold text-black dark:text-white">
                 Live 24K Gold Spot
               </p>
-              <p className="text-2xl font-bold font-sans text-gray-900 dark:text-white mt-1.5 font-mono">
+              <p className="text-3xl font-extrabold font-sans text-black dark:text-white mt-1.5 font-mono">
                 £{gold24kRate}/g
               </p>
             </div>
@@ -135,7 +135,7 @@ export default function DashboardTab({
               <GoldRatesIcon className="w-4 h-4" />
             </div>
           </div>
-          <div className="mt-3 flex items-center text-[11px] text-[#8b6914] font-medium">
+          <div className="mt-3 flex items-center text-xs text-[#8b6914] font-bold">
             <span>LBMA Bullion Desk &amp; Catalog →</span>
           </div>
         </div>

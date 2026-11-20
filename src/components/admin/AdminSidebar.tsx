@@ -93,11 +93,11 @@ export default function AdminSidebar({
                     onSelectTab(item.id as AdminTab);
                     setMobileDrawerOpen(false);
                   }}
-                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-[4px] text-xs font-medium transition-all cursor-pointer ${
+                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-[4px] text-[14px] font-semibold transition-all cursor-pointer ${
                     activeTab === item.id
-                      ? 'bg-gray-900 text-white font-bold shadow-xs'
+                      ? 'bg-gray-900 text-white font-extrabold shadow-xs'
                       : isLight
-                      ? 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                      ? 'text-gray-900 hover:text-black hover:bg-gray-100'
                       : 'text-[#c2b4a3] hover:bg-[#1a120e] hover:text-[#faf7f2]'
                   }`}
                 >
@@ -106,7 +106,7 @@ export default function AdminSidebar({
                     <span>{item.label}</span>
                   </div>
                   {item.count !== null && (
-                    <span className={`text-xs px-2 py-0.5 rounded-[5px] border ${badgeBg}`}>
+                    <span className={`text-xs font-bold px-2 py-0.5 rounded-[5px] border ${badgeBg}`}>
                       {item.count}
                     </span>
                   )}
@@ -213,13 +213,13 @@ export default function AdminSidebar({
               onClick={() => onSelectTab(item.id as AdminTab)}
               className={`w-full flex items-center ${
                 sidebarOpen ? 'justify-between px-3.5' : 'justify-center px-0'
-              } py-2 rounded-[4px] text-xs font-medium transition-all cursor-pointer ${
+              } py-2.5 rounded-[4px] text-[14px] font-semibold transition-all cursor-pointer ${
                 activeTab === item.id
                   ? isLight
-                    ? 'bg-gray-100 text-gray-900 border-l-2 border-gray-900 font-bold shadow-xs'
+                    ? 'bg-gray-100 text-black border-l-3 border-black font-extrabold shadow-xs'
                     : 'bg-slate-800 text-white border-l-2 border-white shadow-md'
                   : isLight
-                  ? 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                  ? 'text-gray-900 hover:text-black hover:bg-gray-100'
                   : 'text-[#c2b4a3] hover:bg-[#1a120e] hover:text-[#faf7f2]'
               }`}
               title={!sidebarOpen ? item.label : undefined}
@@ -229,7 +229,7 @@ export default function AdminSidebar({
                 {sidebarOpen && <span>{item.label}</span>}
               </div>
               {sidebarOpen && item.count !== null && (
-                <span className={`text-xs px-2 py-0.5 rounded-[5px] border ${badgeBg}`}>
+                <span className={`text-xs font-bold px-2 py-0.5 rounded-[5px] border ${badgeBg}`}>
                   {item.count}
                 </span>
               )}
