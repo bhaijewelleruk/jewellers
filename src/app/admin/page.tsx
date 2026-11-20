@@ -69,14 +69,28 @@ export default function AdminDashboardPage() {
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [activeTab, setActiveTab] = useState<AdminTab>('dashboard');
 
-  // Admin Panel 80% zoom
+  // Admin Panel 80% zoom & viewport coverage (removes bottom black gap)
   useEffect(() => {
     const originalZoom = (document.body.style as any).zoom;
+    const originalBodyBg = document.body.style.backgroundColor;
+    const originalHtmlBg = document.documentElement.style.backgroundColor;
+    const originalBodyHeight = document.body.style.height;
+    const originalBodyMinHeight = document.body.style.minHeight;
+
     (document.body.style as any).zoom = '80%';
+    document.body.style.minHeight = '125vh';
+    document.body.style.height = '125vh';
+    document.body.style.backgroundColor = theme === 'light' ? '#ffffff' : '#0c0806';
+    document.documentElement.style.backgroundColor = theme === 'light' ? '#ffffff' : '#0c0806';
+
     return () => {
       (document.body.style as any).zoom = originalZoom || '';
+      document.body.style.minHeight = originalBodyMinHeight || '';
+      document.body.style.height = originalBodyHeight || '';
+      document.body.style.backgroundColor = originalBodyBg || '';
+      document.documentElement.style.backgroundColor = originalHtmlBg || '';
     };
-  }, []);
+  }, [theme]);
 
 
 
@@ -1045,7 +1059,8 @@ export default function AdminDashboardPage() {
   return (
     <div
       suppressHydrationWarning
-      className={`min-h-screen h-screen w-full overflow-hidden ${themeStyles.containerBg} flex flex-col md:flex-row font-sans selection:bg-gray-900 selection:text-white transition-colors duration-200 text-[13px]`}
+      style={{ minHeight: '125vh', height: '125vh' }}
+      className={`w-full overflow-hidden ${themeStyles.containerBg} flex flex-col md:flex-row font-sans selection:bg-gray-900 selection:text-white transition-colors duration-200 text-[13px]`}
     >
       {/* MOBILE HEADER BAR */}
       <header className={`md:hidden flex items-center justify-between px-4 py-3 ${themeStyles.sidebarBg} border-b sticky top-0 z-40`}>
