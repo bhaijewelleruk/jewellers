@@ -46,7 +46,7 @@ export async function GET() {
           description: data.description || SERVER_HERO_CONFIG.description,
           primaryCtaText: data.primary_cta_text || SERVER_HERO_CONFIG.primaryCtaText,
           primaryCtaHref: data.primary_cta_href || SERVER_HERO_CONFIG.primaryCtaHref,
-          heroImage: data.hero_image || SERVER_HERO_CONFIG.heroImage,
+          heroImage: (data.hero_image && data.hero_image !== '/images/hero-img.jpg') ? data.hero_image : '/hero-bg.png',
           featuredTitle: data.featured_title || SERVER_HERO_CONFIG.featuredTitle,
           featuredSubtitle: data.featured_subtitle || SERVER_HERO_CONFIG.featuredSubtitle,
           featuredImage: data.featured_image || SERVER_HERO_CONFIG.featuredImage,

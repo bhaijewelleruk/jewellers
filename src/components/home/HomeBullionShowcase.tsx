@@ -4,7 +4,7 @@ import React, { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { DEFAULT_RATES, formatGBP } from "@/lib/rates";
-import { BullionProduct, INITIAL_GOLD_ITEMS } from "@/data/bullion-items";
+import { INITIAL_GOLD_ITEMS } from "@/data/bullion-items";
 
 export default function HomeBullionShowcase() {
   const [rates, setRates] = useState(DEFAULT_RATES);
@@ -39,22 +39,19 @@ export default function HomeBullionShowcase() {
     }
   };
 
-  // 8 handpicked top bullion products for home showcase
+  // Top 8 handpicked bullion items for home showcase
   const featuredGoldItems = INITIAL_GOLD_ITEMS.slice(0, 8);
 
   return (
-    <section className="w-full bg-[#fdfbf7] py-12 sm:py-20 px-4 sm:px-6 lg:px-8 border-b border-[#eee5dc] select-none overflow-hidden">
+    <section className="w-full bg-[#fdfbf7] py-10 sm:py-16 px-4 sm:px-6 lg:px-8 select-none overflow-hidden">
       <div className="max-w-7xl mx-auto">
         
-        {/* ── Section Header matching high-end British Jewellery design ── */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 sm:mb-12">
+        {/* Section Header */}
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6 sm:mb-10">
           <div>
-            <div className="flex items-center gap-2 mb-1.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
-              <span className="text-[11px] font-bold uppercase tracking-[0.24em] text-[#8b6914]">
-                LBMA ACCREDITED BULLION
-              </span>
-            </div>
+            <span className="text-[10.5px] font-bold uppercase tracking-[0.24em] text-[#8b6914] block mb-1">
+              LBMA ACCREDITED BULLION
+            </span>
             <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-[#1c1510] font-normal tracking-tight">
               Investment Gold Bars & Coins
             </h2>
@@ -74,7 +71,7 @@ export default function HomeBullionShowcase() {
           </div>
         </div>
 
-        {/* ── Scrollable Carousel Container with Navigation Arrows ── */}
+        {/* Scrollable Carousel Container with Navigation Arrows */}
         <div className="relative w-full group/bullion">
           
           {/* Left Arrow Button */}
@@ -101,7 +98,7 @@ export default function HomeBullionShowcase() {
             </svg>
           </button>
 
-          {/* Horizontal Scroll Track (Generous luxury card width so text never crunches) */}
+          {/* Horizontal Track */}
           <div
             ref={scrollRef}
             className="flex gap-4 sm:gap-6 overflow-x-auto pb-4 pt-1 scroll-smooth snap-x snap-mandatory scrollbar-hide px-0.5"
@@ -117,26 +114,19 @@ export default function HomeBullionShowcase() {
                 `Hello Bhai Jeweller, I want to lock the price for ${item.name} (${item.purity}) currently listed at approx ${formatGBP(calculatedPrice)}.`
               );
 
+              const cleanRefiner = item.refiner.includes("/")
+                ? item.refiner.split("/")[0].trim()
+                : item.refiner;
+
               return (
                 <div
                   key={item.id}
-                  className="group flex flex-col text-left transition-all duration-300 w-[240px] sm:w-[270px] md:w-[290px] flex-shrink-0 snap-start select-none bg-white border border-[#dfcca6] hover:border-[#8b6914] rounded-2xl p-4 shadow-2xs hover:shadow-md"
+                  className="group flex flex-col text-left transition-all duration-300 w-[240px] sm:w-[270px] md:w-[285px] flex-shrink-0 snap-start select-none bg-white border border-[#dfcca6]/80 hover:border-[#8b6914] rounded-2xl p-4 shadow-2xs hover:shadow-md"
                 >
-                  {/* Image Container with Floating Badges */}
-                  <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-gradient-to-b from-[#faf5ea]/50 via-white to-[#faf8f5] flex items-center justify-center p-4 border border-[#dfcca6]/40">
-                    <div className="absolute top-2.5 left-2.5 z-10 flex flex-col gap-1 items-start">
-                      <span className="bg-[#8b6914] text-white text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded shadow-2xs">
-                        0% UK VAT
-                      </span>
-                      {item.popular && (
-                        <span className="bg-[#1c1510] text-[#dec29b] text-[8.5px] font-bold uppercase tracking-wider px-1.5 py-0.2 rounded shadow-2xs">
-                          Popular
-                        </span>
-                      )}
-                    </div>
-
-                    <span className="absolute top-2.5 right-2.5 bg-white/95 border border-[#dfcca6] text-[9.5px] font-bold text-slate-700 px-2 py-0.5 rounded-full z-10 shadow-2xs">
-                      24K Pure
+                  {/* Clean Showroom Image Pedestal (Decluttered: No double badges) */}
+                  <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-gradient-to-b from-[#faf6ee] via-white to-[#faf8f5] flex items-center justify-center p-4 border border-[#dfcca6]/30">
+                    <span className="absolute top-2.5 left-2.5 bg-[#8b6914] text-white text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded shadow-2xs z-10">
+                      0% VAT
                     </span>
 
                     <Image
@@ -149,39 +139,36 @@ export default function HomeBullionShowcase() {
                     />
                   </div>
 
-                  {/* Card Details */}
+                  {/* Clean Details */}
                   <div className="mt-3.5 flex flex-col flex-1 justify-between">
                     <div>
-                      {/* Refiner & Purity in clean pill tags */}
-                      <div className="flex items-center justify-between text-[11px] text-zinc-500 mb-1.5">
-                        <span className="font-medium truncate text-zinc-600">{item.refiner.includes("/") ? item.refiner.split("/")[0].trim() : item.refiner}</span>
-                        <span className="font-mono text-[#8b6914] font-bold bg-[#faf5ea] px-1.5 py-0.2 rounded border border-[#dfcca6] text-[10px] flex-shrink-0">
+                      {/* Refiner & Purity */}
+                      <div className="flex items-center justify-between text-[11px] mb-1">
+                        <span className="font-semibold text-stone-500 uppercase tracking-wider text-[10px]">
+                          {cleanRefiner}
+                        </span>
+                        <span className="text-[#8b6914] font-bold text-[10.5px]">
                           {item.purity}
                         </span>
                       </div>
 
                       {/* Product Title */}
-                      <h3 className="font-serif text-[14px] sm:text-[16px] font-bold text-[#1c1510] leading-snug group-hover:text-[#8b6914] transition-colors line-clamp-2 h-[40px]">
+                      <h3 className="font-serif text-[15px] sm:text-[16px] font-semibold text-stone-900 leading-snug group-hover:text-[#8b6914] transition-colors line-clamp-2 h-[42px]">
                         {item.name}
                       </h3>
 
-                      {/* Price Section */}
-                      <div className="mt-2.5 flex items-baseline justify-between pt-2 border-t border-[#dfcca6]/40">
-                        <div>
-                          <span className="text-[10px] text-zinc-400 uppercase tracking-wider block font-medium">
-                            Live Estimate
-                          </span>
-                          <p className="text-[17px] sm:text-[20px] font-extrabold text-[#1c1510] tracking-tight">
-                            {formatGBP(calculatedPrice)}
-                          </p>
-                        </div>
-                        <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded">
-                          LBMA Direct
+                      {/* Clean Price (Removed cluttered 'LIVE ESTIMATE' and 'LBMA Direct' badges) */}
+                      <div className="mt-2.5 pt-2 border-t border-[#dfcca6]/30 flex items-baseline justify-between">
+                        <p className="text-[19px] sm:text-[22px] font-bold text-stone-900 tracking-tight">
+                          {formatGBP(calculatedPrice)}
+                        </p>
+                        <span className="text-[10px] text-zinc-400 font-medium">
+                          VAT Free
                         </span>
                       </div>
                     </div>
 
-                    {/* Action Button: Sleek Luxury Bar */}
+                    {/* Action Buttons: Clean & Elegant */}
                     <div className="mt-3.5 grid grid-cols-2 gap-2">
                       <a
                         href={`https://wa.me/447472027202?text=${whatsappMessage}`}
@@ -193,7 +180,7 @@ export default function HomeBullionShowcase() {
                       </a>
                       <Link
                         href={`/contact?inquiry=${encodeURIComponent(`Gold Bullion Inquiry: ${item.name} (${item.purity}) estimated at ${formatGBP(calculatedPrice)}`)}`}
-                        className="py-2.5 rounded-xl text-xs font-bold text-center bg-[#faf5ea] hover:bg-white text-[#8b6914] border border-[#dfcca6] hover:border-[#8b6914] transition-all active:scale-95 cursor-pointer"
+                        className="py-2.5 rounded-xl text-xs font-bold text-center bg-white hover:bg-[#faf5ea] text-stone-800 border border-[#dfcca6] hover:border-[#8b6914] transition-all active:scale-95 cursor-pointer"
                       >
                         Inquire
                       </Link>

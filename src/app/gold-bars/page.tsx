@@ -142,7 +142,7 @@ export default function GoldBarsPage() {
                   {/* Card Content */}
                   <div className="p-2.5 sm:p-5 space-y-1.5 sm:space-y-2.5">
                     <div className="flex items-center justify-between text-[10px] sm:text-xs text-zinc-500">
-                      <span className="truncate pr-1">{item.refiner}</span>
+                      <span className="truncate pr-1 font-medium">{item.refiner.includes("/") ? item.refiner.split("/")[0].trim() : item.refiner}</span>
                       <span className="font-mono text-[#8b6914] font-bold flex-shrink-0">{item.purity}</span>
                     </div>
 

@@ -53,7 +53,7 @@ export function HeroSection({
             description: resData.data.description || prev.description,
             primaryCtaText: resData.data.primaryCtaText || prev.primaryCtaText,
             primaryCtaHref: resData.data.primaryCtaHref || prev.primaryCtaHref,
-            heroImage: resData.data.heroImage || prev.heroImage,
+            heroImage: (resData.data.heroImage && resData.data.heroImage !== '/images/hero-img.jpg') ? resData.data.heroImage : '/hero-bg.png',
           }));
         }
       })
