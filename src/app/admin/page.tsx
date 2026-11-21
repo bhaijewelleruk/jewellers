@@ -65,11 +65,11 @@ export default function AdminDashboardPage() {
     deleteCategory,
   } = useShop();
 
-  // Theme State
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  // Theme State: Permanently Locked to Luxury Dark Obsidian Gold Terminal
+  const theme = 'dark';
   const [activeTab, setActiveTab] = useState<AdminTab>('dashboard');
 
-  // Admin Panel 80% zoom & viewport coverage (removes bottom black gap)
+  // Admin Panel 80% zoom & viewport coverage with permanent Luxury Dark theme
   useEffect(() => {
     const originalZoom = (document.body.style as any).zoom;
     const originalBodyBg = document.body.style.backgroundColor;
@@ -80,18 +80,13 @@ export default function AdminDashboardPage() {
     (document.body.style as any).zoom = '80%';
     document.body.style.minHeight = '125vh';
     document.body.style.height = '125vh';
-    document.body.style.backgroundColor = theme === 'light' ? '#ffffff' : '#0c0806';
-    document.documentElement.style.backgroundColor = theme === 'light' ? '#ffffff' : '#0c0806';
+    document.body.style.backgroundColor = '#090705';
+    document.documentElement.style.backgroundColor = '#090705';
 
-    if (theme === 'light') {
-      document.documentElement.classList.remove('dark');
-      document.body.classList.remove('dark');
-      document.documentElement.classList.add('light');
-    } else {
-      document.documentElement.classList.remove('light');
-      document.documentElement.classList.add('dark');
-      document.body.classList.add('dark');
-    }
+    document.documentElement.classList.add('dark');
+    document.body.classList.add('dark');
+    document.documentElement.classList.remove('light');
+    document.body.classList.remove('light');
 
     return () => {
       (document.body.style as any).zoom = originalZoom || '';
@@ -99,10 +94,8 @@ export default function AdminDashboardPage() {
       document.body.style.height = originalBodyHeight || '';
       document.body.style.backgroundColor = originalBodyBg || '';
       document.documentElement.style.backgroundColor = originalHtmlBg || '';
-      document.documentElement.classList.remove('dark');
-      document.documentElement.classList.remove('light');
     };
-  }, [theme]);
+  }, []);
 
 
 
@@ -1042,34 +1035,32 @@ export default function AdminDashboardPage() {
     },
   ];
 
-  // Theme styles helper
-  const isLight = theme === 'light';
+  // Theme styles helper: Locked permanently to bespoke Luxury Dark Obsidian Gold
+  const isLight = false;
   const themeStyles: AdminThemeStyles = {
-    isLight,
-    containerBg: isLight ? 'bg-[#f8fafc] text-black font-medium' : 'bg-[#0f172a] text-slate-100',
-    sidebarBg: isLight ? 'bg-white border-gray-200 text-black' : 'bg-[#1e293b] border-slate-700 text-white',
-    sidebarHeaderBorder: isLight ? 'border-gray-200' : 'border-slate-700',
-    sidebarFooterBg: isLight ? 'bg-gray-50 border-gray-200 text-black' : 'bg-[#0f172a] border-slate-700 text-white',
-    cardBg: isLight ? 'bg-white border border-gray-200 text-black shadow-xs' : 'bg-[#1e293b] border border-slate-700 text-white shadow-lg',
-    cardHeaderBorder: isLight ? 'border-gray-200' : 'border-slate-700/60',
-    inputBg: isLight
-      ? 'bg-white border-gray-300 text-black font-semibold text-[14.5px] placeholder:text-gray-500 focus:border-black focus:ring-1 focus:ring-black'
-      : 'bg-slate-800 border-slate-600 text-white font-semibold text-[14.5px] placeholder:text-slate-400 focus:border-white',
-    tableHeaderBg: isLight ? 'bg-gray-100 border-gray-300 text-black font-extrabold text-[13px]' : 'bg-slate-800/80 border-slate-700 text-slate-200 font-extrabold text-[13px]',
-    tableRowHover: isLight ? 'hover:bg-gray-50/90 divide-gray-200 text-black font-medium' : 'hover:bg-slate-800/50 divide-slate-800 text-white',
-    titleColor: isLight ? 'text-black font-extrabold' : 'text-white font-extrabold',
-    accentGold: isLight ? 'text-black font-bold' : 'text-slate-100 font-bold',
-    subtitleColor: isLight ? 'text-gray-900 font-bold text-[14px]' : 'text-slate-100 font-bold text-[14px]',
-    badgeBg: isLight ? 'bg-gray-100 text-black font-bold border-gray-300' : 'bg-slate-800 text-slate-200 border-slate-700 font-bold',
-    primaryBtn: isLight ? 'bg-black hover:bg-gray-800 text-white font-bold shadow-xs' : 'bg-white hover:bg-slate-100 text-black font-bold',
+    isLight: false,
+    containerBg: 'bg-[#080503] text-[#fbf8f5]',
+    sidebarBg: 'bg-[#0c0806] border-r border-[#241a13] text-[#fbf8f5]',
+    sidebarHeaderBorder: 'border-b border-[#241a13]',
+    sidebarFooterBg: 'bg-[#090604] border-t border-[#241a13] text-[#fbf8f5]',
+    cardBg: 'bg-[#120d09] border border-[#261c14] hover:border-[#8b6914]/50 shadow-xl text-[#fbf8f5]',
+    cardHeaderBorder: 'border-b border-[#261c14]',
+    inputBg: 'bg-[#090604] border border-[#2b1f17] text-[#fbf8f5] font-semibold text-[14.5px] placeholder:text-[#6e5d4f] focus:border-[#d8bb93] focus:ring-1 focus:ring-[#d8bb93]/30',
+    tableHeaderBg: 'bg-[#0c0806] border-b border-[#261c14] text-[#d8bb93] font-bold text-[12.5px] uppercase tracking-wider',
+    tableRowHover: 'hover:bg-[#1a130e] divide-[#1f1711] text-[#f5efe8]',
+    titleColor: 'text-[#fbf8f5] font-bold',
+    accentGold: 'text-[#d8bb93] font-bold',
+    subtitleColor: 'text-[#c2b2a3] font-semibold text-[13.5px]',
+    badgeBg: 'bg-[#1a130e] text-[#d8bb93] border border-[#3d2e22] font-bold',
+    primaryBtn: 'bg-gradient-to-r from-[#d8bb93] via-[#e5cfb3] to-[#c5a059] hover:brightness-110 text-[#0c0806] font-bold shadow-md active:scale-95 transition-all',
   };
 
   if (authChecking) {
     return (
-      <div className="min-h-screen bg-white flex flex-col items-center justify-center text-gray-900">
-        <div className="w-10 h-10 rounded-full border-2 border-gray-900 border-t-transparent animate-spin mb-4" />
-        <p className="font-sans text-xs tracking-[0.2em] uppercase text-gray-700 font-semibold">
-          Verifying Bradford Admin Terminal...
+      <div className="min-h-screen bg-[#080503] flex flex-col items-center justify-center text-[#fbf8f5]">
+        <div className="w-12 h-12 rounded-full border-2 border-[#d8bb93] border-t-transparent animate-spin mb-4" />
+        <p className="font-serif text-sm tracking-[0.25em] uppercase text-[#d8bb93] font-semibold">
+          Verifying Bradford Atelier Terminal...
         </p>
       </div>
     );
@@ -1083,14 +1074,14 @@ export default function AdminDashboardPage() {
     <div
       suppressHydrationWarning
       style={{ minHeight: '125vh', height: '125vh' }}
-      className={`w-full overflow-hidden ${themeStyles.containerBg} flex flex-col md:flex-row font-sans selection:bg-gray-900 selection:text-white transition-colors duration-200 text-[15.5px] font-sans text-black`}
+      className={`w-full overflow-hidden ${themeStyles.containerBg} flex flex-col md:flex-row font-sans selection:bg-[#d8bb93]/30 selection:text-white transition-colors duration-200 text-[15px]`}
     >
       {/* MOBILE HEADER BAR */}
-      <header className={`md:hidden flex items-center justify-between px-4 py-3 ${themeStyles.sidebarBg} border-b sticky top-0 z-40`}>
+      <header className={`md:hidden flex items-center justify-between px-4 py-3 ${themeStyles.sidebarBg} border-b border-[#241a13] sticky top-0 z-40 bg-[#0c0806]`}>
         <div className="flex items-center space-x-3">
           <button
             onClick={() => setMobileDrawerOpen(true)}
-            className={`p-2 ${themeStyles.accentGold} hover:bg-gray-50 rounded-[5px] transition-colors cursor-pointer`}
+            className="p-2 text-[#d8bb93] hover:bg-[#18110b] rounded-lg transition-colors cursor-pointer"
             aria-label="Open Admin Menu"
           >
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1098,22 +1089,15 @@ export default function AdminDashboardPage() {
             </svg>
           </button>
           <div className="flex items-center gap-2">
-            <span className="font-serif text-sm font-bold text-gray-900">BHAI JEWELLER</span>
+            <span className="font-serif text-sm font-bold text-[#fbf8f5] tracking-wider">BHAI JEWELLER</span>
           </div>
         </div>
 
         <div className="flex items-center space-x-2">
-          <button
-            onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-            className="p-1.5 rounded-[5px] text-gray-700 border border-gray-200 cursor-pointer"
-            title="Toggle Theme"
-          >
-            {isLight ? <MoonIcon className="w-4 h-4" /> : <SunIcon className="w-4 h-4 text-amber-500" />}
-          </button>
           <Link
             href="/"
             target="_blank"
-            className="p-1.5 rounded-[5px] text-gray-700 border border-gray-200 hover:bg-gray-50"
+            className="p-2 rounded-lg text-[#d8bb93] border border-[#2b1f17] hover:bg-[#18110b]"
             title="View Storefront"
           >
             <ExternalLinkIcon className="w-4 h-4" />
@@ -1124,8 +1108,6 @@ export default function AdminDashboardPage() {
       {/* SIDEBAR */}
       <AdminSidebar
         themeStyles={themeStyles}
-        theme={theme}
-        setTheme={setTheme}
         activeTab={activeTab}
         onSelectTab={(tab) => {
           if (tab === 'add-product') {
@@ -1143,11 +1125,11 @@ export default function AdminDashboardPage() {
       />
 
       {/* MAIN CONTENT AREA */}
-      <main className="flex-1 h-full overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6">
+      <main className="flex-1 h-full overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6 bg-[#080503]">
         {/* TOP BAR DESKTOP */}
-        <div className="hidden md:flex items-center justify-between pb-4 border-b border-gray-200 dark:border-slate-800">
+        <div className="hidden md:flex items-center justify-between pb-4 border-b border-[#241a13]">
           <div>
-            <h1 className={`font-serif text-xl sm:text-2xl font-bold ${themeStyles.titleColor} capitalize`}>
+            <h1 className="font-serif text-xl sm:text-2xl font-bold text-[#fbf8f5] capitalize tracking-wide">
               {activeTab === 'slides'
                 ? 'Slider & Banner Manager'
                 : activeTab === 'add-product'
@@ -1158,16 +1140,23 @@ export default function AdminDashboardPage() {
                 ? 'Gold Bars & Bullion Manager'
                 : activeTab}
             </h1>
-            <p className={`text-xs ${themeStyles.subtitleColor}`}>
+            <p className="text-xs text-[#a89584] font-medium mt-0.5">
               Bradford Atelier Management Terminal &bull; Real-time synchronization
             </p>
           </div>
 
           <div className="flex items-center gap-3">
+            {/* Live 24K Spot Pill */}
+            <div className="px-3.5 py-1.5 rounded-full bg-[#120d09] border border-[#2b1f17] text-xs flex items-center gap-2 shadow-xs">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-[#a89584] uppercase font-bold text-[10.5px]">24K Spot:</span>
+              <span className="font-mono text-[#d8bb93] font-bold">£{liveBullionRates.gold.toFixed(2)}/g</span>
+            </div>
+
             <Link
               href="/shop"
               target="_blank"
-              className="px-3 py-1.5 rounded-[4px] border border-gray-300 dark:border-slate-700 hover:bg-gray-100 text-xs font-semibold flex items-center gap-1.5"
+              className="px-4 py-2 rounded-lg bg-[#140e0a] border border-[#2b1f17] hover:border-[#d8bb93] text-xs font-bold text-[#d8bb93] hover:text-white flex items-center gap-2 transition-all shadow-sm cursor-pointer"
             >
               <span>Live Shop</span>
               <ExternalLinkIcon className="w-3.5 h-3.5" />

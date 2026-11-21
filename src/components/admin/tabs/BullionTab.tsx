@@ -24,7 +24,6 @@ export default function BullionTab({
     titleColor,
     inputBg,
     primaryBtn,
-    isLight,
   } = themeStyles;
 
   const [metalFilter, setMetalFilter] = useState<'gold' | 'silver'>('gold');
@@ -125,10 +124,10 @@ export default function BullionTab({
       weightGrams: 10,
       purity: metalFilter === 'gold' ? '999.9 (24K)' : '999 Fine Silver',
       refiner: 'PAMP Suisse',
-      premiumPercentage: metalFilter === 'gold' ? 0.08 : 0.15,
+      premiumPercentage: 0.08,
       priceMode: 'auto',
       customPriceOverride: 0,
-      imageUrl: metalFilter === 'gold' ? '/bullion/gold-bar-10g.webp' : '/bullion/silver-100g.webp',
+      imageUrl: metalFilter === 'gold' ? '/bullion/gold-bar-10g.webp' : '/bullion/silver-bar-100g.webp',
       badge: 'LBMA Good Delivery',
       perk: 'Free Vault Storage',
       vatStatus: metalFilter === 'gold' ? '0% VAT Exempt' : '20% Standard VAT',
@@ -138,61 +137,74 @@ export default function BullionTab({
     setIsModalOpen(true);
   };
 
-  // Open modal for editing
+  // Open modal for edit
   const handleOpenEditModal = (item: BullionProduct) => {
     setEditingItem(item);
     setFormData({ ...item });
     setIsModalOpen(true);
   };
 
-  // Handle image upload from computer
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Handle Image Upload via Base64 Compression
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    try {
-      setIsUploadingImage(true);
-      const body = new FormData();
-      body.append('file', file);
-      body.append('folder', 'bullion');
-
-      const res = await fetch('/api/admin/upload', {
-        method: 'POST',
-        body,
-      });
-      const data = await res.json();
-      if (data.success && data.url) {
-        setFormData((prev) => ({ ...prev, imageUrl: data.url }));
-        showToast('Image uploaded successfully!', 'success');
-      } else {
-        showToast(data.error || 'Image upload failed', 'error');
-      }
-    } catch (err: any) {
-      showToast(err?.message || 'Error uploading image', 'error');
-    } finally {
-      setIsUploadingImage(false);
+    if (!file.type.startsWith('image/')) {
+      showToast('Please select a valid image file', 'error');
+      return;
     }
+
+    setIsUploadingImage(true);
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = document.createElement('img');
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const MAX_WIDTH = 800;
+        const scaleSize = MAX_WIDTH / img.width;
+        canvas.width = MAX_WIDTH;
+        canvas.height = img.height * scaleSize;
+
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          const compressedBase64 = canvas.toDataURL('image/webp', 0.85);
+          setFormData((prev) => ({ ...prev, imageUrl: compressedBase64 }));
+          showToast('Image uploaded & compressed successfully!');
+        }
+        setIsUploadingImage(false);
+      };
+      img.src = event.target?.result as string;
+    };
+    reader.readAsDataURL(file);
   };
 
-  // Handle Form Submit (Add or Edit)
-  const handleSubmit = async (e: React.FormEvent) => {
+  // Handle Form Submit
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name?.trim()) {
-      showToast('Product name is required', 'error');
+      showToast('Please enter a product name', 'error');
       return;
     }
 
     try {
       setIsSubmitting(true);
+
+      const generatedId =
+        editingItem?.id ||
+        `${formData.metal}-${formData.type}-${String(formData.name)
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')}-${Date.now().toString().slice(-4)}`;
+
       const itemToSave: BullionProduct = {
-        id: editingItem?.id || `${formData.metal}-${formData.weightGrams}g-${Date.now()}`,
+        id: generatedId,
         name: formData.name.trim(),
         metal: (formData.metal as 'gold' | 'silver') || 'gold',
         type: (formData.type as 'bar' | 'coin') || 'bar',
         weightGrams: Number(formData.weightGrams) || 1,
         purity: formData.purity || (formData.metal === 'gold' ? '999.9 (24K)' : '999 Fine Silver'),
         refiner: formData.refiner || 'PAMP Suisse',
-        premiumPercentage: Number(formData.premiumPercentage) || 0.08,
+        premiumPercentage: Number(formData.premiumPercentage) ?? 0.08,
         priceMode: formData.priceMode || 'auto',
         customPriceOverride: Number(formData.customPriceOverride) || 0,
         imageUrl: formData.imageUrl || '/bullion/gold-bar-1g.webp',
@@ -256,17 +268,17 @@ export default function BullionTab({
       {/* Toast Alert */}
       {toastMsg && (
         <div
-          className={`p-4 rounded-lg text-xs font-semibold flex items-center justify-between shadow-md transition-all ${
+          className={`p-4 rounded-xl text-xs font-bold flex items-center justify-between shadow-xl transition-all ${
             toastMsg.type === 'success'
-              ? 'bg-emerald-50 text-emerald-800 border border-emerald-300'
-              : 'bg-rose-50 text-rose-800 border border-rose-300'
+              ? 'bg-emerald-950/80 text-emerald-300 border border-emerald-700'
+              : 'bg-rose-950/80 text-rose-300 border border-rose-700'
           }`}
         >
           <span>{toastMsg.text}</span>
           <button
             type="button"
             onClick={() => setToastMsg(null)}
-            className="text-xs uppercase font-bold hover:underline cursor-pointer"
+            className="text-xs uppercase font-bold hover:underline cursor-pointer ml-3"
           >
             Dismiss
           </button>
@@ -274,35 +286,35 @@ export default function BullionTab({
       )}
 
       {/* Header Overview Card */}
-      <div className={`${cardBg} p-5 sm:p-6 rounded-xl border border-gray-200 dark:border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs`}>
+      <div className={`${cardBg} p-5 sm:p-6 rounded-xl border border-[#261c14] flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xl`}>
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-xs" />
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[#8b6914]">
-              Bullion & Investment Manager
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#d8bb93] shadow-xs animate-pulse" />
+            <span className="text-xs font-bold uppercase tracking-wider text-[#d8bb93]">
+              Bullion &amp; Investment Desk
             </span>
           </div>
           <h2 className={`font-serif text-2xl font-bold ${titleColor}`}>
-            Gold Bars & Bullion Products
+            Gold Bars &amp; Bullion Products
           </h2>
-          <p className={`text-[13.5px] font-medium text-gray-800 dark:text-gray-200 mt-1 max-w-xl`}>
+          <p className="text-xs text-[#a89584] font-medium mt-1 max-w-xl">
             Add, edit, remove, and manage minted gold bars, coins, and silver items with real-time LBMA spot pricing.
           </p>
         </div>
 
         {/* Live Spot Quick Badges & Add Button */}
         <div className="flex flex-wrap items-center gap-3">
-          <div className="flex items-center gap-3 bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl px-3.5 py-2 text-xs">
+          <div className="flex items-center gap-3 bg-[#090604] border border-[#2b1f17] rounded-xl px-4 py-2 text-xs">
             <div>
-              <span className="block text-[9.5px] uppercase font-bold text-amber-600">Live 24K Gold</span>
-              <span className="font-mono font-bold text-sm text-stone-900 dark:text-stone-100">
+              <span className="block text-[10px] uppercase font-bold text-[#d8bb93]">Live 24K Gold</span>
+              <span className="font-mono font-bold text-sm text-[#fbf8f5]">
                 {formatGBP(goldGram)}/g
               </span>
             </div>
-            <div className="h-6 w-[1px] bg-gray-200 dark:bg-slate-700" />
+            <div className="h-6 w-[1px] bg-[#241a13]" />
             <div>
-              <span className="block text-[9.5px] uppercase font-bold text-slate-500">Live Silver</span>
-              <span className="font-mono font-bold text-sm text-stone-900 dark:text-stone-100">
+              <span className="block text-[10px] uppercase font-bold text-slate-400">Live Silver</span>
+              <span className="font-mono font-bold text-sm text-[#fbf8f5]">
                 {formatGBP(silverGram)}/g
               </span>
             </div>
@@ -311,7 +323,7 @@ export default function BullionTab({
           <button
             type="button"
             onClick={handleOpenAddModal}
-            className={`px-4 py-2.5 ${primaryBtn} font-bold text-xs uppercase tracking-wider rounded-xl shadow-xs transition-all flex items-center gap-2 cursor-pointer active:scale-95`}
+            className={`px-4 py-2.5 ${primaryBtn} font-bold text-xs uppercase tracking-wider rounded-xl shadow-md transition-all flex items-center gap-2 cursor-pointer active:scale-95`}
           >
             <span className="text-base leading-none">+</span>
             <span>Add New Bullion Item</span>
@@ -320,21 +332,21 @@ export default function BullionTab({
       </div>
 
       {/* Tabs & Search Controls */}
-      <div className={`${cardBg} p-4 rounded-xl border border-gray-200 dark:border-slate-800 space-y-3 shadow-xs`}>
+      <div className={`${cardBg} p-4 rounded-xl border border-[#261c14] space-y-3 shadow-xl`}>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           
           {/* Gold vs Silver Toggle */}
-          <div className="inline-flex p-1 bg-gray-100 dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800">
+          <div className="inline-flex p-1 bg-[#090604] rounded-xl border border-[#2b1f17]">
             <button
               type="button"
               onClick={() => setMetalFilter('gold')}
               className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                 metalFilter === 'gold'
-                  ? 'bg-amber-600 text-white shadow-xs'
-                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900'
+                  ? 'bg-[#d8bb93] text-[#0c0806] shadow-xs'
+                  : 'text-[#a89584] hover:text-[#fbf8f5]'
               }`}
             >
-              🟡 Gold Bars & Coins ({goldItems.length})
+              🟡 Gold Bars &amp; Coins ({goldItems.length})
             </button>
             <button
               type="button"
@@ -342,7 +354,7 @@ export default function BullionTab({
               className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                 metalFilter === 'silver'
                   ? 'bg-slate-700 text-white shadow-xs'
-                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900'
+                  : 'text-[#a89584] hover:text-[#fbf8f5]'
               }`}
             >
               ⚪ Silver Bullion ({silverItems.length})
@@ -350,16 +362,16 @@ export default function BullionTab({
           </div>
 
           {/* Type Filter */}
-          <div className="inline-flex p-1 bg-gray-100 dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800">
+          <div className="inline-flex p-1 bg-[#090604] rounded-xl border border-[#2b1f17]">
             {(['all', 'bar', 'coin'] as const).map((t) => (
               <button
                 key={t}
                 type="button"
                 onClick={() => setTypeFilter(t)}
-                className={`px-3 py-1 rounded-lg text-xs font-semibold capitalize transition-all cursor-pointer ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold capitalize transition-all cursor-pointer ${
                   typeFilter === t
-                    ? 'bg-white dark:bg-slate-800 text-stone-900 dark:text-white shadow-xs'
-                    : 'text-gray-800 dark:text-gray-200 hover:text-gray-900'
+                    ? 'bg-[#1a130e] text-[#d8bb93] border border-[#3d2e22] shadow-xs'
+                    : 'text-[#a89584] hover:text-[#fbf8f5]'
                 }`}
               >
                 {t === 'all' ? 'All' : t === 'bar' ? 'Bars Only' : 'Coins Only'}
@@ -374,10 +386,10 @@ export default function BullionTab({
               placeholder="Search by name, mint, weight..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className={`w-full text-xs px-3.5 py-2 pl-8 rounded-xl border border-gray-200 dark:border-slate-800 focus:outline-none focus:border-amber-600 ${inputBg}`}
+              className={`w-full text-xs px-3.5 py-2 pl-9 rounded-xl border border-[#2b1f17] focus:outline-none focus:border-[#d8bb93] ${inputBg}`}
             />
             <svg
-              className="w-3.5 h-3.5 text-gray-400 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none"
+              className="w-4 h-4 text-[#8c7b6d] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -390,23 +402,23 @@ export default function BullionTab({
       </div>
 
       {/* Items Table / Cards */}
-      <div className={`${cardBg} rounded-xl border border-gray-200 dark:border-slate-800 overflow-hidden shadow-xs`}>
+      <div className={`${cardBg} rounded-xl border border-[#261c14] overflow-hidden shadow-xl`}>
         {isLoading ? (
-          <div className="p-12 text-center text-xs text-gray-400">
+          <div className="p-12 text-center text-xs text-[#a89584]">
             Loading bullion items...
           </div>
         ) : filteredItems.length === 0 ? (
           <div className="p-12 text-center">
-            <p className="text-sm font-semibold text-gray-600 dark:text-gray-300">No bullion products found</p>
-            <p className="text-xs text-gray-400 mt-1">
+            <p className="text-sm font-bold text-[#fbf8f5]">No bullion products found</p>
+            <p className="text-xs text-[#a89584] mt-1">
               Try adjusting your search or click &quot;Add New Bullion Item&quot; to add one.
             </p>
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-[14px] font-medium text-black dark:text-white border-collapse">
+            <table className="w-full text-left text-[14px] font-medium text-[#fbf8f5] border-collapse">
               <thead>
-                <tr className="border-b border-gray-200 dark:border-slate-800 bg-gray-50/60 dark:bg-slate-900/60 text-gray-800 dark:text-gray-200 font-bold uppercase tracking-wider text-[10px]">
+                <tr className="border-b border-[#241a13] bg-[#0c0806] text-[#d8bb93] font-bold uppercase tracking-wider text-[11px]">
                   <th className="py-3 px-4">Product</th>
                   <th className="py-3 px-4">Refiner / Mint</th>
                   <th className="py-3 px-4">Weight &amp; Purity</th>
@@ -416,18 +428,18 @@ export default function BullionTab({
                   <th className="py-3 px-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100 dark:divide-slate-800">
+              <tbody className="divide-y divide-[#241a13]">
                 {filteredItems.map((item) => {
                   const estPrice = calculatePrice(item);
                   return (
                     <tr
                       key={item.id}
-                      className="hover:bg-gray-50/70 dark:hover:bg-slate-900/40 transition-colors"
+                      className="hover:bg-[#1a130e]/80 transition-colors"
                     >
                       {/* Product thumbnail & Name */}
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 rounded-lg bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 flex items-center justify-center overflow-hidden flex-shrink-0 p-1">
+                          <div className="w-12 h-12 rounded-lg bg-[#090604] border border-[#261c14] flex items-center justify-center overflow-hidden shrink-0 p-1">
                             <Image
                               src={item.imageUrl || '/bullion/gold-bar-1g.webp'}
                               alt={item.name}
@@ -438,28 +450,28 @@ export default function BullionTab({
                             />
                           </div>
                           <div>
-                            <span className="font-semibold text-stone-900 dark:text-stone-100 block text-[13px]">
+                            <span className="font-bold text-[#fbf8f5] block text-[13px]">
                               {item.name}
                             </span>
-                            <span className="text-[10px] text-gray-600 dark:text-gray-400 font-semibold font-mono">ID: {item.id}</span>
+                            <span className="text-[10px] text-[#a89584] font-semibold font-mono">ID: {item.id}</span>
                           </div>
                         </div>
                       </td>
 
                       {/* Refiner / Mint */}
                       <td className="py-3 px-4">
-                        <span className="font-medium text-stone-700 dark:text-stone-300">
+                        <span className="font-bold text-[#fbf8f5]">
                           {item.refiner || 'PAMP Suisse'}
                         </span>
-                        <span className="block text-[10px] text-gray-400 capitalize">{item.type}</span>
+                        <span className="block text-[10px] text-[#a89584] capitalize">{item.type}</span>
                       </td>
 
                       {/* Weight & Purity */}
                       <td className="py-3 px-4">
-                        <span className="font-bold text-stone-900 dark:text-stone-100 block">
+                        <span className="font-bold text-[#fbf8f5] block">
                           {item.weightGrams}g
                         </span>
-                        <span className="text-[10px] text-[#8b6914] font-semibold">
+                        <span className="text-[10px] text-[#d8bb93] font-bold">
                           {item.purity}
                         </span>
                       </td>
@@ -467,11 +479,11 @@ export default function BullionTab({
                       {/* Pricing Mode */}
                       <td className="py-3 px-4">
                         {item.priceMode === 'fixed' ? (
-                          <span className="bg-purple-50 dark:bg-purple-950 text-purple-700 dark:text-purple-300 px-2 py-0.5 rounded text-[10px] font-bold border border-purple-200 dark:border-purple-800">
+                          <span className="bg-purple-950/70 text-purple-300 px-2 py-0.5 rounded text-[10px] font-bold border border-purple-800">
                             Fixed Override
                           </span>
                         ) : (
-                          <span className="bg-amber-50 dark:bg-amber-950 text-amber-800 dark:text-amber-300 px-2 py-0.5 rounded text-[10px] font-bold border border-amber-200 dark:border-amber-800">
+                          <span className="bg-amber-950/70 text-amber-300 px-2 py-0.5 rounded text-[10px] font-bold border border-amber-800">
                             Spot + {Math.round(item.premiumPercentage * 100)}%
                           </span>
                         )}
@@ -479,27 +491,27 @@ export default function BullionTab({
 
                       {/* Live Calculated Price */}
                       <td className="py-3 px-4">
-                        <span className="font-extrabold text-sm text-stone-900 dark:text-stone-100 font-mono">
+                        <span className="font-bold text-sm text-[#fbf8f5] font-mono">
                           {formatGBP(estPrice)}
                         </span>
-                        <span className="block text-[10px] text-gray-400">{item.vatStatus || '0% VAT'}</span>
+                        <span className="block text-[10px] text-[#a89584]">{item.vatStatus || '0% VAT'}</span>
                       </td>
 
                       {/* Badges / Status */}
                       <td className="py-3 px-4">
                         <div className="flex flex-col gap-1 items-start">
                           {item.inStock !== false ? (
-                            <span className="text-[9.5px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200">
+                            <span className="text-[10px] font-bold text-emerald-400 bg-emerald-950/70 px-2 py-0.5 rounded border border-emerald-800">
                               In Stock
                             </span>
                           ) : (
-                            <span className="text-[9.5px] font-bold text-rose-700 bg-rose-50 px-1.5 py-0.2 rounded border border-rose-200">
+                            <span className="text-[10px] font-bold text-rose-400 bg-rose-950/70 px-2 py-0.5 rounded border border-rose-800">
                               Out of Stock
                             </span>
                           )}
                           {item.popular && (
-                            <span className="text-[9px] font-bold text-amber-700 bg-amber-50 px-1.5 py-0.2 rounded border border-amber-200">
-                              Popular
+                            <span className="text-[9px] font-bold text-[#d8bb93] bg-[#1a130e] border border-[#3d2e22] px-1.5 py-0.2 rounded">
+                              ⭐ Popular
                             </span>
                           )}
                         </div>
@@ -511,16 +523,16 @@ export default function BullionTab({
                           <button
                             type="button"
                             onClick={() => handleOpenEditModal(item)}
-                            className="px-2.5 py-1 rounded-md text-[11px] font-semibold bg-gray-100 hover:bg-amber-600 hover:text-white dark:bg-slate-800 dark:hover:bg-amber-600 transition-colors cursor-pointer"
+                            className="px-2.5 py-1 rounded-lg border border-[#2b1f17] bg-[#140e0a] hover:bg-[#1f1711] text-[#d8bb93] hover:text-white text-xs font-bold transition-colors cursor-pointer"
                           >
                             Edit
                           </button>
                           <button
                             type="button"
                             onClick={() => handleDeleteItem(item)}
-                            className="px-2.5 py-1 rounded-md text-[11px] font-semibold bg-rose-50 text-rose-700 hover:bg-rose-600 hover:text-white border border-rose-200 transition-colors cursor-pointer"
+                            className="px-2.5 py-1 rounded-lg border border-[#2b1f17] hover:border-rose-800 bg-[#140e0a] hover:bg-rose-950/60 text-[#8c7b6d] hover:text-rose-400 text-xs font-bold transition-colors cursor-pointer"
                           >
-                            Remove
+                            Delete
                           </button>
                         </div>
                       </td>
@@ -533,94 +545,90 @@ export default function BullionTab({
         )}
       </div>
 
-      {/* ── ADD / EDIT MODAL ── */}
+      {/* ADD / EDIT MODAL */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-xs"
-            onClick={() => !isSubmitting && setIsModalOpen(false)}
-          />
-
-          <div className={`relative w-full max-w-2xl max-h-[90vh] overflow-y-auto ${cardBg} rounded-2xl border border-gray-200 dark:border-slate-800 shadow-2xl p-6 z-10 space-y-5 animate-fadeIn`}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs">
+          <div className="w-full max-w-2xl bg-[#120d09] border border-[#261c14] rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
             
             {/* Modal Header */}
-            <div className="flex items-center justify-between border-b border-gray-200 dark:border-slate-800 pb-3">
+            <div className="p-5 border-b border-[#241a13] flex items-center justify-between">
               <div>
-                <h3 className={`font-serif text-lg font-bold ${titleColor}`}>
-                  {editingItem ? `Edit Bullion Item: ${editingItem.name}` : 'Add New Bullion Product'}
+                <span className="text-xs uppercase font-bold text-[#d8bb93]">
+                  Bullion Catalog Studio
+                </span>
+                <h3 className="font-serif text-lg font-bold text-[#fbf8f5]">
+                  {editingItem ? `Edit: ${editingItem.name}` : 'Add New Bullion Product'}
                 </h3>
-                <p className={`text-[13.5px] font-medium text-gray-800 dark:text-gray-200`}>
-                  Configure metal specifications, weight, refiner, live pricing, and image.
-                </p>
               </div>
               <button
                 type="button"
                 onClick={() => setIsModalOpen(false)}
-                className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-slate-800 flex items-center justify-center text-gray-800 dark:text-gray-200 cursor-pointer"
+                className="w-8 h-8 rounded-full bg-[#1a130e] border border-[#2b1f17] text-[#a89584] hover:text-white flex items-center justify-center font-bold cursor-pointer"
               >
                 ✕
               </button>
             </div>
 
-            {/* Modal Form */}
-            <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Modal Form Body */}
+            <form onSubmit={handleFormSubmit} className="p-6 overflow-y-auto space-y-4 text-xs">
               
               {/* Product Name */}
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-300 mb-1">
+                <label className="block text-xs font-bold uppercase tracking-wider text-[#d8bb93] mb-1.5">
                   Product Name *
                 </label>
                 <input
                   type="text"
                   required
-                  placeholder="e.g. 10 Gram Minted Gold Bar"
+                  placeholder="e.g. 10 Gram Minted Gold Bar or 1oz Britannia Gold Coin"
                   value={formData.name || ''}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className={`w-full text-[14.5px] px-3.5 py-2.5 font-medium text-black rounded-lg border border-gray-200 dark:border-slate-800 focus:outline-none focus:border-amber-600 ${inputBg}`}
+                  className={`w-full text-[14.5px] px-4 py-2.5 font-bold text-[#fbf8f5] rounded-lg border border-[#2b1f17] focus:outline-none focus:border-[#d8bb93] ${inputBg}`}
                 />
               </div>
 
-              {/* Metal & Type */}
-              <div className="grid grid-cols-2 gap-3">
+              {/* Metal & Product Type */}
+              <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-300 mb-1">
-                    Metal *
+                  <label className="block text-xs font-bold uppercase tracking-wider text-[#d8bb93] mb-1.5">
+                    Precious Metal *
                   </label>
                   <select
                     value={formData.metal}
-                    onChange={(e) =>
+                    onChange={(e) => {
+                      const m = e.target.value as 'gold' | 'silver';
                       setFormData({
                         ...formData,
-                        metal: e.target.value as 'gold' | 'silver',
-                        purity: e.target.value === 'gold' ? '999.9 (24K)' : '999 Fine Silver',
-                        vatStatus: e.target.value === 'gold' ? '0% VAT Exempt' : '20% Standard VAT',
-                      })
-                    }
-                    className={`w-full text-[14.5px] px-3.5 py-2.5 font-medium text-black rounded-lg border border-gray-200 dark:border-slate-800 focus:outline-none focus:border-amber-600 ${inputBg}`}
+                        metal: m,
+                        purity: m === 'gold' ? '999.9 (24K)' : '999 Fine Silver',
+                        vatStatus: m === 'gold' ? '0% VAT Exempt' : '20% Standard VAT',
+                      });
+                    }}
+                    className={`w-full text-[14.5px] px-4 py-2.5 font-bold text-[#fbf8f5] rounded-lg border border-[#2b1f17] focus:outline-none focus:border-[#d8bb93] ${inputBg}`}
                   >
-                    <option value="gold">Gold</option>
-                    <option value="silver">Silver</option>
+                    <option value="gold" className="bg-[#120d09] text-white">Gold</option>
+                    <option value="silver" className="bg-[#120d09] text-white">Silver</option>
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-300 mb-1">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-[#d8bb93] mb-1.5">
                     Product Type *
                   </label>
                   <select
                     value={formData.type}
                     onChange={(e) => setFormData({ ...formData, type: e.target.value as 'bar' | 'coin' })}
-                    className={`w-full text-[14.5px] px-3.5 py-2.5 font-medium text-black rounded-lg border border-gray-200 dark:border-slate-800 focus:outline-none focus:border-amber-600 ${inputBg}`}
+                    className={`w-full text-[14.5px] px-4 py-2.5 font-bold text-[#fbf8f5] rounded-lg border border-[#2b1f17] focus:outline-none focus:border-[#d8bb93] ${inputBg}`}
                   >
-                    <option value="bar">Minted Bar</option>
-                    <option value="coin">Bullion Coin</option>
+                    <option value="bar" className="bg-[#120d09] text-white">Minted Bar</option>
+                    <option value="coin" className="bg-[#120d09] text-white">Bullion Coin</option>
                   </select>
                 </div>
               </div>
 
               {/* Weight & Quick Presets */}
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-300 mb-1">
+                <label className="block text-xs font-bold uppercase tracking-wider text-[#d8bb93] mb-1.5">
                   Weight in Grams *
                 </label>
                 <div className="flex items-center gap-2">
@@ -631,9 +639,9 @@ export default function BullionTab({
                     required
                     value={formData.weightGrams || ''}
                     onChange={(e) => setFormData({ ...formData, weightGrams: parseFloat(e.target.value) || 0 })}
-                    className={`w-full text-[14.5px] px-3.5 py-2.5 font-medium text-black rounded-lg border border-gray-200 dark:border-slate-800 focus:outline-none focus:border-amber-600 ${inputBg}`}
+                    className={`w-full text-[14.5px] px-4 py-2.5 font-bold text-[#fbf8f5] rounded-lg border border-[#2b1f17] focus:outline-none focus:border-[#d8bb93] ${inputBg}`}
                   />
-                  <span className="text-xs font-bold text-gray-800 dark:text-gray-200">grams</span>
+                  <span className="text-xs font-bold text-[#d8bb93]">grams</span>
                 </div>
                 {/* Quick weight preset chips */}
                 <div className="flex flex-wrap gap-1.5 mt-2">
@@ -642,7 +650,7 @@ export default function BullionTab({
                       key={w}
                       type="button"
                       onClick={() => setFormData({ ...formData, weightGrams: w })}
-                      className="px-2 py-0.5 rounded text-[10px] font-semibold bg-gray-100 hover:bg-amber-600 hover:text-white dark:bg-slate-800 dark:hover:bg-amber-600 transition-colors cursor-pointer"
+                      className="px-2 py-0.5 rounded text-[10.5px] font-bold bg-[#140e0a] border border-[#2b1f17] hover:border-[#d8bb93] text-[#a89584] hover:text-[#fbf8f5] transition-colors cursor-pointer"
                     >
                       {w === 31.1035 ? '1 oz (31.1g)' : `${w}g`}
                     </button>
@@ -650,7 +658,7 @@ export default function BullionTab({
                   <button
                     type="button"
                     onClick={() => setFormData({ ...formData, weightGrams: 11.664 })}
-                    className="px-2 py-0.5 rounded text-[10px] font-semibold bg-gray-100 hover:bg-amber-600 hover:text-white dark:bg-slate-800 transition-colors cursor-pointer"
+                    className="px-2 py-0.5 rounded text-[10.5px] font-bold bg-[#140e0a] border border-[#2b1f17] hover:border-[#d8bb93] text-[#a89584] hover:text-[#fbf8f5] transition-colors cursor-pointer"
                   >
                     1 Tola (11.66g)
                   </button>
@@ -658,9 +666,9 @@ export default function BullionTab({
               </div>
 
               {/* Refiner & Purity */}
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-300 mb-1">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-[#d8bb93] mb-1.5">
                     Refiner / Mint *
                   </label>
                   <input
@@ -669,12 +677,12 @@ export default function BullionTab({
                     placeholder="e.g. PAMP Suisse, Royal Mint, Valcambi"
                     value={formData.refiner || ''}
                     onChange={(e) => setFormData({ ...formData, refiner: e.target.value })}
-                    className={`w-full text-[14.5px] px-3.5 py-2.5 font-medium text-black rounded-lg border border-gray-200 dark:border-slate-800 focus:outline-none focus:border-amber-600 ${inputBg}`}
+                    className={`w-full text-[14.5px] px-4 py-2.5 font-bold text-[#fbf8f5] rounded-lg border border-[#2b1f17] focus:outline-none focus:border-[#d8bb93] ${inputBg}`}
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-300 mb-1">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-[#d8bb93] mb-1.5">
                     Purity *
                   </label>
                   <input
@@ -683,19 +691,19 @@ export default function BullionTab({
                     placeholder="e.g. 999.9 (24K) or 916.7 (22K)"
                     value={formData.purity || ''}
                     onChange={(e) => setFormData({ ...formData, purity: e.target.value })}
-                    className={`w-full text-[14.5px] px-3.5 py-2.5 font-medium text-black rounded-lg border border-gray-200 dark:border-slate-800 focus:outline-none focus:border-amber-600 ${inputBg}`}
+                    className={`w-full text-[14.5px] px-4 py-2.5 font-bold text-[#fbf8f5] rounded-lg border border-[#2b1f17] focus:outline-none focus:border-[#d8bb93] ${inputBg}`}
                   />
                 </div>
               </div>
 
               {/* Pricing Mode & Markup */}
-              <div className="p-3.5 rounded-xl bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-800 space-y-3">
+              <div className="p-4 rounded-xl bg-[#090604] border border-[#241a13] space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-stone-900 dark:text-stone-100">
+                  <span className="text-xs font-bold text-[#fbf8f5]">
                     Pricing Mode
                   </span>
-                  <div className="flex items-center gap-2">
-                    <label className="inline-flex items-center gap-1.5 text-xs cursor-pointer">
+                  <div className="flex items-center gap-3">
+                    <label className="inline-flex items-center gap-1.5 text-xs text-[#fbf8f5] cursor-pointer">
                       <input
                         type="radio"
                         name="priceMode"
@@ -704,7 +712,7 @@ export default function BullionTab({
                       />
                       <span>Live Spot Auto</span>
                     </label>
-                    <label className="inline-flex items-center gap-1.5 text-xs cursor-pointer">
+                    <label className="inline-flex items-center gap-1.5 text-xs text-[#fbf8f5] cursor-pointer">
                       <input
                         type="radio"
                         name="priceMode"
@@ -718,7 +726,7 @@ export default function BullionTab({
 
                 {formData.priceMode === 'auto' ? (
                   <div>
-                    <label className="block text-[11px] font-semibold text-gray-600 dark:text-gray-400 mb-1">
+                    <label className="block text-[11px] font-bold text-[#a89584] mb-1.5">
                       Premium Markup % (e.g. 0.08 for 8% above spot)
                     </label>
                     <input
@@ -728,12 +736,12 @@ export default function BullionTab({
                       max="1"
                       value={formData.premiumPercentage ?? 0.08}
                       onChange={(e) => setFormData({ ...formData, premiumPercentage: parseFloat(e.target.value) || 0 })}
-                      className={`w-full text-[14px] px-3.5 py-2 font-medium text-black rounded-lg border border-gray-200 dark:border-slate-800 ${inputBg}`}
+                      className={`w-full text-[14px] px-3.5 py-2 font-bold text-[#fbf8f5] rounded-lg border border-[#2b1f17] ${inputBg}`}
                     />
                   </div>
                 ) : (
                   <div>
-                    <label className="block text-[11px] font-semibold text-gray-600 dark:text-gray-400 mb-1">
+                    <label className="block text-[11px] font-bold text-[#a89584] mb-1.5">
                       Fixed Price Override (£)
                     </label>
                     <input
@@ -743,31 +751,31 @@ export default function BullionTab({
                       placeholder="e.g. 98.50"
                       value={formData.customPriceOverride || ''}
                       onChange={(e) => setFormData({ ...formData, customPriceOverride: parseFloat(e.target.value) || 0 })}
-                      className={`w-full text-[14px] px-3.5 py-2 font-medium text-black rounded-lg border border-gray-200 dark:border-slate-800 ${inputBg}`}
+                      className={`w-full text-[14px] px-3.5 py-2 font-bold text-[#fbf8f5] rounded-lg border border-[#2b1f17] ${inputBg}`}
                     />
                   </div>
                 )}
 
                 {/* Live Preview Box */}
-                <div className="p-2.5 rounded-lg bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 flex items-center justify-between text-xs">
-                  <span className="font-semibold text-amber-900 dark:text-amber-200">
+                <div className="p-3 rounded-lg bg-[#1a130e] border border-[#3d2e22] flex items-center justify-between text-xs">
+                  <span className="font-bold text-[#a89584]">
                     Live Estimated Catalog Price:
                   </span>
-                  <span className="font-extrabold text-sm text-[#8b6914] font-mono">
+                  <span className="font-extrabold text-sm text-[#d8bb93] font-mono">
                     {formatGBP(calculatePrice(formData))}
                   </span>
                 </div>
               </div>
 
               {/* Image Section: Device Upload or Custom URL */}
-              <div className="p-3.5 rounded-xl bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-800 space-y-3">
-                <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-300">
+              <div className="p-4 rounded-xl bg-[#090604] border border-[#241a13] space-y-3">
+                <label className="block text-xs font-bold uppercase tracking-wider text-[#d8bb93]">
                   Product Image *
                 </label>
 
                 <div className="flex items-start gap-4">
                   {/* Image Preview */}
-                  <div className="w-20 h-20 rounded-xl bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 flex items-center justify-center p-1 overflow-hidden shrink-0 shadow-xs">
+                  <div className="w-20 h-20 rounded-xl bg-[#120d09] border border-[#261c14] flex items-center justify-center p-1 overflow-hidden shrink-0 shadow-xs">
                     {formData.imageUrl ? (
                       <Image
                         src={formData.imageUrl}
@@ -778,7 +786,7 @@ export default function BullionTab({
                         unoptimized
                       />
                     ) : (
-                      <span className="text-[10px] text-gray-400">No Image</span>
+                      <span className="text-[10px] text-[#8c7b6d]">No Image</span>
                     )}
                   </div>
 
@@ -796,7 +804,7 @@ export default function BullionTab({
                         type="button"
                         disabled={isUploadingImage}
                         onClick={() => fileInputRef.current?.click()}
-                        className="px-3.5 py-2 rounded-lg bg-[#1a130f] hover:bg-[#8b6914] text-white text-xs font-bold transition-all cursor-pointer shadow-xs disabled:opacity-50"
+                        className="px-3.5 py-2 rounded-lg bg-[#140e0a] hover:bg-[#1f1711] border border-[#2b1f17] text-[#d8bb93] hover:text-white text-xs font-bold transition-all cursor-pointer shadow-xs disabled:opacity-50"
                       >
                         {isUploadingImage ? 'Uploading...' : '📁 Upload Photo from Device'}
                       </button>
@@ -808,7 +816,7 @@ export default function BullionTab({
                         placeholder="Or enter image URL (/bullion/gold-bar-1g.webp)"
                         value={formData.imageUrl || ''}
                         onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
-                        className={`w-full text-xs px-3 py-1.5 rounded-lg border border-gray-200 dark:border-slate-800 ${inputBg}`}
+                        className={`w-full text-xs px-3.5 py-2 rounded-lg border border-[#2b1f17] ${inputBg}`}
                       />
                     </div>
                   </div>
@@ -816,7 +824,7 @@ export default function BullionTab({
 
                 {/* Quick Preset Images */}
                 <div>
-                  <span className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">
+                  <span className="block text-[10px] font-bold text-[#a89584] uppercase tracking-wider mb-1.5">
                     Or select from bullion presets:
                   </span>
                   <div className="flex flex-wrap gap-1.5">
@@ -831,7 +839,7 @@ export default function BullionTab({
                       { label: '100g Bar', url: '/bullion/gold-bar-100g.webp' },
                       { label: '1kg Bar', url: '/bullion/gold-bar-1kg.webp' },
                       { label: 'Britannia Coin', url: '/bullion/gold-coin-britannia.webp' },
-                      { label: 'Sovereign Coin', url: '/bullion/gold-coin-sovereign.webp' },
+                      { label: 'Sovereign Coin', url: '/bullion/gold-coin-soovereign.webp' },
                       { label: 'Silver 100g', url: '/bullion/silver-bar-100g.webp' },
                       { label: 'Silver 1kg', url: '/bullion/silver-bar-1kg.webp' },
                     ].map((preset) => (
@@ -839,10 +847,10 @@ export default function BullionTab({
                         key={preset.url}
                         type="button"
                         onClick={() => setFormData({ ...formData, imageUrl: preset.url })}
-                        className={`px-2 py-0.5 rounded text-[10px] font-medium border transition-colors cursor-pointer ${
+                        className={`px-2 py-0.5 rounded text-[10px] font-bold border transition-colors cursor-pointer ${
                           formData.imageUrl === preset.url
-                            ? 'bg-[#8b6914] text-white border-[#8b6914]'
-                            : 'bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700 hover:border-[#8b6914]'
+                            ? 'bg-[#d8bb93] text-[#0c0806] border-[#d8bb93]'
+                            : 'bg-[#140e0a] border-[#2b1f17] text-[#a89584] hover:border-[#d8bb93] hover:text-[#fbf8f5]'
                         }`}
                       >
                         {preset.label}
@@ -854,44 +862,44 @@ export default function BullionTab({
 
               {/* Toggles (Popular & In Stock) */}
               <div className="grid grid-cols-2 gap-3 pt-1">
-                <label className="flex items-center gap-2 p-3 rounded-lg border border-gray-200 dark:border-slate-800 cursor-pointer">
+                <label className="flex items-center gap-2.5 p-3 rounded-xl border border-[#241a13] bg-[#090604] cursor-pointer">
                   <input
                     type="checkbox"
                     checked={!!formData.popular}
                     onChange={(e) => setFormData({ ...formData, popular: e.target.checked })}
                   />
                   <div>
-                    <span className="text-xs font-bold block">Popular Badge</span>
-                    <span className="text-[10px] text-gray-400">Featured with gold badge</span>
+                    <span className="text-xs font-bold text-[#fbf8f5] block">Popular Badge</span>
+                    <span className="text-[10px] text-[#a89584]">Featured with gold badge</span>
                   </div>
                 </label>
 
-                <label className="flex items-center gap-2 p-3 rounded-lg border border-gray-200 dark:border-slate-800 cursor-pointer">
+                <label className="flex items-center gap-2.5 p-3 rounded-xl border border-[#241a13] bg-[#090604] cursor-pointer">
                   <input
                     type="checkbox"
                     checked={formData.inStock !== false}
                     onChange={(e) => setFormData({ ...formData, inStock: e.target.checked })}
                   />
                   <div>
-                    <span className="text-xs font-bold block">In Stock</span>
-                    <span className="text-[10px] text-gray-400">Available for live purchase</span>
+                    <span className="text-xs font-bold text-[#fbf8f5] block">In Stock</span>
+                    <span className="text-[10px] text-[#a89584]">Available for live purchase</span>
                   </div>
                 </label>
               </div>
 
               {/* Form Action Buttons */}
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-200 dark:border-slate-800">
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#241a13]">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 rounded-xl text-xs font-semibold bg-gray-100 hover:bg-gray-200 dark:bg-slate-800 text-stone-700 dark:text-stone-300 transition-colors cursor-pointer"
+                  className="px-4 py-2 rounded-xl text-xs font-bold bg-[#140e0a] border border-[#2b1f17] text-[#a89584] hover:text-white transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className={`px-6 py-2.5 ${primaryBtn} text-xs font-bold uppercase tracking-wider rounded-xl shadow-xs transition-all cursor-pointer disabled:opacity-50`}
+                  className={`px-6 py-2.5 ${primaryBtn} text-xs font-bold uppercase tracking-wider rounded-xl shadow-md transition-all cursor-pointer disabled:opacity-50`}
                 >
                   {isSubmitting ? 'Saving...' : editingItem ? 'Save Changes' : 'Create Bullion Item'}
                 </button>
