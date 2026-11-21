@@ -132,66 +132,66 @@ export default function HomeBullionShowcase() {
               return (
                 <div
                   key={item.id}
-                  className="group flex flex-col text-left transition-all duration-300 w-[240px] sm:w-[270px] md:w-[285px] flex-shrink-0 snap-start select-none bg-white border border-[#dfcca6]/80 hover:border-[#8b6914] rounded-2xl p-4 shadow-2xs hover:shadow-md"
+                  className="group flex flex-col text-left transition-all duration-300 w-[195px] sm:w-[235px] md:w-[255px] flex-shrink-0 snap-start select-none bg-white border border-[#dfcca6]/80 hover:border-[#8b6914] rounded-xl sm:rounded-2xl p-2.5 sm:p-3.5 shadow-2xs hover:shadow-md"
                 >
-                  {/* Clean Showroom Image Pedestal (Decluttered: No double badges) */}
-                  <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-gradient-to-b from-[#faf6ee] via-white to-[#faf8f5] flex items-center justify-center p-4 border border-[#dfcca6]/30">
-                    <span className="absolute top-2.5 left-2.5 bg-[#8b6914] text-white text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded shadow-2xs z-10">
+                  {/* Compact Showroom Image Pedestal (No wasted vertical dead-space) */}
+                  <div className="relative w-full h-32 sm:h-40 rounded-lg sm:rounded-xl overflow-hidden bg-gradient-to-b from-[#faf6ee] via-white to-[#faf8f5] flex items-center justify-center p-2 sm:p-2.5 border border-[#dfcca6]/30">
+                    <span className="absolute top-2 left-2 bg-[#8b6914] text-white text-[8.5px] sm:text-[9px] font-bold uppercase tracking-wider px-1.5 sm:px-2 py-0.5 rounded shadow-2xs z-10">
                       0% VAT
                     </span>
 
                     <Image
                       src={item.imageUrl}
                       alt={item.name}
-                      width={200}
-                      height={200}
-                      className="max-h-32 sm:max-h-40 object-contain group-hover:scale-108 transition-transform duration-500 drop-shadow-md"
+                      width={180}
+                      height={180}
+                      className="max-h-24 sm:max-h-32 w-auto object-contain group-hover:scale-105 transition-transform duration-500 drop-shadow-md"
                       unoptimized
                     />
                   </div>
 
-                  {/* Clean Details */}
-                  <div className="mt-3.5 flex flex-col flex-1 justify-between">
+                  {/* Clean Compact Details */}
+                  <div className="mt-2.5 flex flex-col flex-1 justify-between">
                     <div>
                       {/* Refiner & Purity */}
-                      <div className="flex items-center justify-between text-[11px] mb-1">
-                        <span className="font-semibold text-stone-500 uppercase tracking-wider text-[10px]">
+                      <div className="flex items-center justify-between text-[10px] sm:text-[11px] mb-1">
+                        <span className="font-semibold text-stone-500 uppercase tracking-wider text-[9px] sm:text-[10px] truncate max-w-[120px]">
                           {cleanRefiner}
                         </span>
-                        <span className="text-[#8b6914] font-bold text-[10.5px]">
+                        <span className="text-[#8b6914] font-bold text-[10px] sm:text-[10.5px]">
                           {item.purity}
                         </span>
                       </div>
 
                       {/* Product Title */}
-                      <h3 className="font-serif text-[15px] sm:text-[16px] font-semibold text-stone-900 leading-snug group-hover:text-[#8b6914] transition-colors line-clamp-2 h-[42px]">
+                      <h3 className="font-serif text-[13.5px] sm:text-[15px] font-semibold text-stone-900 leading-snug group-hover:text-[#8b6914] transition-colors line-clamp-2 h-9 sm:h-10">
                         {item.name}
                       </h3>
 
-                      {/* Clean Price (Removed cluttered 'LIVE ESTIMATE' and 'LBMA Direct' badges) */}
-                      <div className="mt-2.5 pt-2 border-t border-[#dfcca6]/30 flex items-baseline justify-between">
-                        <p className="text-[19px] sm:text-[22px] font-bold text-stone-900 tracking-tight">
+                      {/* Clean Price */}
+                      <div className="mt-1.5 pt-1.5 border-t border-[#dfcca6]/30 flex items-baseline justify-between">
+                        <p className="text-[17px] sm:text-[20px] font-bold text-stone-900 tracking-tight">
                           {formatGBP(calculatedPrice)}
                         </p>
-                        <span className="text-[10px] text-zinc-400 font-medium">
+                        <span className="text-[9.5px] sm:text-[10px] text-zinc-400 font-medium">
                           VAT Free
                         </span>
                       </div>
                     </div>
 
-                    {/* Action Buttons: Clean & Elegant */}
-                    <div className="mt-3.5 grid grid-cols-2 gap-2">
+                    {/* Action Buttons: Clean & Compact */}
+                    <div className="mt-2.5 grid grid-cols-2 gap-1.5 sm:gap-2">
                       <a
                         href={`https://wa.me/447472027202?text=${whatsappMessage}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="py-2.5 rounded-xl text-xs font-bold text-center bg-[#1c1510] hover:bg-[#8b6914] text-white transition-all shadow-xs active:scale-95 cursor-pointer"
+                        className="py-1.5 sm:py-2 rounded-lg sm:rounded-xl text-[11px] sm:text-xs font-bold text-center bg-[#1c1510] hover:bg-[#8b6914] text-white transition-all shadow-2xs active:scale-95 cursor-pointer flex items-center justify-center"
                       >
                         Lock Price
                       </a>
                       <Link
                         href={`/contact?inquiry=${encodeURIComponent(`Gold Bullion Inquiry: ${item.name} (${item.purity}) estimated at ${formatGBP(calculatedPrice)}`)}`}
-                        className="py-2.5 rounded-xl text-xs font-bold text-center bg-white hover:bg-[#faf5ea] text-stone-800 border border-[#dfcca6] hover:border-[#8b6914] transition-all active:scale-95 cursor-pointer"
+                        className="py-1.5 sm:py-2 rounded-lg sm:rounded-xl text-[11px] sm:text-xs font-bold text-center bg-white hover:bg-[#faf5ea] text-stone-800 border border-[#dfcca6] hover:border-[#8b6914] transition-all active:scale-95 cursor-pointer flex items-center justify-center"
                       >
                         Inquire
                       </Link>
