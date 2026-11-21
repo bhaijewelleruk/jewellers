@@ -1,6 +1,45 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/middleware';
 
+const AUTH_SECRET =
+  process.env.AUTH_SECRET ||
+  process.env.SUPABASE_SERVICE_ROLE_KEY ||
+  'bhai_jeweller_super_secure_vault_secret_bradford_2026';
+
+/**
+ * Web Crypto HMAC-SHA256 verification compatible with Next.js Edge Runtime
+ */
+async function verifyEdgeSignature(dataBase64Url: string, signatureBase64Url: string): Promise<boolean> {
+  try {
+    const encoder = new TextEncoder();
+    const key = await crypto.subtle.importKey(
+      'raw',
+      encoder.encode(AUTH_SECRET),
+      { name: 'HMAC', hash: 'SHA-256' },
+      false,
+      ['verify']
+    );
+
+    const base64 = signatureBase64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const pad = base64.length % 4;
+    const padded = pad ? base64 + '='.repeat(4 - pad) : base64;
+    const binary = atob(padded);
+    const sigBytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+      sigBytes[i] = binary.charCodeAt(i);
+    }
+
+    return await crypto.subtle.verify(
+      'HMAC',
+      key,
+      sigBytes,
+      encoder.encode(dataBase64Url)
+    );
+  } catch {
+    return false;
+  }
+}
+
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
@@ -17,8 +56,18 @@ export async function middleware(request: NextRequest) {
     try {
       const parts = sessionCookie.value.split('.');
       if (parts.length === 2) {
-        // Base64url decode
-        const base64 = parts[0].replace(/-/g, '+').replace(/_/g, '/');
+        const [dataBase64Url, signature] = parts;
+
+        // Cryptographically verify HMAC-SHA256 signature at the edge
+        const isValidSignature = await verifyEdgeSignature(dataBase64Url, signature);
+        if (!isValidSignature) {
+          const loginUrl = new URL('/admin/login', request.url);
+          loginUrl.searchParams.set('redirect', pathname);
+          return NextResponse.redirect(loginUrl);
+        }
+
+        // Base64url decode verified payload
+        const base64 = dataBase64Url.replace(/-/g, '+').replace(/_/g, '/');
         const json = atob(base64);
         const user = JSON.parse(json);
 
@@ -29,10 +78,12 @@ export async function middleware(request: NextRequest) {
         }
       } else {
         const loginUrl = new URL('/admin/login', request.url);
+        loginUrl.searchParams.set('redirect', pathname);
         return NextResponse.redirect(loginUrl);
       }
     } catch {
       const loginUrl = new URL('/admin/login', request.url);
+      loginUrl.searchParams.set('redirect', pathname);
       return NextResponse.redirect(loginUrl);
     }
   }

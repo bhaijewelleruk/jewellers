@@ -6,6 +6,7 @@ import { AnnouncementBar } from './AnnouncementBar';
 import { Header } from './Header';
 import { Footer } from './Footer';
 import { MobileBottomNav } from './MobileBottomNav';
+import { CookieConsent } from './CookieConsent';
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -29,6 +30,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           {children}
         </div>
         <Footer />
+        <CookieConsent />
       </div>
     );
   }
@@ -47,6 +49,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </div>
       <Footer />
       <MobileBottomNav />
+      <CookieConsent />
     </div>
   );
 }
