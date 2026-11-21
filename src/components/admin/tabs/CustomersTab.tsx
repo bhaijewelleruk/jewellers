@@ -63,16 +63,21 @@ export default function CustomersTab({
 
   // Filter users
   const filteredUsers = registeredUsers.filter((u) => {
+    const displayName = (u.fullName || (u as any).name || '').toLowerCase();
     const matchesSearch =
       !userSearchText ||
       u.email.toLowerCase().includes(userSearchText.toLowerCase()) ||
-      (u.fullName && u.fullName.toLowerCase().includes(userSearchText.toLowerCase()));
+      displayName.includes(userSearchText.toLowerCase()) ||
+      ((u as any).phone && (u as any).phone.includes(userSearchText));
 
     if (!matchesSearch) return false;
 
+    const isBanned = u.status === 'banned' || (u as any).isBanned === true;
+    const isLocked = ((u as any).failedAttempts || u.loginAttempts || 0) >= 5 || (u as any).isLocked === true;
+
     if (userStatusFilter === 'all') return true;
-    if (userStatusFilter === 'banned') return u.status === 'banned';
-    if (userStatusFilter === 'locked') return (u.loginAttempts || 0) >= 5;
+    if (userStatusFilter === 'banned') return isBanned;
+    if (userStatusFilter === 'locked') return isLocked;
     if (userStatusFilter === 'active') return u.status === 'active';
     if (userStatusFilter === 'inactive') return u.status === 'inactive';
     return true;
@@ -216,19 +221,25 @@ export default function CustomersTab({
                     </tr>
                   ) : (
                     filteredUsers.map((u) => {
-                      const isBanned = u.status === 'banned';
+                      const isBanned = u.status === 'banned' || (u as any).isBanned === true;
                       const isInactive = u.status === 'inactive';
-                      const isLocked = (u.loginAttempts || 0) >= 5;
+                      const failedCount = (u as any).failedAttempts ?? u.loginAttempts ?? 0;
+                      const isLocked = failedCount >= 5 || (u as any).isLocked === true;
                       const isLoading = userLoadingId === u.id;
+                      const displayName = u.fullName || (u as any).name || 'Registered Client';
+                      const displayDate = (u as any).registeredDate || (u.created_at ? new Date(u.created_at).toLocaleDateString('en-GB') : 'Recently');
+                      const displayPhone = (u as any).phone || 'N/A';
 
                       return (
                         <tr key={u.id} className="transition-colors">
                           <td className="p-4">
                             <p className={`font-semibold text-xs ${titleColor}`}>
-                              {u.fullName || 'Registered Client'}
+                              {displayName}
                             </p>
                             <p className={`text-[11px] font-mono ${subtitleColor}`}>{u.email}</p>
-                            <p className="text-[10px] text-gray-400 mt-0.5">Joined: {u.created_at || 'Recently'}</p>
+                            <p className="text-[10px] text-gray-500 font-medium mt-0.5">
+                              Joined: {displayDate} &bull; Phone: {displayPhone}
+                            </p>
                           </td>
                           <td className="p-4">
                             <span
@@ -271,18 +282,18 @@ export default function CustomersTab({
                             {isLocked ? (
                               <span className="px-2 py-0.5 rounded-[4px] bg-red-100 text-red-900 border border-red-300 font-semibold text-[10px] inline-flex items-center gap-1">
                                 <LockIcon className="w-3 h-3 text-red-600" />
-                                <span>IP Locked ({u.loginAttempts || 5}/5)</span>
+                                <span>IP Locked ({failedCount}/5)</span>
                               </span>
                             ) : (
                               <span
                                 className={`text-[10.5px] font-mono inline-flex items-center gap-1 ${
-                                  (u.loginAttempts || 0) > 0 ? 'text-amber-600' : subtitleColor
+                                  failedCount > 0 ? 'text-amber-600 font-bold' : subtitleColor
                                 }`}
                               >
-                                {(u.loginAttempts || 0) > 0 ? (
+                                {failedCount > 0 ? (
                                   <>
                                     <AlertTriangleIcon className="w-3 h-3 text-amber-600" />
-                                    <span>{u.loginAttempts} Failed Attempts</span>
+                                    <span>{failedCount} Failed Attempt(s)</span>
                                   </>
                                 ) : (
                                   <>

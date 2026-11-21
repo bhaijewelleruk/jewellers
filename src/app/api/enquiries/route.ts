@@ -89,14 +89,14 @@ export async function POST(request: Request) {
 
     const name = sanitizeString(body.name, 100);
     const email = sanitizeEmail(body.email);
-    const phone = sanitizePhone(body.phone);
-    const service = sanitizeString(body.service, 100) || 'Bespoke Jewelry Customization';
-    const budget = sanitizeString(body.budget, 50) || '£2,000 - £5,000';
+    const phone = sanitizePhone(body.phone || body.contactNumber || body.tel) || 'Not provided';
+    const service = sanitizeString(body.subject || body.service, 100) || 'General Inquiry';
+    const budget = sanitizeString(body.budget, 50) || 'N/A';
     const message = sanitizeString(body.message, 2000);
 
-    if (!name || !email || !phone) {
+    if (!name || !email) {
       return NextResponse.json(
-        { success: false, error: 'Name, valid email, and contact phone are required.' },
+        { success: false, error: 'Name and a valid email address are required.' },
         { status: 400 }
       );
     }

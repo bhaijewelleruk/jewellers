@@ -83,12 +83,24 @@ export default function AdminDashboardPage() {
     document.body.style.backgroundColor = theme === 'light' ? '#ffffff' : '#0c0806';
     document.documentElement.style.backgroundColor = theme === 'light' ? '#ffffff' : '#0c0806';
 
+    if (theme === 'light') {
+      document.documentElement.classList.remove('dark');
+      document.body.classList.remove('dark');
+      document.documentElement.classList.add('light');
+    } else {
+      document.documentElement.classList.remove('light');
+      document.documentElement.classList.add('dark');
+      document.body.classList.add('dark');
+    }
+
     return () => {
       (document.body.style as any).zoom = originalZoom || '';
       document.body.style.minHeight = originalBodyMinHeight || '';
       document.body.style.height = originalBodyHeight || '';
       document.body.style.backgroundColor = originalBodyBg || '';
       document.documentElement.style.backgroundColor = originalHtmlBg || '';
+      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.remove('light');
     };
   }, [theme]);
 
@@ -316,28 +328,45 @@ export default function AdminDashboardPage() {
   });
   const [announcementSaveMsg, setAnnouncementSaveMsg] = useState(false);
 
-  // Load real-time data once authorized
+  // Load real-time data once authorized & setup automatic live synchronization
   useEffect(() => {
     if (!isAdminAuthorized) return;
 
-    fetch('/api/orders')
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success && Array.isArray(data.data)) {
-          setOrders(data.data);
-        }
-      })
-      .catch((err) => console.error('Error loading orders:', err));
+    const fetchLiveStoreData = () => {
+      fetch('/api/orders')
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success && Array.isArray(data.data)) {
+            setOrders(data.data);
+          }
+        })
+        .catch((err) => console.error('Error loading orders:', err));
 
-    fetch('/api/enquiries')
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success && Array.isArray(data.data)) {
-          setEnquiries(data.data);
-        }
-      })
-      .catch((err) => console.error('Error loading enquiries:', err));
+      fetch('/api/enquiries')
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success && Array.isArray(data.data)) {
+            setEnquiries(data.data);
+          }
+        })
+        .catch((err) => console.error('Error loading enquiries:', err));
 
+      fetch('/api/users')
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success) {
+            if (Array.isArray(data.users)) setRegisteredUsers(data.users);
+            const logs = data.loginAttempts || data.attempts;
+            if (Array.isArray(logs)) setLoginAttemptsLogs(logs);
+          }
+        })
+        .catch((err) => console.error('Error loading users:', err));
+    };
+
+    // Immediate fetch
+    fetchLiveStoreData();
+
+    // One-off UI config fetches
     fetch('/api/slides')
       .then((res) => res.json())
       .then((data) => {
@@ -370,15 +399,9 @@ export default function AdminDashboardPage() {
       })
       .catch((err) => console.error('Error loading announcement config:', err));
 
-    fetch('/api/users')
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          if (Array.isArray(data.users)) setRegisteredUsers(data.users);
-          if (Array.isArray(data.attempts)) setLoginAttemptsLogs(data.attempts);
-        }
-      })
-      .catch((err) => console.error('Error loading users:', err));
+    // Live real-time polling every 10 seconds for user accounts, orders, and inquiries
+    const syncInterval = setInterval(fetchLiveStoreData, 10000);
+    return () => clearInterval(syncInterval);
   }, [isAdminAuthorized]);
 
   // Add Product Form State
@@ -1023,20 +1046,20 @@ export default function AdminDashboardPage() {
   const isLight = theme === 'light';
   const themeStyles: AdminThemeStyles = {
     isLight,
-    containerBg: isLight ? 'bg-[#f8fafc] text-black' : 'bg-[#0f172a] text-slate-100',
-    sidebarBg: isLight ? 'bg-white border-gray-200' : 'bg-[#1e293b] border-slate-700',
+    containerBg: isLight ? 'bg-[#f8fafc] text-black font-medium' : 'bg-[#0f172a] text-slate-100',
+    sidebarBg: isLight ? 'bg-white border-gray-200 text-black' : 'bg-[#1e293b] border-slate-700 text-white',
     sidebarHeaderBorder: isLight ? 'border-gray-200' : 'border-slate-700',
-    sidebarFooterBg: isLight ? 'bg-gray-50 border-gray-200' : 'bg-[#0f172a] border-slate-700',
-    cardBg: isLight ? 'bg-white border border-gray-200 shadow-xs' : 'bg-[#1e293b] border border-slate-700 shadow-lg',
-    cardHeaderBorder: isLight ? 'border-gray-100' : 'border-slate-700/60',
+    sidebarFooterBg: isLight ? 'bg-gray-50 border-gray-200 text-black' : 'bg-[#0f172a] border-slate-700 text-white',
+    cardBg: isLight ? 'bg-white border border-gray-200 text-black shadow-xs' : 'bg-[#1e293b] border border-slate-700 text-white shadow-lg',
+    cardHeaderBorder: isLight ? 'border-gray-200' : 'border-slate-700/60',
     inputBg: isLight
       ? 'bg-white border-gray-300 text-black font-semibold text-[14.5px] placeholder:text-gray-500 focus:border-black focus:ring-1 focus:ring-black'
       : 'bg-slate-800 border-slate-600 text-white font-semibold text-[14.5px] placeholder:text-slate-400 focus:border-white',
     tableHeaderBg: isLight ? 'bg-gray-100 border-gray-300 text-black font-extrabold text-[13px]' : 'bg-slate-800/80 border-slate-700 text-slate-200 font-extrabold text-[13px]',
-    tableRowHover: isLight ? 'hover:bg-gray-50/80 divide-gray-100 text-black' : 'hover:bg-slate-800/50 divide-slate-800 text-white',
+    tableRowHover: isLight ? 'hover:bg-gray-50/90 divide-gray-200 text-black font-medium' : 'hover:bg-slate-800/50 divide-slate-800 text-white',
     titleColor: isLight ? 'text-black font-extrabold' : 'text-white font-extrabold',
     accentGold: isLight ? 'text-black font-bold' : 'text-slate-100 font-bold',
-    subtitleColor: isLight ? 'text-black font-bold text-[14px]' : 'text-slate-100 font-bold text-[14px]',
+    subtitleColor: isLight ? 'text-gray-900 font-bold text-[14px]' : 'text-slate-100 font-bold text-[14px]',
     badgeBg: isLight ? 'bg-gray-100 text-black font-bold border-gray-300' : 'bg-slate-800 text-slate-200 border-slate-700 font-bold',
     primaryBtn: isLight ? 'bg-black hover:bg-gray-800 text-white font-bold shadow-xs' : 'bg-white hover:bg-slate-100 text-black font-bold',
   };

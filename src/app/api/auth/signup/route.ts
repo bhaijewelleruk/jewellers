@@ -5,6 +5,7 @@ import { checkRateLimit, getClientIp } from '@/lib/rateLimit';
 
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
 import { supabase as defaultSupabase } from '@/lib/supabase';
+import { GLOBAL_USERS_CACHE } from '@/app/api/users/route';
 
 const supabase = supabaseAdmin || defaultSupabase;
 
@@ -104,6 +105,23 @@ export async function POST(request: Request) {
         console.error('Supabase signup insert error:', error);
       }
     }
+
+    // Real-time synchronization: immediately track user in live server cache for Admin Panel
+    GLOBAL_USERS_CACHE.set(email.toLowerCase(), {
+      id: userId,
+      name: fullName,
+      fullName: fullName,
+      email: email,
+      phone: phone || 'N/A',
+      role: 'client',
+      status: 'active',
+      isBanned: false,
+      failedAttempts: 0,
+      loginAttempts: 0,
+      isLocked: false,
+      registeredDate: new Date().toLocaleDateString('en-GB'),
+      created_at: new Date().toISOString(),
+    });
 
     const sessionPayload = {
       id: userId,

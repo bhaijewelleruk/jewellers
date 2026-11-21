@@ -6,17 +6,58 @@ import Link from 'next/link';
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+  const [referenceId, setReferenceId] = useState('');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    subject: 'general',
+    phone: '',
+    subject: 'General Enquiry',
     message: '',
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (formData.name && formData.email && formData.message) {
-      setSubmitted(true);
+    setSubmitError('');
+    if (!formData.name || !formData.email || !formData.message) {
+      setSubmitError('Please fill in your name, email, and message.');
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      const res = await fetch('/api/enquiries', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone || 'N/A',
+          service: formData.subject,
+          subject: formData.subject,
+          message: formData.message,
+        }),
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setReferenceId(data.data?.id || `ENQ-${Math.floor(100 + Math.random() * 900)}`);
+        setSubmitted(true);
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          subject: 'General Enquiry',
+          message: '',
+        });
+      } else {
+        setSubmitError(data.error || 'Failed to send message. Please try again or WhatsApp us directly.');
+      }
+    } catch {
+      setSubmitError('Network error. Please try again or message us on WhatsApp.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -125,73 +166,107 @@ export default function ContactPage() {
           </h3>
 
           {submitted ? (
-            <div className="p-6 rounded-xl bg-[#f6efe7] border border-[#dec29b]/50 text-center animate-fadeIn">
-              <p className="font-serif text-xl text-[#1c1510]">Thank you for reaching out!</p>
-              <p className="text-xs text-[#6b5c50] font-light mt-1">
-                Your message has been received. Our concierge team will contact you shortly.
+            <div className="p-6 sm:p-8 rounded-xl bg-white border border-[#dec29b]/70 text-center shadow-md animate-fadeIn">
+              <div className="w-14 h-14 rounded-full bg-[#faf5ea] border border-[#dec29b] flex items-center justify-center mx-auto mb-3 text-2xl">
+                ✓
+              </div>
+              <p className="font-serif text-xl sm:text-2xl text-[#1c1510] font-normal">
+                Thank you for reaching out!
+              </p>
+              {referenceId && (
+                <div className="mt-2 inline-block px-3 py-1 rounded bg-[#faf5ea] border border-[#dec29b]/50 text-xs font-mono font-bold text-[#8b6914]">
+                  Inquiry Ref: {referenceId}
+                </div>
+              )}
+              <p className="text-xs sm:text-sm text-[#6b5c50] font-light mt-2 max-w-md mx-auto leading-relaxed">
+                Your consultation request has been forwarded directly to our Bradford showroom concierge desk. We will get in touch shortly via WhatsApp or email.
               </p>
               <button
                 type="button"
                 onClick={() => setSubmitted(false)}
-                className="mt-4 px-5 py-2 rounded-full border border-[#1c1510] text-xs font-light hover:bg-[#1c1510] hover:text-[#f5efe8] transition-colors"
+                className="mt-5 px-6 py-2.5 rounded-full border border-[#1c1510] bg-[#1c1510] text-[#f5efe8] text-xs font-medium hover:bg-[#33261d] transition-all shadow-xs cursor-pointer"
               >
-                Send Another Message
+                Send Another Inquiry
               </button>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-xs font-medium text-[#1c1510] mb-1.5">
-                  Full Name <span className="text-[#a83232]">*</span>
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="Your full name"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-lg border border-[#e2d6c8] bg-white text-xs text-[#1c1510] placeholder-[#9a897b] outline-none focus:border-[#1c1510] transition-colors shadow-2xs"
-                />
+              {submitError && (
+                <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs font-medium">
+                  {submitError}
+                </div>
+              )}
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-medium text-[#1c1510] mb-1.5">
+                    Full Name <span className="text-[#a83232]">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Tariq Khan"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    className="w-full px-4 py-2.5 rounded-lg border border-[#e2d6c8] bg-white text-xs text-[#1c1510] placeholder-[#9a897b] outline-none focus:border-[#1c1510] transition-colors shadow-2xs"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-[#1c1510] mb-1.5">
+                    Email Address <span className="text-[#a83232]">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    placeholder="you@example.com"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    className="w-full px-4 py-2.5 rounded-lg border border-[#e2d6c8] bg-white text-xs text-[#1c1510] placeholder-[#9a897b] outline-none focus:border-[#1c1510] transition-colors shadow-2xs"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-medium text-[#1c1510] mb-1.5">
+                    Contact Phone / WhatsApp <span className="text-[#8c7e73] font-normal">(Optional)</span>
+                  </label>
+                  <input
+                    type="tel"
+                    placeholder="+44 7472 000 000"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    className="w-full px-4 py-2.5 rounded-lg border border-[#e2d6c8] bg-white text-xs text-[#1c1510] placeholder-[#9a897b] outline-none focus:border-[#1c1510] transition-colors shadow-2xs"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-[#1c1510] mb-1.5">
+                    Inquiry Type / Subject
+                  </label>
+                  <select
+                    value={formData.subject}
+                    onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                    className="w-full px-4 py-2.5 rounded-lg border border-[#e2d6c8] bg-white text-xs text-[#1c1510] outline-none focus:border-[#1c1510] transition-colors cursor-pointer shadow-2xs"
+                  >
+                    <option value="General Enquiry">General Jewellery Enquiry</option>
+                    <option value="Gold Bullion & Coins">Gold Bullion & Coins (0% VAT)</option>
+                    <option value="Bespoke 21ct Bridal Set">Bespoke 21ct Bridal Consultation</option>
+                    <option value="Sell Scrap Gold">Sell Scrap Gold Estimate</option>
+                    <option value="Private Showroom Appointment">Private Bradford Showroom Viewing</option>
+                  </select>
+                </div>
               </div>
 
               <div>
                 <label className="block text-xs font-medium text-[#1c1510] mb-1.5">
-                  Email Address <span className="text-[#a83232]">*</span>
-                </label>
-                <input
-                  type="email"
-                  required
-                  placeholder="you@example.com"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-lg border border-[#e2d6c8] bg-white text-xs text-[#1c1510] placeholder-[#9a897b] outline-none focus:border-[#1c1510] transition-colors shadow-2xs"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-medium text-[#1c1510] mb-1.5">
-                  Subject
-                </label>
-                <select
-                  value={formData.subject}
-                  onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-lg border border-[#e2d6c8] bg-white text-xs text-[#1c1510] outline-none focus:border-[#1c1510] transition-colors cursor-pointer shadow-2xs"
-                >
-                  <option value="general">General Enquiry</option>
-                  <option value="bespoke">Bespoke Ring Consultation</option>
-                  <option value="order">Order Tracking & Sizing</option>
-                  <option value="wholesale">Private Showroom Appointment</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-xs font-medium text-[#1c1510] mb-1.5">
-                  Message <span className="text-[#a83232]">*</span>
+                  Message Details <span className="text-[#a83232]">*</span>
                 </label>
                 <textarea
                   required
                   rows={4}
-                  placeholder="How can we assist you today?"
+                  placeholder="Tell us what piece, design, or bullion specification you are looking for..."
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   className="w-full px-4 py-2.5 rounded-lg border border-[#e2d6c8] bg-white text-xs text-[#1c1510] placeholder-[#9a897b] outline-none focus:border-[#1c1510] transition-colors resize-none shadow-2xs"
@@ -200,10 +275,20 @@ export default function ContactPage() {
 
               <button
                 type="submit"
-                className="w-full sm:w-auto px-8 py-3 rounded-full bg-[#1c1510] text-[#f5efe8] font-medium text-xs sm:text-sm tracking-wide hover:bg-[#33261d] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-sm"
+                disabled={isSubmitting}
+                className="w-full sm:w-auto px-8 py-3 rounded-full bg-[#1c1510] hover:bg-[#8b6914] text-[#f5efe8] font-medium text-xs sm:text-sm tracking-wide active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-sm disabled:opacity-50 cursor-pointer"
               >
-                <span>Send Message</span>
-                <span>→</span>
+                {isSubmitting ? (
+                  <>
+                    <span className="w-3.5 h-3.5 rounded-full border-2 border-white border-t-transparent animate-spin" />
+                    <span>Submitting Inquiry...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Submit Inquiry</span>
+                    <span>→</span>
+                  </>
+                )}
               </button>
             </form>
           )}
